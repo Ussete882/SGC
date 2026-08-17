@@ -274,6 +274,12 @@ async function api(req, res, url) {
     const a = acharAssembleia(codigo);
     const s = acharSessao(url.searchParams.get('token'), codigo);
 
+    // Só este socket vive indefinidamente: é o canal que fica aberto durante
+    // toda a assembleia. Os restantes seguem os tempos normais do servidor.
+    req.socket.setTimeout(0);
+    req.socket.setNoDelay(true);
+    req.socket.setKeepAlive(true, 30000);
+
     res.writeHead(200, {
       'Content-Type': 'text/event-stream; charset=utf-8',
       'Cache-Control': 'no-cache, no-transform',
@@ -387,10 +393,13 @@ const servidor = createServer(async (req, res) => {
   }
 });
 
-// Ligações SSE não devem morrer por inactividade.
-servidor.keepAliveTimeout = 0;
-servidor.headersTimeout = 0;
-servidor.requestTimeout = 0;
+/* Os valores por omissão do Node ficam como estão, de propósito.
+   `requestTimeout` e `headersTimeout` contam o tempo de *receber o pedido* — um
+   GET sem corpo termina de imediato, por isso nunca cortam uma resposta longa.
+   E `keepAliveTimeout = 0` desligaria a reciclagem de ligações inactivas: atrás
+   de um proxy, que abre ligações a toda a hora, isso é uma fuga de sockets que
+   acaba por asfixiar a instância. O que a ligação de eventos precisa é de não
+   ter tempo limite *no seu próprio socket*, e isso faz-se caso a caso. */
 
 function enderecos() {
   const out = [];

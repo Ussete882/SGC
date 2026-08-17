@@ -33,6 +33,11 @@ async function pedir(caminho, opcoes, tentativas = 4) {
         await new Promise((res) => setTimeout(res, 3000 * n));
         continue;
       }
+      if (daBorda) {
+        throw new Error(
+          `o alojamento devolveu ${r.status} em ${caminho} após ${tentativas} tentativas — a instância não está a servir`,
+        );
+      }
       return { estatuto: r.status, corpo: texto ? JSON.parse(texto) : {} };
     } catch (e) {
       ultimoErro = e;
