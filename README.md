@@ -133,6 +133,13 @@ nem os votos já depositados.
 Variáveis de ambiente: `PORT` (porta, por omissão 5190) e `SGC_DADOS` (caminho
 do ficheiro de estado).
 
+`GET /api/saude` diz em que pé está o serviço — útil sobretudo no alojamento,
+para saber que versão está mesmo no ar:
+
+```json
+{ "ok": true, "assembleias": 1, "ligacoes": 12, "commit": "df93018", "desdeSegundos": 430 }
+```
+
 Ensaio de ponta a ponta — constituição, consulta prévia, escrutínio sem maioria,
 segunda volta, proclamação, acta, controlo de acessos e segredo do voto — com o
 servidor a correr:

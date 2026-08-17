@@ -382,7 +382,15 @@ const servidor = createServer(async (req, res) => {
 
   try {
     if (url.pathname === '/api/saude') {
-      return json(res, 200, { ok: true, assembleias: assembleias.size, versao: 1 });
+      return json(res, 200, {
+        ok: true,
+        assembleias: assembleias.size,
+        ligacoes: [...ligacoes.values()].reduce((a, s) => a + s.size, 0),
+        // Sem isto não se sabe que versão está no ar — e a dúvida custa tempo
+        // precisamente quando não há tempo a perder.
+        commit: (process.env.RENDER_GIT_COMMIT ?? 'local').slice(0, 7),
+        desdeSegundos: Math.round(process.uptime()),
+      });
     }
     if (url.pathname.startsWith('/api/')) return await api(req, res, url);
     return await estatico(req, res, url);
