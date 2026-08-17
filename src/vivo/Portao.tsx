@@ -541,10 +541,27 @@ const Entrada: React.FC<{ codigo: string; ir: (r: string) => void; onSessao: (s:
 
 /* ═══════════════════════════════════ Portão ════════════════════════════════ */
 
-export const Portao: React.FC<{ codigo: string; ir: (r: string) => void; onSessao: (s: Sessao) => void }> = ({
-  codigo, ir, onSessao,
-}) => {
-  if (!codigo) return <Abertura ir={ir} />;
-  if (codigo === 'NOVO') return <Constituir ir={ir} onSessao={onSessao} />;
-  return <Entrada codigo={codigo} ir={ir} onSessao={onSessao} />;
+export const Portao: React.FC<{
+  codigo: string;
+  ir: (r: string) => void;
+  onSessao: (s: Sessao) => void;
+  /** Motivo por que a sessão anterior caiu, quando houve uma. */
+  aviso?: string | null;
+}> = ({ codigo, ir, onSessao, aviso }) => {
+  const barra = aviso ? (
+    <div className="fixed inset-x-0 top-0 z-50 bg-brand-600 text-white px-4 py-2.5 text-center a-fade">
+      <p className="text-[12.5px] font-semibold leading-snug max-w-2xl mx-auto">{aviso}</p>
+    </div>
+  ) : null;
+
+  return (
+    <>
+      {barra}
+      <div className={aviso ? 'pt-10' : ''}>
+        {!codigo ? <Abertura ir={ir} />
+          : codigo === 'NOVO' ? <Constituir ir={ir} onSessao={onSessao} />
+            : <Entrada codigo={codigo} ir={ir} onSessao={onSessao} />}
+      </div>
+    </>
+  );
 };

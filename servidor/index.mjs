@@ -269,6 +269,17 @@ async function api(req, res, url) {
     return json(res, 200, { ok: true, resultado });
   }
 
+  /* GET /api/salas/:codigo/sessao — a pergunta «ainda valho alguma coisa?».
+     O canal de eventos, quando falha, não deixa o navegador ler o motivo: o
+     EventSource só sabe dizer «erro». É esta rota que distingue uma quebra de
+     rede (que passa) de uma sessão que morreu (que não passa). */
+  if (rota[2] === 'sessao' && req.method === 'GET') {
+    const a = acharAssembleia(codigo);
+    const s = acharSessao(url.searchParams.get('token'), codigo);
+    const m = s.membroId ? a.membros.find((x) => x.id === s.membroId) : null;
+    return json(res, 200, { valida: true, papel: s.papel, membroId: s.membroId, nome: m?.nome ?? null });
+  }
+
   // GET /api/salas/:codigo/eventos — o canal em tempo real
   if (rota[2] === 'eventos' && req.method === 'GET') {
     const a = acharAssembleia(codigo);

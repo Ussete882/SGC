@@ -364,9 +364,15 @@ export const Votante: React.FC<{
       <Topo sala={sala} nome={eu?.nome ?? sessao.nome ?? 'Camarada'} estado={estado} onSair={onSair} />
 
       <main className="px-4 py-5 max-w-lg mx-auto space-y-4">
-        {estado === 'A_RELIGAR' && (
-          <Alerta tom="gold" titulo="Ligação instável" icone={<IcAviso className="w-4 h-4" />}>
-            A religar ao servidor da assembleia. O seu voto, se já foi depositado, está seguro.
+        {(estado === 'A_RELIGAR' || estado === 'SEM_SERVIDOR') && (
+          <Alerta
+            tom="gold"
+            titulo={estado === 'SEM_SERVIDOR' ? 'Sem resposta do servidor' : 'Ligação instável'}
+            icone={<IcAviso className="w-4 h-4" />}
+            accao={<Btn tamanho="sm" onClick={onSair}>Voltar a entrar</Btn>}
+          >
+            A religar à assembleia — o seu voto, se já foi depositado, está seguro. Se isto não passar em alguns
+            segundos, volte a entrar com o seu nome.
           </Alerta>
         )}
 

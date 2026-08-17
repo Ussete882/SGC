@@ -26,13 +26,24 @@ export function lerRota(): Rota {
   return { codigo: (partes[1] ?? '').toUpperCase(), sub: partes[2] ?? '' };
 }
 
-const AEsperar: React.FC<{ texto: string; estado?: React.ReactNode }> = ({ texto, estado }) => (
+const AEsperar: React.FC<{ texto: string; estado?: React.ReactNode; onDesistir?: () => void }> = ({
+  texto, estado, onDesistir,
+}) => (
   <MolduraEscura>
     <div className="flex-1 grid place-items-center px-6">
       <div className="text-center">
         <Emblema tamanho={64} className="mx-auto" />
         <p className="text-[14px] text-white/50 mt-5">{texto}</p>
         {estado && <div className="mt-3 flex justify-center">{estado}</div>}
+        {/* Nunca deixar o camarada sem saída, seja qual for a avaria. */}
+        {onDesistir && (
+          <button
+            onClick={onDesistir}
+            className="mt-6 text-[12.5px] font-bold text-white/40 hover:text-white border border-white/15 hover:border-white/40 rounded-xl px-4 py-2 transition-colors"
+          >
+            Voltar a entrar
+          </button>
+        )}
       </div>
     </div>
   </MolduraEscura>
@@ -61,7 +72,8 @@ export const AppVivo: React.FC = () => {
 
   const ir = useCallback((destino: string) => { window.location.hash = destino.replace(/^#/, ''); }, []);
 
-  const { sala, estado, accao } = useAssembleia(sessao);
+  const { sala, estado, motivo, accao } = useAssembleia(sessao);
+  const [aviso, setAviso] = useState<string | null>(null);
 
   const sair = useCallback(() => {
     if (sessao) esquecerSessao(sessao.codigo);
@@ -69,23 +81,32 @@ export const AppVivo: React.FC = () => {
     ir(`#/votar/${rota.codigo}`);
   }, [sessao, rota.codigo, ir]);
 
-  // A sessão morreu do lado do servidor (reposição de dados, por exemplo).
+  /* A sessão morreu do lado do servidor — por exemplo, porque o serviço foi
+     republicado e o disco volátil levou consigo a assembleia. Devolvemos o
+     camarada ao ecrã de entrada com o motivo à vista, em vez de o deixar a
+     olhar para «a religar» indefinidamente. */
   useEffect(() => {
     if (estado === 'SEM_SESSAO' && sessao) {
       esquecerSessao(sessao.codigo);
+      setAviso(motivo ?? 'A sua sessão terminou. Volte a entrar com o seu nome.');
       setSessao(null);
     }
-  }, [estado, sessao]);
+  }, [estado, sessao, motivo]);
 
-  const entrar = useCallback((s: Sessao) => setSessao(s), []);
+  const entrar = useCallback((s: Sessao) => { setAviso(null); setSessao(s); }, []);
 
-  if (!sessao) return <Portao codigo={rota.codigo} ir={ir} onSessao={entrar} />;
+  if (!sessao) return <Portao codigo={rota.codigo} ir={ir} onSessao={entrar} aviso={aviso} />;
 
   if (!sala) {
     return (
       <AEsperar
-        texto={`A ligar à assembleia ${sessao.codigo}…`}
+        texto={
+          estado === 'SEM_SERVIDOR'
+            ? 'Sem resposta do servidor da votação. A insistir…'
+            : `A ligar à assembleia ${sessao.codigo}…`
+        }
         estado={<SinalLigacao estado={estado} />}
+        onDesistir={sair}
       />
     );
   }

@@ -815,9 +815,15 @@ export const Mesa: React.FC<{
         {aba === 'credenciais' && <Credenciais sala={sala} accao={accao} />}
         {aba === 'bordo' && <LivroDeBordo sala={sala} />}
 
-        {estado === 'A_RELIGAR' && (
-          <Alerta tom="gold" titulo="A religar ao servidor" icone={<IcAviso className="w-4 h-4" />}>
-            Os votos já depositados estão guardados no servidor. Assim que a ligação voltar, o ecrã actualiza-se.
+        {(estado === 'A_RELIGAR' || estado === 'SEM_SERVIDOR') && (
+          <Alerta
+            tom="gold"
+            titulo={estado === 'SEM_SERVIDOR' ? 'Sem resposta do servidor' : 'A religar ao servidor'}
+            icone={<IcAviso className="w-4 h-4" />}
+            accao={<Btn tamanho="sm" onClick={onSair}>Voltar a entrar</Btn>}
+          >
+            Os votos já depositados estão guardados no servidor. Assim que a ligação voltar, o ecrã actualiza-se
+            sozinho. Se não passar em alguns segundos, volte a entrar com a chave da mesa.
           </Alerta>
         )}
 

@@ -45,6 +45,7 @@ export const SinalLigacao: React.FC<{ estado: EstadoLigacao; compacto?: boolean 
     A_LIGAR: { cor: 'bg-ink-300', texto: 'a ligar…', pulsa: true },
     LIGADO: { cor: 'bg-verde-600', texto: 'em directo', pulsa: true },
     A_RELIGAR: { cor: 'bg-gold-500', texto: 'a religar…', pulsa: true },
+    SEM_SERVIDOR: { cor: 'bg-gold-600', texto: 'sem servidor', pulsa: true },
     SEM_SESSAO: { cor: 'bg-brand-600', texto: 'sessão terminada', pulsa: false },
   };
   const s = mapa[estado];

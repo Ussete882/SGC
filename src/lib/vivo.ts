@@ -243,7 +243,7 @@ export function ultimoCodigo(): string | null {
 
 /* ══════════════════════════════ Ligação ao vivo ════════════════════════════ */
 
-export type EstadoLigacao = 'A_LIGAR' | 'LIGADO' | 'A_RELIGAR' | 'SEM_SESSAO';
+export type EstadoLigacao = 'A_LIGAR' | 'LIGADO' | 'A_RELIGAR' | 'SEM_SESSAO' | 'SEM_SERVIDOR';
 
 /**
  * Mantém a assembleia sincronizada em tempo real. O EventSource religa-se
@@ -253,8 +253,9 @@ export type EstadoLigacao = 'A_LIGAR' | 'LIGADO' | 'A_RELIGAR' | 'SEM_SESSAO';
 export function useAssembleia(sessao: Sessao | null) {
   const [sala, setSala] = useState<Assembleia | null>(null);
   const [estado, setEstado] = useState<EstadoLigacao>('A_LIGAR');
+  const [motivo, setMotivo] = useState<string | null>(null);
   const falhas = useRef(0);
-  const recebeu = useRef(false);
+  const aDiagnosticar = useRef(false);
 
   useEffect(() => {
     if (!sessao) {
@@ -264,17 +265,49 @@ export function useAssembleia(sessao: Sessao | null) {
     }
     let vivo = true;
     falhas.current = 0;
-    recebeu.current = false;
+    aDiagnosticar.current = false;
+    setMotivo(null);
+
+    /* O EventSource não deixa ler o motivo da falha — só sabe dizer «erro». Sem
+       isto, uma sessão morta era indistinguível de uma quebra de rede, e o ecrã
+       ficava eternamente a religar, sem saída. */
+    const diagnosticar = async () => {
+      if (aDiagnosticar.current) return;
+      aDiagnosticar.current = true;
+      try {
+        const r = await fetch(
+          `${BASE}/api/salas/${sessao.codigo}/sessao?token=${encodeURIComponent(sessao.token)}`,
+        );
+        if (!vivo) return;
+        if (r.ok) {
+          // Sessão de pé: é o fluxo que está a falhar. Continuar a insistir.
+          setEstado('A_RELIGAR');
+          return;
+        }
+        const corpo = await r.json().catch(() => ({} as { erro?: string }));
+        setEstado('SEM_SESSAO');
+        setMotivo(
+          r.status === 404
+            ? 'Esta assembleia já não existe no servidor. Se ele foi republicado, é preciso constituí-la de novo.'
+            : (corpo as { erro?: string }).erro ?? 'A sua sessão terminou.',
+        );
+      } catch {
+        // Nem sequer chegámos ao servidor: é a rede, e essa volta.
+        if (vivo) setEstado('SEM_SERVIDOR');
+      } finally {
+        aDiagnosticar.current = false;
+      }
+    };
     const url = `${BASE}/api/salas/${sessao.codigo}/eventos?token=${encodeURIComponent(sessao.token)}`;
     const fonte = new EventSource(url);
 
     fonte.addEventListener('estado', (ev) => {
       if (!vivo) return;
       falhas.current = 0;
-      recebeu.current = true;
       try {
         setSala(JSON.parse((ev as MessageEvent).data) as Assembleia);
         setEstado('LIGADO');
+        setMotivo(null);
       } catch { /* trama truncada — a próxima corrige */ }
     });
 
@@ -282,13 +315,15 @@ export function useAssembleia(sessao: Sessao | null) {
       if (!vivo) return;
       falhas.current = 0;
       setEstado('LIGADO');
+      setMotivo(null);
     };
 
     fonte.onerror = () => {
       if (!vivo) return;
       falhas.current += 1;
-      // Três falhas seguidas sem nunca ter chegado estado: a sessão morreu.
-      setEstado(falhas.current >= 3 && !recebeu.current ? 'SEM_SESSAO' : 'A_RELIGAR');
+      setEstado((actual) => (actual === 'LIGADO' || actual === 'A_LIGAR' ? 'A_RELIGAR' : actual));
+      // Duas falhas seguidas: vale a pena perguntar ao servidor o que se passa.
+      if (falhas.current >= 2) void diagnosticar();
     };
 
     return () => {
@@ -307,7 +342,7 @@ export function useAssembleia(sessao: Sessao | null) {
     [sessao],
   );
 
-  return { sala, estado, accao };
+  return { sala, estado, motivo, accao };
 }
 
 /* ═══════════════════════════════ Conveniências ═════════════════════════════ */
