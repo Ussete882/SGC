@@ -1,0 +1,251 @@
+/* ===========================================================================
+   SGC — Sistema de Gestão da Célula · camada de estilo base
+   O Tailwind (play CDN) trata do utilitário; aqui ficam os fundamentos,
+   as animações e os detalhes que o utilitário não cobre.
+   ========================================================================= */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* Cores do emblema oficial da FRELIMO */
+:root {
+  --ink: #1a1717;
+  --ink-700: #2e2a2a;
+  --ink-400: #726b6b;
+  --line: #ede9e9;
+  --brand: #e61923;
+  --verde: #00a34f;
+  --amarelo: #fff000;
+  --preto: #211e1e;
+  --surface: #ffffff;
+  --canvas: #f6f4f3;
+  color-scheme: light;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  background: var(--canvas);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'ss01' 1, 'cv11' 1;
+}
+
+/* Números sempre alinhados em colunas de tabelas e KPIs */
+.tnum { font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+
+/* --------------------------------- foco --------------------------------- */
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* ------------------------------ scrollbars ------------------------------ */
+* { scrollbar-width: thin; scrollbar-color: #c3c9d4 transparent; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: #cfd5e0;
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover { background: #aab3c2; background-clip: content-box; }
+
+.rail-scroll::-webkit-scrollbar-thumb { background: #313b4d; background-clip: content-box; }
+
+/* ------------------------------- animações ------------------------------ */
+@keyframes sgc-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes sgc-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes sgc-scale {
+  from { opacity: 0; transform: scale(.96) translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes sgc-slide-right {
+  from { transform: translateX(24px); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+@keyframes sgc-pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(200, 16, 46, .35); }
+  70%  { box-shadow: 0 0 0 10px rgba(200, 16, 46, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(200, 16, 46, 0); }
+}
+@keyframes sgc-shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+@keyframes sgc-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.a-rise  { animation: sgc-rise .5s cubic-bezier(.22,1,.36,1) both; }
+.a-fade  { animation: sgc-fade .4s ease both; }
+.a-scale { animation: sgc-scale .28s cubic-bezier(.22,1,.36,1) both; }
+.a-drawer { animation: sgc-slide-right .32s cubic-bezier(.22,1,.36,1) both; }
+.a-ping  { animation: sgc-pulse-ring 2.4s ease-out infinite; }
+
+.stagger > * { animation: sgc-rise .5s cubic-bezier(.22,1,.36,1) both; }
+.stagger > *:nth-child(1) { animation-delay: .02s; }
+.stagger > *:nth-child(2) { animation-delay: .06s; }
+.stagger > *:nth-child(3) { animation-delay: .10s; }
+.stagger > *:nth-child(4) { animation-delay: .14s; }
+.stagger > *:nth-child(5) { animation-delay: .18s; }
+.stagger > *:nth-child(6) { animation-delay: .22s; }
+.stagger > *:nth-child(7) { animation-delay: .26s; }
+.stagger > *:nth-child(8) { animation-delay: .30s; }
+
+.shimmer {
+  background: linear-gradient(90deg, #eef1f6 25%, #f8fafc 37%, #eef1f6 63%);
+  background-size: 200% 100%;
+  animation: sgc-shimmer 1.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+
+/* ------------------------------- texturas ------------------------------- */
+.rail-bg {
+  background:
+    radial-gradient(900px 420px at -10% -5%, rgba(230,25,35,.34), transparent 60%),
+    radial-gradient(700px 380px at 110% 105%, rgba(0,163,79,.24), transparent 62%),
+    linear-gradient(180deg, #241f1f 0%, #100d0d 100%);
+}
+.canvas-bg {
+  background-image:
+    radial-gradient(1100px 520px at 88% -8%, rgba(230,25,35,.06), transparent 60%),
+    radial-gradient(900px 460px at -6% 8%, rgba(0,163,79,.055), transparent 60%);
+}
+.hero-bg {
+  background:
+    radial-gradient(620px 320px at 92% -30%, rgba(255,240,0,.20), transparent 60%),
+    radial-gradient(540px 330px at 6% 130%, rgba(0,163,79,.32), transparent 62%),
+    linear-gradient(115deg, #2a2222 0%, #171313 52%, #3d0a0e 100%);
+}
+.grid-paper {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* ─────────────── Faixa da bandeira — assinatura do Partido ──────────────
+   Verde, preto, amarelo e vermelho, na ordem da bandeira nacional e das
+   diagonais do emblema da FRELIMO.                                        */
+.faixa-bandeira {
+  background: linear-gradient(
+    90deg,
+    var(--verde) 0 25%,
+    var(--preto) 25% 50%,
+    var(--amarelo) 50% 75%,
+    var(--brand) 75% 100%
+  );
+}
+
+/* Variante diagonal, para cantos e cabeçalhos */
+.faixa-diagonal {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--verde) 0 14px,
+    var(--preto) 14px 28px,
+    var(--amarelo) 28px 42px,
+    var(--brand) 42px 56px
+  );
+}
+
+/* Selo do emblema — moldura branca sobre campo vermelho, como no original */
+.selo-emblema {
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(33, 30, 30, .12), 0 2px 8px -2px rgba(26, 23, 23, .28);
+}
+
+/* --------------------------- pequenos detalhes -------------------------- */
+.hairline { box-shadow: inset 0 -1px 0 var(--line); }
+
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1.5px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size .25s cubic-bezier(.22,1,.36,1);
+}
+.link-underline:hover { background-size: 100% 1.5px; }
+
+.lift { transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s cubic-bezier(.22,1,.36,1); }
+.lift:hover { transform: translateY(-2px); }
+
+/* Cartão de membro — brilho diagonal */
+.card-sheen { position: relative; overflow: hidden; }
+.card-sheen::after {
+  content: '';
+  position: absolute;
+  inset: -40% -60%;
+  background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,.16) 50%, transparent 58%);
+  transform: translateX(-30%);
+  transition: transform .9s cubic-bezier(.22,1,.36,1);
+}
+.card-sheen:hover::after { transform: translateX(30%); }
+
+/* Faixa nacional em movimento */
+.marquee-track { display: flex; width: max-content; animation: sgc-marquee 42s linear infinite; }
+.marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+
+/* Tabelas */
+table.sgc { border-collapse: separate; border-spacing: 0; width: 100%; }
+table.sgc thead th {
+  position: sticky; top: 0; z-index: 1;
+  background: #fbfcfe;
+  font-size: 11px; letter-spacing: .09em; text-transform: uppercase;
+  color: #626a7a; font-weight: 700; text-align: left;
+  padding: 10px 14px; border-bottom: 1px solid var(--line);
+}
+table.sgc tbody td { padding: 12px 14px; border-bottom: 1px solid #eef1f6; font-size: 14px; vertical-align: middle; }
+table.sgc tbody tr { transition: background .15s ease; }
+table.sgc tbody tr:hover { background: #fafbfd; }
+table.sgc tbody tr:last-child td { border-bottom: none; }
+
+/* Range slider */
+input[type='range'].sgc {
+  -webkit-appearance: none; appearance: none; height: 6px; border-radius: 999px;
+  background: #e7eaf0; outline: none;
+}
+input[type='range'].sgc::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 20px; height: 20px; border-radius: 999px; background: #fff;
+  border: 5px solid var(--brand); cursor: pointer;
+  box-shadow: 0 2px 8px rgba(11,14,20,.18);
+}
+
+/* Checkbox custom */
+input[type='checkbox'].sgc {
+  appearance: none; -webkit-appearance: none;
+  width: 18px; height: 18px; border: 1.5px solid #c3c9d4; border-radius: 5px;
+  background: #fff; cursor: pointer; position: relative; flex: none;
+  transition: border-color .15s ease, background .15s ease;
+}
+input[type='checkbox'].sgc:checked { background: var(--brand); border-color: var(--brand); }
+input[type='checkbox'].sgc:checked::after {
+  content: ''; position: absolute; left: 5px; top: 2px;
+  width: 5px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Impressão — relatório mensal e acta */
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; }
+  .print-sheet { box-shadow: none !important; border: none !important; margin: 0 !important; }
+  @page { size: A4; margin: 16mm; }
+}

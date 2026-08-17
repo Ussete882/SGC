@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SGC · Sistema de Gestão da Célula — FRELIMO</title>
+    <meta name="description" content="Protótipo funcional do Sistema de Gestão da Célula: membros, cotas, reuniões, eleições e consolidação nacional." />
+    <meta name="theme-color" content="#E61923" />
+    <link rel="icon" type="image/webp" href="/frelimo.webp" />
+    <link rel="apple-touch-icon" href="/frelimo.webp" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+              mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+            },
+            /* ── Paleta extraída do emblema oficial da FRELIMO ──
+               vermelho #E61923 · verde #00A34F · amarelo #FFF000 · preto #211E1E */
+            colors: {
+              ink: {
+                DEFAULT: '#1A1717',
+                900: '#100D0D',
+                800: '#221F1F',
+                700: '#2E2A2A',
+                600: '#3E3939',
+                500: '#585151',
+                400: '#726B6B',
+                300: '#9E9797',
+                200: '#D0CACA',
+                100: '#EDE9E9',
+                50:  '#F8F6F6',
+              },
+              brand: {
+                DEFAULT: '#E61923',
+                900: '#78090F',
+                800: '#A10E16',
+                700: '#C4141D',
+                600: '#E61923',
+                500: '#F0303A',
+                400: '#F4666D',
+                300: '#F89CA1',
+                200: '#FBCED1',
+                100: '#FDE7E9',
+                50:  '#FEF4F5',
+              },
+              verde: {
+                DEFAULT: '#00A34F',
+                900: '#00522A',
+                800: '#007038',
+                700: '#008943',
+                600: '#00A34F',
+                500: '#0FB85E',
+                400: '#45CE86',
+                300: '#86E2B0',
+                200: '#C2F0D6',
+                100: '#E7F9EF',
+              },
+              gold: {
+                DEFAULT: '#F5D400',
+                800: '#6E5C00',
+                700: '#836E00',
+                600: '#A88F00',
+                500: '#F5D400',
+                400: '#FFE83D',
+                300: '#FFF07A',
+                100: '#FFFBD9',
+              },
+              /* Amarelo exacto da bandeira — só para elementos gráficos */
+              amarelo: '#FFF000',
+            },
+            boxShadow: {
+              card: '0 1px 2px rgba(26,23,23,.04), 0 8px 24px -12px rgba(26,23,23,.10)',
+              lift: '0 2px 4px rgba(26,23,23,.05), 0 18px 40px -16px rgba(26,23,23,.22)',
+              rail: '0 24px 60px -30px rgba(16,13,13,.6)',
+            },
+            borderRadius: { xl2: '1.25rem' },
+            transitionTimingFunction: { swift: 'cubic-bezier(.22,1,.36,1)' },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

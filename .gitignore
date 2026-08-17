@@ -1,0 +1,8 @@
+node_modules
+dist
+
+# Estado das assembleias de voto — dados reais de sessões, nunca versionados.
+servidor/dados/
+
+# Documento gerado
+SGC_Dossier_Tecnico.pdf

@@ -1,0 +1,22 @@
+# Publicação do SGC — aplicação e servidor de votação no mesmo processo.
+#
+# Um único serviço serve tudo: os ficheiros construídos da aplicação e a API em
+# tempo real. Não é preciso Netlify nem qualquer outro alojamento à parte.
+#
+# No Render: New → Blueprint → escolher este repositório. Lê este ficheiro e não
+# há mais nada a configurar.
+
+services:
+  - type: web
+    name: sgc-frelimo
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm ci && npm run build
+    startCommand: node servidor/index.mjs
+    # O canal de tempo real emite um sinal de vida de 20 em 20 segundos, por isso
+    # a ligação nunca fica parada tempo suficiente para o proxy a cortar.
+    healthCheckPath: /api/saude
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
