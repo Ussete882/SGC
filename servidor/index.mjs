@@ -105,19 +105,25 @@ function difundir(codigo) {
 }
 
 function difundirJa(codigo) {
-  const a = assembleias.get(codigo);
-  const clientes = ligacoes.get(codigo);
-  if (!a || !clientes || clientes.size === 0) return;
-  const ligados = ligadosDe(codigo);
-  const paraMesa = JSON.stringify(projectar(a, ligados, 'MESA'));
-  const paraVotante = JSON.stringify(projectar(a, ligados, 'VOTANTE'));
-  clientes.forEach((c) => {
-    try {
-      c.res.write(`event: estado\ndata: ${c.papel === 'MESA' ? paraMesa : paraVotante}\n\n`);
-    } catch {
-      /* ligação já morta — será limpa no evento de fecho */
-    }
-  });
+  try {
+    const a = assembleias.get(codigo);
+    const clientes = ligacoes.get(codigo);
+    if (!a || !clientes || clientes.size === 0) return;
+    const ligados = ligadosDe(codigo);
+    const paraMesa = JSON.stringify(projectar(a, ligados, 'MESA'));
+    const paraVotante = JSON.stringify(projectar(a, ligados, 'VOTANTE'));
+    clientes.forEach((c) => {
+      try {
+        c.res.write(`event: estado\ndata: ${c.papel === 'MESA' ? paraMesa : paraVotante}\n\n`);
+      } catch {
+        /* ligação já morta — será limpa no evento de fecho */
+      }
+    });
+  } catch (err) {
+    // Isto corre num temporizador: sem esta rede, um erro aqui derrubaria o
+    // processo inteiro e, com ele, a assembleia em curso.
+    console.error(`[sgc] falha ao difundir ${codigo}:`, err);
+  }
 }
 
 /* ═══════════════════════════════ Utilitários ═══════════════════════════════ */
@@ -395,6 +401,16 @@ function enderecos() {
   });
   return out;
 }
+
+/* Uma assembleia a decorrer não pode cair por causa de um erro isolado. O
+   estado vive em memória e no disco; o que aqui se protege é o processo. Os
+   navegadores religam-se sozinhos, mas só se houver a quem religar. */
+process.on('uncaughtException', (err) => {
+  console.error('[sgc] excepção não tratada — o servidor continua de pé:', err);
+});
+process.on('unhandledRejection', (motivo) => {
+  console.error('[sgc] promessa rejeitada sem tratamento:', motivo);
+});
 
 await carregar();
 
