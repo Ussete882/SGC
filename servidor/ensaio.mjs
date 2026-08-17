@@ -277,6 +277,60 @@ ok(
 const guardado = await get(`/api/saude`);
 ok(guardado.corpo.ok === true, 'servidor saudável');
 
+/* ───────────────────────────────────────────────────────────────────────────
+   Um segundo acto na mesma assembleia, agora com várias vagas: é o caso dos
+   Assistentes do Secretariado, em que cada eleitor assinala mais do que um
+   nome no mesmo boletim. O apuramento conta por candidato e a maioria absoluta
+   aplica-se a cada um deles.
+   ────────────────────────────────────────────────────────────────────────── */
+
+console.log('\n13. Segundo acto: duas vagas no mesmo boletim');
+const vt2 = (await accao(mesa, 'votacao.criar', {
+  titulo: 'Assistentes do Secretariado',
+  cargo: 'ASSISTENTES_CELULA',
+  vagas: 2,
+  quorumRegra: 'METADE',
+  efectividade: 5,
+})).corpo.resultado.votacaoId;
+ok(!!vt2, 'segunda votação convocada sem sair da assembleia');
+
+const doActo = (estado) => estado.votacoes.find((v) => v.id === vt2);
+for (const i of [1, 2, 3]) await accao(mesa, 'votacao.candidato.add', { votacaoId: vt2, membroId: membros[i].id });
+await ate(() => doActo(ultimo(canalMesa))?.candidatos.length === 3, 'as três candidaturas do segundo acto');
+const cands2 = doActo(ultimo(canalMesa)).candidatos;
+for (const c of cands2) {
+  const i = membros.findIndex((m) => m.id === c.membroId);
+  await accao(sessoes[i].token, 'candidatura.responder', { votacaoId: vt2, candidatoId: c.id, aceitou: true });
+}
+await ate(() => doActo(ultimo(canalMesa)).candidatos.every((c) => c.aceitou === true), 'as aceitações');
+await accao(mesa, 'votacao.abrir', { votacaoId: vt2 });
+await ate(() => doActo(ultimo(canalVotante))?.voltas.length === 1, 'a urna do segundo acto');
+
+const b2 = doActo(ultimo(canalVotante)).voltas[0].candidatos;
+// Maioria absoluta de 5 membros em efectividade = 3 votos.
+// Dois nomes por boletim: o primeiro leva 4, o segundo 3, o terceiro 3.
+const cruzes = [[b2[0], b2[1]], [b2[0], b2[1]], [b2[0], b2[2]], [b2[0], b2[2]], [b2[1], b2[2]]];
+for (let i = 0; i < 5; i++) {
+  const r = await accao(sessoes[i].token, 'voto.registar', { votacaoId: vt2, tipo: 'VALIDO', escolhas: cruzes[i] });
+  ok(r.estatuto === 200, `boletim ${i + 1} com dois nomes aceite`);
+}
+const aMais = await accao(sessoes[0].token, 'voto.registar', { votacaoId: vt2, tipo: 'VALIDO', escolhas: b2 });
+ok(aMais.estatuto === 400, 'três nomes num boletim de duas vagas é recusado');
+
+await accao(mesa, 'votacao.encerrar', { votacaoId: vt2 });
+await ate(() => doActo(ultimo(canalMesa)).voltas[0].apuramento, 'o apuramento do segundo acto');
+const ap3 = doActo(ultimo(canalMesa)).voltas[0].apuramento;
+ok(ap3.maioriaExigida === 3, `maioria absoluta = 3 (${ap3.maioriaExigida})`);
+ok(ap3.linhas[0].votos === 4, `o mais votado tem 4 cruzes (${ap3.linhas[0].votos})`);
+ok(ap3.eleitosAgora.length === 2, `as duas vagas preenchidas à primeira volta (${ap3.eleitosAgora.length})`);
+ok(ap3.precisaSegundaVolta === false, 'sem segunda volta: ambos com maioria absoluta');
+
+await accao(mesa, 'votacao.proclamar', { votacaoId: vt2 });
+await ate(() => doActo(ultimo(canalVotante))?.estado === 'PROCLAMADA', 'a proclamação do segundo acto');
+const f2 = doActo(ultimo(canalVotante));
+ok(f2.eleitos.filter((x) => !x.suplente).length === 2, 'dois Assistentes proclamados');
+ok(f2.eleitos.filter((x) => x.suplente).length === 1, 'o restante fica suplente pela ordem de eleição');
+
 canalMesa.fechar();
 canalVotante.fechar();
 await espera(200);
