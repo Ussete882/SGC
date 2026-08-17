@@ -57,10 +57,20 @@ const erro = (m, e) => { throw new ErroAccao(m, e); };
 /* ══════════════════════════════ Construção ═════════════════════════════════ */
 
 const ORGAOS = {
-  CELULA: { rotulo: 'Reunião Geral da Célula', quorum: 'METADE' },
-  CIRCULO: { rotulo: 'Comité do Círculo', quorum: 'DOIS_TERCOS' },
-  CONFERENCIA: { rotulo: 'Conferência do Círculo', quorum: 'DOIS_TERCOS' },
+  /* A Célula é constituída por um mínimo de cinco e um máximo de quinze
+     membros (Art. 35 n.º 3) — e tem um só Secretário. Os escalões acima não
+     têm esse tecto: o Comité do Círculo agrupa os Secretários de todas as
+     Células que lhe são subordinadas. */
+  CELULA: { rotulo: 'Reunião Geral da Célula', quorum: 'METADE', maximo: 15, minimo: 5 },
+  CIRCULO: { rotulo: 'Comité do Círculo', quorum: 'DOIS_TERCOS', maximo: 200, minimo: 2 },
+  CONFERENCIA: { rotulo: 'Conferência do Círculo', quorum: 'DOIS_TERCOS', maximo: 200, minimo: 2 },
 };
+
+/** Tecto de membros do órgão, com a norma que o fixa. */
+function tecto(escopo) {
+  const o = ORGAOS[escopo] ?? ORGAOS.CIRCULO;
+  return { maximo: o.maximo, minimo: o.minimo, rotulo: o.rotulo };
+}
 
 function nomeLimpo(v) {
   return String(v ?? '').replace(/\s+/g, ' ').trim().slice(0, 70);
@@ -91,6 +101,15 @@ export function novaAssembleia(dados = {}) {
     .map((m) => novoMembro(m.nome, m));
 
   if (membros.length < 2) erro('Uma assembleia precisa de pelo menos dois membros no caderno eleitoral.');
+
+  const t = tecto(escopo);
+  if (membros.length > t.maximo) {
+    erro(
+      escopo === 'CELULA'
+        ? `Uma Célula tem no máximo ${t.maximo} membros (Art. 35 n.º 3); indicou ${membros.length}. Os camaradas do Comité do Círculo não militam todos na mesma Célula — se é o Comité que vai deliberar, escolha esse órgão.`
+        : `Máximo de ${t.maximo} membros por assembleia.`,
+    );
+  }
 
   const a = {
     codigo: codigo(),
@@ -292,7 +311,14 @@ const ACCOES = {
     exigirMesa(actor);
     const nome = nomeLimpo(d.nome);
     if (nome.length < 2) erro('Indique o nome do camarada.');
-    if (a.membros.length >= 200) erro('Limite de 200 membros por assembleia.');
+    const t = tecto(a.escopo);
+    if (a.membros.length >= t.maximo) {
+      erro(
+        a.escopo === 'CELULA'
+          ? `A Célula já tem ${t.maximo} membros — é o máximo previsto (Art. 35 n.º 3).`
+          : `Limite de ${t.maximo} membros por assembleia.`,
+      );
+    }
     const m = novoMembro(nome, { funcao: d.funcao });
     a.membros.push(m);
     registar(a, 'CADERNO', `${m.nome} inscrito no caderno eleitoral.`);
@@ -303,6 +329,14 @@ const ACCOES = {
     if (!a.registoAberto) erro('O registo por auto-inscrição está fechado. Peça à mesa para o inscrever.', 403);
     const nome = nomeLimpo(d.nome);
     if (nome.length < 3) erro('Escreva o seu nome completo.');
+    const t = tecto(a.escopo);
+    if (a.membros.length >= t.maximo) {
+      erro(
+        a.escopo === 'CELULA'
+          ? `A Célula já tem ${t.maximo} membros, o máximo previsto (Art. 35 n.º 3). Fale com a mesa.`
+          : 'A assembleia está cheia. Fale com a mesa.',
+      );
+    }
     const jaExiste = a.membros.find((m) => m.nome.toLowerCase() === nome.toLowerCase());
     if (jaExiste) erro('Já existe um camarada com esse nome no caderno. Escolha-o na lista.');
     const m = novoMembro(nome);

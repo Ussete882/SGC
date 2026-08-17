@@ -182,11 +182,30 @@ const Constituir: React.FC<{ ir: (r: string) => void; onSessao: (s: Sessao) => v
     [lista],
   );
 
+  const comoTexto = (c: { membros: { nome: string; funcao: string }[] }) =>
+    c.membros.map((m) => `${m.nome}${m.funcao ? ` — ${m.funcao}` : ''}`).join('\n');
+
   const aplicarCaderno = (chave: 'CIRCULO' | 'CELULA') => {
     const c = cadernos[chave];
     setEscopo(c.escopo);
     setNome(c.nome);
-    setLista(c.membros.map((m) => `${m.nome}${m.funcao ? ` — ${m.funcao}` : ''}`).join('\n'));
+    setLista(comoTexto(c));
+  };
+
+  /**
+   * Os membros de uma Célula não são os do Comité do Círculo: o Comité agrupa
+   * os Secretários de várias Células, e numa Célula há um só Secretário. Trocar
+   * de órgão troca, por isso, o caderno — mas apenas enquanto ele ainda for um
+   * dos cadernos-tipo. Se já foi escrito à mão, não se deita fora o trabalho.
+   */
+  const escolherOrgao = (novo: 'CELULA' | 'CIRCULO' | 'CONFERENCIA') => {
+    setEscopo(novo);
+    const intacto = lista.trim() === comoTexto(cadernos.CIRCULO).trim()
+      || lista.trim() === comoTexto(cadernos.CELULA).trim();
+    if (!intacto) return;
+    const c = novo === 'CELULA' ? cadernos.CELULA : cadernos.CIRCULO;
+    setNome(c.nome);
+    setLista(comoTexto(c));
   };
 
   const criar = async () => {
@@ -206,7 +225,8 @@ const Constituir: React.FC<{ ir: (r: string) => void; onSessao: (s: Sessao) => v
   };
 
   const semServidor = erro?.includes('servidor da votação');
-  const forade = escopo === 'CELULA' && (membros.length < 5 || membros.length > 15);
+  const excedeu = escopo === 'CELULA' && membros.length > 15;
+  const escassa = escopo === 'CELULA' && membros.length < 5;
 
   return (
     <Casca onVoltar={() => ir('#/votar')} largura="max-w-3xl">
@@ -237,9 +257,9 @@ const Constituir: React.FC<{ ir: (r: string) => void; onSessao: (s: Sessao) => v
             <Escolha
               colunas={3}
               valor={escopo}
-              onMudar={(v) => setEscopo(v as any)}
+              onMudar={(v) => escolherOrgao(v as 'CELULA' | 'CIRCULO' | 'CONFERENCIA')}
               itens={[
-                { id: 'CELULA', rotulo: 'Reunião Geral da Célula', nota: 'Quórum: mais de metade' },
+                { id: 'CELULA', rotulo: 'Reunião Geral da Célula', nota: 'Quórum: mais de metade · até 15 membros' },
                 { id: 'CIRCULO', rotulo: 'Comité do Círculo', nota: 'Quórum: dois terços' },
                 { id: 'CONFERENCIA', rotulo: 'Conferência', nota: 'Quórum: dois terços' },
               ]}
@@ -258,7 +278,16 @@ const Constituir: React.FC<{ ir: (r: string) => void; onSessao: (s: Sessao) => v
           </Campo>
 
           <Campo
-            rotulo={`Caderno eleitoral — ${membros.length} camarada(s)`}
+            rotulo={
+              <span className="flex items-center gap-2">
+                Caderno eleitoral — {membros.length} camarada(s)
+                {escopo === 'CELULA' && (
+                  <span className={`normal-case tracking-normal font-bold ${excedeu ? 'text-brand-600' : 'text-ink-300'}`}>
+                    máximo 15
+                  </span>
+                )}
+              </span>
+            }
             obrigatorio
             className="sm:col-span-2"
             nota="Um nome por linha. Para indicar a função, escreva «Nome — Função»."
@@ -273,11 +302,19 @@ const Constituir: React.FC<{ ir: (r: string) => void; onSessao: (s: Sessao) => v
           </Campo>
         </div>
 
-        {forade && (
+        {excedeu && (
           <div className="mt-4">
-            <Alerta tom="gold" titulo="Dimensão fora do previsto para uma Célula" base="art35">
-              Uma Célula tem entre cinco e quinze membros; indicou {membros.length}. Para o teste não impede nada —
-              é só um aviso do sistema.
+            <Alerta tom="brand" titulo={`Uma Célula não tem ${membros.length} membros`} base="art35">
+              O máximo é quinze. Os camaradas do Comité do Círculo são Secretários de Células diferentes — não
+              militam todos na mesma Célula, onde há um só Secretário. Se é o Comité que vai deliberar, escolha esse
+              órgão acima.
+            </Alerta>
+          </div>
+        )}
+        {escassa && (
+          <div className="mt-4">
+            <Alerta tom="gold" titulo="Menos de cinco membros" base="art35">
+              Uma Célula constitui-se com um mínimo de cinco. Para um ensaio não impede nada — é só um aviso.
             </Alerta>
           </div>
         )}
@@ -314,7 +351,12 @@ const Constituir: React.FC<{ ir: (r: string) => void; onSessao: (s: Sessao) => v
             <Lei id="art28" />
             <Lei id="art21" />
           </div>
-          <Btn variante="primaria" tamanho="lg" onClick={criar} disabled={aGuardar || membros.length < 2 || nome.trim().length < 3}>
+          <Btn
+            variante="primaria"
+            tamanho="lg"
+            onClick={criar}
+            disabled={aGuardar || excedeu || membros.length < 2 || nome.trim().length < 3}
+          >
             {aGuardar ? 'A constituir…' : 'Constituir e abrir a sala'}
           </Btn>
         </div>
