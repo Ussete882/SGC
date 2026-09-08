@@ -10,6 +10,7 @@ import { CARGOS_ELEITORAIS, REGRAS } from './estatutos';
 import { addDays, addMonths, clamp, diffDays, mesDe, ultimosMeses } from './format';
 import type {
   Eleicao,
+  FichaDelegado,
   Estado,
   EstadoPresenca,
   Membro,
@@ -660,6 +661,102 @@ export function progressoMandato(inicio: string, fim: string, hoje: string): num
   const total = diffDays(fim, inicio);
   const feito = diffDays(hoje, inicio);
   return clamp((feito / total) * 100, 0, 100);
+}
+
+// ────────────────────── Ficha de Delegado: anexos ───────────────────────────
+
+export interface VerificacaoAnexo {
+  chave: keyof FichaDelegado['anexos'];
+  alinea: string;
+  rotulo: string;
+  /** VERIFICADO: o sistema confirma pelos seus próprios dados.
+      EM_FALTA: o sistema sabe que falta.
+      MANUAL: só o Secretariado pode atestar. */
+  estado: 'VERIFICADO' | 'EM_FALTA' | 'MANUAL';
+  detalhe: string;
+  base?: string;
+}
+
+/**
+ * Dos cinco anexos exigidos ao delegado, o SGC consegue atestar quatro a partir
+ * do que já tem registado. Só a declaração da Célula depende de assinatura.
+ */
+export function anexosDoDelegado(e: Estado, membroId: string): VerificacaoAnexo[] {
+  const m = membroPorId(e, membroId);
+  if (!m) return [];
+
+  const atraso = mesesEmAtraso(e, membroId, e.hoje);
+  const elegivel = m.estado === 'EFECTIVO';
+
+  return [
+    {
+      chave: 'cartaoMembro',
+      alinea: 'a)',
+      rotulo: 'Fotocópia do Cartão de Membro do Partido',
+      estado: m.cartao ? 'VERIFICADO' : 'EM_FALTA',
+      detalhe: m.cartao
+        ? `Cartão n.º ${m.cartao} no registo da Célula`
+        : 'Sem número de cartão na ficha de membro',
+      base: 'art14',
+    },
+    {
+      chave: 'pagamentoQuotas',
+      alinea: 'b)',
+      rotulo: 'Declaração de pagamento de quotas',
+      estado: atraso === 0 ? 'VERIFICADO' : 'EM_FALTA',
+      detalhe: atraso === 0
+        ? 'Cotização em dia no livro da Célula'
+        : `${atraso} ${atraso === 1 ? 'mês' : 'meses'} por regularizar`,
+      base: 'manual_quota',
+    },
+    {
+      chave: 'declaracaoCelula',
+      alinea: 'c)',
+      rotulo: 'Declaração da Célula onde milita',
+      estado: 'MANUAL',
+      detalhe: `Emitida e assinada pelo Secretariado da ${e.celula.nome}`,
+      base: 'manual_bd',
+    },
+    {
+      chave: 'biPassaporte',
+      alinea: 'd)',
+      rotulo: 'Fotocópia do B.I. ou Passaporte',
+      estado: m.bi ? 'VERIFICADO' : 'EM_FALTA',
+      detalhe: m.bi ? `B.I. n.º ${m.bi} na ficha de membro` : 'Sem B.I. registado na ficha',
+      base: 'manual_bd',
+    },
+    {
+      chave: 'elegibilidade',
+      alinea: 'e)',
+      rotulo: 'Declaração de Elegibilidade',
+      estado: elegivel ? 'VERIFICADO' : 'EM_FALTA',
+      detalhe: elegivel
+        ? 'Membro efectivo, no pleno gozo dos seus direitos'
+        : `Filiação em estado ${m.estado.toLowerCase()} — sem capacidade eleitoral passiva`,
+      base: 'art28',
+    },
+  ];
+}
+
+/** Percentagem de campos do impresso já preenchidos. */
+export function completudeFichaDelegado(f: FichaDelegado): number {
+  const obrigatorios: (keyof FichaDelegado)[] = [
+    'distritoZona', 'circulo', 'nomeCompleto', 'filhoDe', 'eDe', 'naturalDe',
+    'distritoDe', 'provinciaDe', 'idade', 'nascidoEm', 'estadoCivil',
+    'habilitacoesLiterarias', 'profissaoOcupacao', 'localTrabalho', 'localResidencia',
+    'biNumero', 'biEmitidoPor', 'biDataEmissao', 'dataIngressoFrelimo',
+    'cartaoMembroNum', 'cartaoDataEmissao', 'nomeCelula', 'distritoCidadeCelula',
+    'pagamentoQuotasAte', 'localAssinatura', 'dataAssinatura',
+  ];
+  const preenchidos = obrigatorios.filter((k) => {
+    const v = f[k];
+    return typeof v === 'string' && v.trim() !== '';
+  }).length;
+  return Math.round((preenchidos / obrigatorios.length) * 100);
+}
+
+export function fichaDoMembro(e: Estado, membroId: string): FichaDelegado | undefined {
+  return e.fichasDelegado.find((f) => f.membroId === membroId);
 }
 
 // ──────────────────────── Consolidação nacional ─────────────────────────────

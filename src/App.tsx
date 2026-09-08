@@ -10,6 +10,7 @@ import { Membros } from './views/Membros';
 import { Cotas } from './views/Cotas';
 import { Reunioes } from './views/Reunioes';
 import { Eleicoes } from './views/Eleicoes';
+import { Delegados } from './views/Delegados';
 import { Comunicacao } from './views/Comunicacao';
 import { Documentos } from './views/Documentos';
 import { RelatorioMensal } from './views/RelatorioMensal';
@@ -171,6 +172,7 @@ const Vistas: React.FC = () => {
     case 'cotas': return <Cotas />;
     case 'reunioes': return <Reunioes />;
     case 'eleicoes': return <Eleicoes />;
+    case 'delegados': return <Delegados />;
     case 'comunicacao': return <Comunicacao />;
     case 'documentos': return <Documentos />;
     case 'relatorio': return <RelatorioMensal />;

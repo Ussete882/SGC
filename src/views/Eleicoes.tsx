@@ -1092,6 +1092,26 @@ export const Eleicoes: React.FC = () => {
         </div>
       </a>
 
+      {doEscopo.some((x) => x.cargo === 'DELEGADOS_CONFERENCIA_CIRCULO') && (
+        <Card>
+          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
+            <div className="w-11 h-11 rounded-xl bg-gold-100 text-gold-700 grid place-items-center flex-none">
+              <IcLei className="w-5 h-5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[14px] font-bold text-ink">Ficha de Delegado à Conferência do Círculo</p>
+              <p className="text-[12.5px] text-ink-400 mt-1 leading-relaxed max-w-3xl">
+                Eleito o delegado, segue-se o impresso oficial com os seus anexos. O sistema instrui-o com o que já
+                tem na ficha de membro e verifica quatro dos cinco anexos contra os seus próprios registos.
+              </p>
+            </div>
+            <Btn variante="contorno" iconeFim={<IcSeta className="w-4 h-4" />} onClick={() => irPara('delegados')}>
+              Abrir fichas
+            </Btn>
+          </div>
+        </Card>
+      )}
+
       <Segmentado
         itens={[
           { id: 'processos', rotulo: `Processos (${abertas.length})` },

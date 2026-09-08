@@ -269,6 +269,80 @@ export interface Mandato {
   notaCessacao?: string;
 }
 
+// ───────────────────────── Ficha de Delegado ────────────────────────────────
+
+/**
+ * Ficha de Delegado à Conferência do Comité do Círculo — campos do impresso
+ * oficial do Partido. A Reunião Geral elege os delegados (Art. 35 n.º 7); cada
+ * eleito instrui a sua ficha, que segue para o Círculo com os anexos.
+ */
+export interface FichaDelegado {
+  id: string;
+  membroId: string;
+  /** Eleição que originou a ficha, quando veio de um acto eleitoral. */
+  eleicaoId?: string;
+
+  // ── cabeçalho do impresso ──
+  distritoZona: string;
+  circulo: string;
+
+  // ── identificação ──
+  nomeCompleto: string;
+  sexo: Sexo;
+  filhoDe: string;
+  eDe: string;
+  naturalDe: string;
+  distritoDe: string;
+  provinciaDe: string;
+  idade: string;
+  nascidoEm: string;
+  estadoCivil: string;
+  nomeConjuge?: string;
+  habilitacoesLiterarias: string;
+  profissaoOcupacao: string;
+  localTrabalho: string;
+  localResidencia: string;
+
+  // ── documento de identificação ──
+  biNumero: string;
+  biEmitidoPor: string;
+  biDataEmissao: string;
+
+  // ── filiação no Partido ──
+  dataIngressoFrelimo: string;
+  cartaoMembroNum: string;
+  cartaoDataEmissao: string;
+  nomeCelula: string;
+  distritoCidadeCelula: string;
+  pagamentoQuotasAte: string;
+
+  // ── vida orgânica ──
+  membroOrgaoPartido: 'SIM' | 'NAO';
+  membroOrgaoPartidoQual?: string;
+  membroOrgSocial: 'SIM' | 'NAO';
+  membroOrgSocialQual?: string;
+  combatenteLuta: 'SIM' | 'NAO';
+  combatenteLutaDesde?: string;
+  actividadesPoliticas?: string;
+  outrasInformacoes?: string;
+
+  // ── assinatura ──
+  localAssinatura: string;
+  dataAssinatura: string;
+
+  /** Anexos declarados pelo delegado (o sistema verifica o que consegue). */
+  anexos: {
+    cartaoMembro: boolean;
+    pagamentoQuotas: boolean;
+    declaracaoCelula: boolean;
+    biPassaporte: boolean;
+    elegibilidade: boolean;
+  };
+
+  criadaEm: string;
+  entregueEm?: string;
+}
+
 // ────────────────────────────── Comunicação ─────────────────────────────────
 
 export type Segmento =
@@ -365,6 +439,7 @@ export interface Estado {
   movimentos: Movimento[];
   eleicoes: Eleicao[];
   mandatos: Mandato[];
+  fichasDelegado: FichaDelegado[];
   mensagens: Mensagem[];
   documentos: Documento[];
   celulasCirculo: CelulaResumo[];

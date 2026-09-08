@@ -706,7 +706,7 @@ function construirProvincias(): ProvinciaResumo[] {
 
 // ───────────────────────────────── Estado ───────────────────────────────────
 
-export const VERSAO_SEED = 9;
+export const VERSAO_SEED = 10;
 
 export function criarEstadoInicial(): Estado {
   return {
@@ -718,6 +718,7 @@ export function criarEstadoInicial(): Estado {
     movimentos,
     eleicoes,
     mandatos,
+    fichasDelegado: [],
     mensagens,
     documentos: construirDocumentos(),
     celulasCirculo: construirCelulasCirculo(),

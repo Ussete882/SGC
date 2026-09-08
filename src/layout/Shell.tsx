@@ -34,6 +34,7 @@ export function navPara(lente: Lente, contagens: Record<string, number>): ItemNa
       { id: 'cotas', rotulo: 'Cotas e contas', icone: <IcMoeda className="w-5 h-5" />, grupo: 'Vida orgânica', badge: contagens.emFalta },
       { id: 'reunioes', rotulo: 'Reuniões e actas', icone: <IcCalendario className="w-5 h-5" />, grupo: 'Vida orgânica' },
       { id: 'eleicoes', rotulo: 'Eleições e mandatos', icone: <IcUrna className="w-5 h-5" />, grupo: 'Democracia interna', badge: contagens.eleicoes },
+      { id: 'delegados', rotulo: 'Fichas de Delegado', icone: <IcRelatorio className="w-5 h-5" />, grupo: 'Democracia interna', badge: contagens.fichas },
       { id: 'vivo', rotulo: 'Votação em directo', icone: <IcRaio className="w-5 h-5" />, grupo: 'Democracia interna' },
       { id: 'comunicacao', rotulo: 'Comunicação', icone: <IcMegafone className="w-5 h-5" />, grupo: 'Apoio' },
       { id: 'documentos', rotulo: 'Documentos', icone: <IcPasta className="w-5 h-5" />, grupo: 'Apoio' },
@@ -73,6 +74,7 @@ const Rail: React.FC<{ aberto: boolean; onFechar: () => void }> = ({ aberto, onF
     emFalta: e.membros.filter((m) => m.estado === 'EFECTIVO').length - e.quotas.filter((q) => q.mes === e.hoje.slice(0, 7)).length,
     eleicoes: e.eleicoes.filter((x) => !['HOMOLOGADA', 'ANULADA'].includes(x.fase)).length,
     desconforme: av.filter((a) => a.nivel === 'CRITICO').length,
+    fichas: e.fichasDelegado.filter((f) => !f.entregueEm).length,
   };
 
   const itens = navPara(lente, contagens);
@@ -87,7 +89,7 @@ const Rail: React.FC<{ aberto: boolean; onFechar: () => void }> = ({ aberto, onF
     <>
       {aberto && <div className="fixed inset-0 bg-ink/50 z-40 lg:hidden a-fade" onClick={onFechar} />}
       <aside
-        className={`fixed z-50 top-0 left-0 h-full w-[262px] rail-bg text-white flex flex-col transition-transform duration-300 ease-swift ${
+        className={`no-print fixed z-50 top-0 left-0 h-full w-[262px] rail-bg text-white flex flex-col transition-transform duration-300 ease-swift ${
           aberto ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
@@ -217,6 +219,7 @@ const TITULOS: Record<string, { t: string; s: string }> = {
   cotas: { t: 'Cotas e contas', s: 'Cobrança, repartição 60/40 e relatório de contas' },
   reunioes: { t: 'Reuniões e actas', s: 'Convocatórias, presenças, decisões e arquivo' },
   eleicoes: { t: 'Eleições e mandatos', s: 'Democracia interna da Célula e do Círculo' },
+  delegados: { t: 'Fichas de Delegado', s: 'Impresso oficial para a Conferência do Círculo' },
   comunicacao: { t: 'Comunicação com os membros', s: 'WhatsApp, SMS e email a partir do mesmo ecrã' },
   documentos: { t: 'Documentos', s: 'Actas, relatórios e normativos do Partido' },
   relatorio: { t: 'Relatório mensal ao Círculo', s: 'Gerado a partir dos dados do mês' },
@@ -245,7 +248,7 @@ const Topbar: React.FC<{ onMenu: () => void; onBusca: () => void }> = ({ onMenu,
   }, [notifAberto]);
 
   return (
-    <header className="sticky top-0 z-30 bg-white/88 backdrop-blur-xl border-b border-ink-100">
+    <header className="no-print sticky top-0 z-30 bg-white/88 backdrop-blur-xl border-b border-ink-100">
       <FaixaBandeira altura={3} />
       <div className="px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-3">
         <button onClick={onMenu} className="lg:hidden w-9 h-9 rounded-xl grid place-items-center text-ink-500 hover:bg-ink-50">
@@ -346,10 +349,10 @@ export const Shell: React.FC<{ children: React.ReactNode; onBusca: () => void }>
   return (
     <div className="min-h-screen canvas-bg">
       <Rail aberto={menu} onFechar={() => setMenu(false)} />
-      <div className="lg:pl-[262px]">
+      <div className="lg:pl-[262px] print-largura">
         <Topbar onMenu={() => setMenu(true)} onBusca={onBusca} />
         <main className="px-4 sm:px-6 lg:px-8 py-6 max-w-[1520px] mx-auto">{children}</main>
-        <footer className="px-4 sm:px-6 lg:px-8 pb-8 pt-2 max-w-[1520px] mx-auto">
+        <footer className="no-print px-4 sm:px-6 lg:px-8 pb-8 pt-2 max-w-[1520px] mx-auto">
           <FaixaBandeira altura={3} arredondada className="opacity-80" />
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4">
             <div className="flex items-start gap-3">

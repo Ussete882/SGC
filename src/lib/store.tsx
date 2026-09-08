@@ -8,7 +8,7 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AGENDA_SECRETARIADO, AGENDA_TIPO, CARGOS_ELEITORAIS, REGRAS } from './estatutos';
-import { addDays, addYears, mesDe, uid } from './format';
+import { addDays, addYears, anos, mesDe, uid } from './format';
 import { apurar, quotaReferencia } from './selectors';
 import { criarEstadoInicial, VERSAO_SEED } from './seed';
 import type {
@@ -18,6 +18,7 @@ import type {
   Documento,
   Eleicao,
   Estado,
+  FichaDelegado,
   EstadoPresenca,
   Lente,
   Membro,
@@ -91,6 +92,12 @@ interface Ctx {
   fecharVolta: (eleicaoId: string) => void;
   homologar: (eleicaoId: string) => void;
   anularEleicao: (eleicaoId: string, motivo: string) => void;
+
+  // ── fichas de delegado ──
+  criarFichaDelegado: (membroId: string, eleicaoId?: string) => FichaDelegado;
+  guardarFichaDelegado: (f: FichaDelegado) => void;
+  entregarFichaDelegado: (id: string) => void;
+  removerFichaDelegado: (id: string) => void;
 
   // ── comunicação e documentos ──
   enviarMensagem: (p: { canais: Canal[]; segmento: Segmento; destinatarios: string[]; assunto: string; corpo: string; tipo: 'CONVOCATORIA' | 'AVISO_QUOTA' | 'ANIVERSARIO' | 'ELEITORAL' | 'LIVRE' }) => void;
@@ -756,6 +763,119 @@ export const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     avisar({ tipo: 'lei', titulo: 'Eleição anulada', texto: motivo, base: 'art33' });
   }, [set, avisar]);
 
+  // ─────────────────────── Fichas de Delegado ───────────────────────────────
+
+  /**
+   * Instrui a ficha com o que a Célula já sabe do camarada. Sobram os campos
+   * que só ele pode responder — filiação, naturalidade, habilitações.
+   */
+  const criarFichaDelegado = useCallback((membroId: string, eleicaoId?: string) => {
+    const m = e.membros.find((x) => x.id === membroId);
+    const idade = m?.dataNascimento ? anos(m.dataNascimento, e.hoje) : null;
+    const ultimaQuota = e.quotas
+      .filter((q) => q.membroId === membroId)
+      .reduce<string>((max, q) => (q.mes > max ? q.mes : max), '');
+
+    const ROTULO_CARGO: Record<Membro['cargo'], string> = {
+      SECRETARIO: 'Secretário da Célula',
+      ASSISTENTE: 'Assistente do Secretariado',
+      ELEMENTO_LIGACAO: 'Elemento de Ligação',
+      MEMBRO: '',
+    };
+    const cargo = m ? ROTULO_CARGO[m.cargo] : '';
+
+    const f: FichaDelegado = {
+      id: uid('fd'),
+      membroId,
+      eleicaoId,
+      distritoZona: e.celula.distrito,
+      circulo: e.circulo.nome,
+      nomeCompleto: m?.nome ?? '',
+      sexo: m?.sexo ?? 'M',
+      filhoDe: '',
+      eDe: '',
+      naturalDe: '',
+      distritoDe: '',
+      provinciaDe: '',
+      idade: idade !== null ? String(idade) : '',
+      nascidoEm: m?.dataNascimento ?? '',
+      estadoCivil: '',
+      habilitacoesLiterarias: '',
+      profissaoOcupacao: m?.profissao ?? '',
+      localTrabalho: '',
+      localResidencia: [m?.bairro, m?.quarteirao].filter(Boolean).join(', '),
+      biNumero: m?.bi ?? '',
+      biEmitidoPor: '',
+      biDataEmissao: '',
+      dataIngressoFrelimo: m?.dataAdmissao ?? '',
+      cartaoMembroNum: m?.cartao ?? '',
+      cartaoDataEmissao: '',
+      nomeCelula: e.celula.nome,
+      distritoCidadeCelula: `${e.celula.distrito}, ${e.celula.provincia}`,
+      pagamentoQuotasAte: ultimaQuota,
+      membroOrgaoPartido: cargo ? 'SIM' : 'NAO',
+      membroOrgaoPartidoQual: cargo || undefined,
+      membroOrgSocial: 'NAO',
+      combatenteLuta: 'NAO',
+      localAssinatura: e.celula.localidade,
+      dataAssinatura: e.hoje,
+      anexos: {
+        cartaoMembro: !!m?.cartao,
+        pagamentoQuotas: false,
+        declaracaoCelula: false,
+        biPassaporte: !!m?.bi,
+        elegibilidade: m?.estado === 'EFECTIVO',
+      },
+      criadaEm: e.hoje,
+    };
+
+    set((prev) => ({ ...prev, fichasDelegado: [f, ...prev.fichasDelegado] }));
+    avisar({
+      tipo: 'lei',
+      titulo: 'Ficha de Delegado aberta',
+      texto: `${f.nomeCompleto} — instruída com os dados da ficha de membro. Falta o que só o camarada pode responder.`,
+      base: 'art35n7',
+    });
+    return f;
+  }, [set, avisar, e]);
+
+  const guardarFichaDelegado = useCallback((f: FichaDelegado) => {
+    set((prev) => ({
+      ...prev,
+      fichasDelegado: prev.fichasDelegado.map((x) => (x.id === f.id ? f : x)),
+    }));
+  }, [set]);
+
+  const entregarFichaDelegado = useCallback((id: string) => {
+    set((prev) => ({
+      ...prev,
+      fichasDelegado: prev.fichasDelegado.map((x) => (x.id === id ? { ...x, entregueEm: prev.hoje } : x)),
+      documentos: [
+        {
+          id: uid('dc'),
+          titulo: `Ficha de Delegado — ${prev.fichasDelegado.find((x) => x.id === id)?.nomeCompleto ?? ''}`,
+          categoria: 'ELEITORAL' as const,
+          escopo: 'CIRCULO' as const,
+          data: prev.hoje,
+          paginas: 2,
+          tamanhoKb: 180,
+        },
+        ...prev.documentos,
+      ],
+    }));
+    avisar({
+      tipo: 'ok',
+      titulo: 'Ficha entregue ao Círculo',
+      texto: 'Arquivada nos documentos do escalão, com os anexos declarados.',
+      base: 'art47',
+    });
+  }, [set, avisar]);
+
+  const removerFichaDelegado = useCallback((id: string) => {
+    set((prev) => ({ ...prev, fichasDelegado: prev.fichasDelegado.filter((x) => x.id !== id) }));
+    avisar({ tipo: 'info', titulo: 'Ficha eliminada' });
+  }, [set, avisar]);
+
   // ─────────────────────── Comunicação e documentos ─────────────────────────
 
   const enviarMensagem = useCallback((p: { canais: Canal[]; segmento: Segmento; destinatarios: string[]; assunto: string; corpo: string; tipo: 'CONVOCATORIA' | 'AVISO_QUOTA' | 'ANIVERSARIO' | 'ELEITORAL' | 'LIVRE' }) => {
@@ -780,6 +900,7 @@ export const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     registarQuota, anularQuota, registarMovimento,
     agendarReuniao, enviarConvocatoria, marcarPresenca, concluirReuniao, anexarActa, aprovarActa, addDecisao, toggleDecisao, cancelarReuniao,
     criarEleicao, gerarCaderno, alternarCaderno, abrirCandidaturas, addCandidatura, aceitarCandidatura, retirarCandidatura, abrirEscrutinio, registarVotos, fecharVolta, homologar, anularEleicao,
+    criarFichaDelegado, guardarFichaDelegado, entregarFichaDelegado, removerFichaDelegado,
     enviarMensagem, arquivarDocumento,
   }), [
     e, lente, vista, params, toasts, irPara, avisar, fecharToast, repor,
@@ -788,6 +909,7 @@ export const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     registarQuota, anularQuota, registarMovimento,
     agendarReuniao, enviarConvocatoria, marcarPresenca, concluirReuniao, anexarActa, aprovarActa, addDecisao, toggleDecisao, cancelarReuniao,
     criarEleicao, gerarCaderno, alternarCaderno, abrirCandidaturas, addCandidatura, aceitarCandidatura, retirarCandidatura, abrirEscrutinio, registarVotos, fecharVolta, homologar, anularEleicao,
+    criarFichaDelegado, guardarFichaDelegado, entregarFichaDelegado, removerFichaDelegado,
     enviarMensagem, arquivarDocumento,
   ]);
 
