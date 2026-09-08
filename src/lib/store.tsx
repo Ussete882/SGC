@@ -10,7 +10,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 import { AGENDA_SECRETARIADO, AGENDA_TIPO, CARGOS_ELEITORAIS, REGRAS } from './estatutos';
 import { addDays, addYears, anos, mesDe, uid } from './format';
 import { apurar, quotaReferencia } from './selectors';
-import { criarEstadoInicial, VERSAO_SEED } from './seed';
+import { criarEstadoCelulaB, criarEstadoInicial, VERSAO_SEED } from './seed';
 import type {
   Canal,
   Candidatura,
@@ -32,6 +32,8 @@ import type {
 const CHAVE = 'sgc.prototipo.estado';
 const CHAVE_SESSAO = 'sgc.prototipo.sessao';
 
+export type Cenario = 'REAL' | 'DEMONSTRACAO';
+
 export interface Toast {
   id: string;
   tipo: 'ok' | 'erro' | 'info' | 'lei';
@@ -50,7 +52,7 @@ interface Ctx {
   toasts: Toast[];
   avisar: (t: Omit<Toast, 'id'>) => void;
   fecharToast: (id: string) => void;
-  repor: () => void;
+  repor: (cenario?: Cenario) => void;
 
   // ── sessão ──
   sessao: boolean;
@@ -116,7 +118,7 @@ function carregar(): Estado {
   } catch {
     /* cenário novo */
   }
-  return criarEstadoInicial();
+  return criarEstadoCelulaB();
 }
 
 export const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -163,10 +165,21 @@ export const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   const set = useCallback((fn: (prev: Estado) => Estado) => setE(fn), []);
 
-  const repor = useCallback(() => {
+  const repor = useCallback((cenario: Cenario = 'REAL') => {
     localStorage.removeItem(CHAVE);
-    setE(criarEstadoInicial());
-    avisar({ tipo: 'info', titulo: 'Cenário reposto', texto: 'Os dados de demonstração voltaram ao estado inicial.' });
+    setE(cenario === 'REAL' ? criarEstadoCelulaB() : criarEstadoInicial());
+    avisar(cenario === 'REAL'
+      ? {
+          tipo: 'ok',
+          titulo: 'Célula B reposta',
+          texto: 'Quinze militantes, livro em branco. Nenhum histórico atribuído a ninguém.',
+          base: 'art35',
+        }
+      : {
+          tipo: 'info',
+          titulo: 'Cenário de demonstração carregado',
+          texto: 'Célula n.º 7 «Josina Machel» — dados fictícios, para mostrar o sistema.',
+        });
   }, [avisar]);
 
   // ─────────────────────────────── Sessão ───────────────────────────────────

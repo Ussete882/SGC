@@ -359,7 +359,10 @@ export function conformidade(e: Estado): Verificacao[] {
         : activos.length === REGRAS.MAX_MEMBROS_CELULA
           ? 'ATENCAO'
           : 'CONFORME',
-    detalhe: `${activos.length} membros (mínimo 5, máximo 15)`,
+    detalhe:
+      activos.length === REGRAS.MAX_MEMBROS_CELULA
+        ? `${activos.length} membros — a Célula está no máximo previsto. Admitir mais implica constituir nova Célula.`
+        : `${activos.length} membros (mínimo 5, máximo 15)`,
     base: 'art35',
     accao: { rotulo: 'Ver membros', vista: 'membros' },
   });
@@ -776,7 +779,7 @@ export function totaisNacionais(e: Estado) {
   return {
     celulasAderentes,
     celulasTotais,
-    adopcao: (celulasAderentes / celulasTotais) * 100,
+    adopcao: (celulasAderentes / (celulasTotais || 1)) * 100,
     membros,
     reunioesMes,
     reunioesEsperadas,

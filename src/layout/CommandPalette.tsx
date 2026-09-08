@@ -67,7 +67,8 @@ export const CommandPalette: React.FC<{ aberto: boolean; onFechar: () => void }>
       { t: 'Convocar eleição', s: 'Assistente eleitoral em cinco passos', f: () => { setLente('CELULA'); irPara('eleicoes', { acao: 'convocar' }); } },
       { t: 'Gerar relatório mensal ao Círculo', s: 'Modelo do Manual da Célula', f: () => { setLente('CELULA'); irPara('relatorio'); } },
       { t: 'Ver reuniões realizadas em todo o País', s: 'Consolidação nacional', f: () => { setLente('NACIONAL'); irPara('nacional-reunioes', { tab: 'reunioes' }); } },
-      { t: 'Repor o cenário de demonstração', s: 'Devolve todos os dados ao estado inicial', f: repor },
+      { t: 'Repor a Célula B', s: 'Quinze militantes, livro em branco — o cenário real', f: () => repor('REAL') },
+      { t: 'Carregar cenário de demonstração', s: 'Célula n.º 7 «Josina Machel», com dados fictícios', f: () => repor('DEMONSTRACAO') },
       { t: 'Terminar sessão', s: 'Voltar ao ecrã de entrada e escolher outro perfil', f: sair },
     ];
     acoes.forEach((a, i) => {

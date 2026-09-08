@@ -190,8 +190,8 @@ const Rail: React.FC<{ aberto: boolean; onFechar: () => void }> = ({ aberto, onF
               <p className="text-[10.5px] text-white/40 truncate">{perfil.rotulo}</p>
             </div>
             <button
-              onClick={repor}
-              title="Repor o cenário de demonstração"
+              onClick={() => repor('REAL')}
+              title="Repor a Célula B — livro em branco"
               className="w-8 h-8 rounded-xl grid place-items-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"
             >
               <IcRepor className="w-4 h-4" />

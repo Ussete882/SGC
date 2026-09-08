@@ -706,7 +706,7 @@ function construirProvincias(): ProvinciaResumo[] {
 
 // ───────────────────────────────── Estado ───────────────────────────────────
 
-export const VERSAO_SEED = 10;
+export const VERSAO_SEED = 11;
 
 export function criarEstadoInicial(): Estado {
   return {
@@ -724,6 +724,115 @@ export function criarEstadoInicial(): Estado {
     celulasCirculo: construirCelulasCirculo(),
     provincias: construirProvincias(),
     hoje: HOJE,
+    versaoSeed: VERSAO_SEED,
+  };
+}
+
+/* ═══════════════════════ Cenário real: Célula B ════════════════════════════
+   Comité de Círculo 8 de Março. Os nomes são reais, por isso o livro entra
+   em branco: nenhuma quota, falta, suspensão ou acta é atribuída a ninguém
+   sem ter acontecido. O Secretariado preenche à medida que a vida orgânica
+   acontece.
+   ========================================================================= */
+
+const CIRCULO_8M_ID = 'cir_8m';
+const CELULA_B_ID = 'cel_b';
+
+/** Militantes da Célula B, tal como comunicados pelo Círculo. */
+export const MEMBROS_CELULA_B: { nome: string; notas?: string }[] = [
+  { nome: 'Carlos Jama' },
+  { nome: 'Dingane Mamadhusen' },
+  { nome: 'Felícia Nhama' },
+  { nome: 'Elizabeth Kida' },
+  { nome: 'Patrick Salomão' },
+  { nome: 'Clara Neves' },
+  { nome: 'Gilberto Chirindza' },
+  { nome: 'Ezequiel Munduapege' },
+  { nome: 'Marco Morgado' },
+  { nome: 'Esperança Bias', notas: 'Membro da Comissão Política.' },
+  { nome: 'Alberto Sithole' },
+  { nome: 'Sigangurne Sithole' },
+  { nome: 'Ntanzi Carrilho' },
+  { nome: 'Eulália Nhatitima', notas: 'Membro do Comité Central.' },
+  { nome: 'Fátima Uamusse' },
+];
+
+const celulaB: Celula = {
+  id: CELULA_B_ID,
+  numero: 2,
+  nome: 'Célula B',
+  circuloId: CIRCULO_8M_ID,
+  bairro: '',
+  localidade: '',
+  distrito: '',
+  provincia: '',
+  criadaEm: iso(new Date()),
+};
+
+const circulo8M: Circulo = {
+  id: CIRCULO_8M_ID,
+  nome: 'Comité de Círculo 8 de Março',
+  distrito: '',
+  provincia: '',
+  totalCelulas: 1,
+};
+
+/**
+ * Estado de arranque para a operação real. Sem histórico fabricado: os
+ * membros entram como efectivos, sem cargos atribuídos — o Secretário e os
+ * Assistentes hão-de sair de eleição, no próprio sistema.
+ */
+export function criarEstadoCelulaB(): Estado {
+  const hoje = iso(new Date());
+
+  const membrosB: Membro[] = MEMBROS_CELULA_B.map((p, i) => ({
+    id: `cb${String(i + 1).padStart(2, '0')}`,
+    cartao: '',
+    nome: p.nome,
+    telefone: '',
+    temWhatsapp: true,
+    canal: 'WHATSAPP',
+    dataAdmissao: hoje,
+    estado: 'EFECTIVO',
+    cargo: 'MEMBRO',
+    celulaId: CELULA_B_ID,
+    notas: p.notas,
+  }));
+
+  const resumoB: CelulaResumo = {
+    id: CELULA_B_ID,
+    nome: celulaB.nome,
+    numero: celulaB.numero,
+    bairro: celulaB.bairro,
+    membros: membrosB.length,
+    reunioesAno: 0,
+    reunioesMes: 0,
+    assiduidade: 0,
+    cotizacao: 0,
+    valorMes: 0,
+    ivo: 0,
+    secretario: '',
+    ultimaReuniao: '',
+    mandatoFim: '',
+    alertas: [],
+  };
+
+  return {
+    membros: membrosB,
+    celula: celulaB,
+    circulo: circulo8M,
+    reunioes: [],
+    quotas: [],
+    movimentos: [],
+    eleicoes: [],
+    mandatos: [],
+    mensagens: [],
+    fichasDelegado: [],
+    // Só os normativos do Partido: são documentos reais, não cenário.
+    documentos: construirDocumentos().filter((d) => d.bloqueado),
+    celulasCirculo: [resumoB],
+    provincias: [],
+    hoje,
     versaoSeed: VERSAO_SEED,
   };
 }

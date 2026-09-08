@@ -4,7 +4,7 @@
    ========================================================================= */
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { MEMBROS_EXTERNOS, SECRETARIOS_CIRCULO, criarEstadoInicial } from '../lib/seed';
+import { MEMBROS_CELULA_B, MEMBROS_EXTERNOS, SECRETARIOS_CIRCULO, criarEstadoInicial } from '../lib/seed';
 import { normalizar } from '../lib/format';
 import { ErroServidor, api, guardarSessao, type ResumoSala, type Sessao } from '../lib/vivo';
 import { Alerta, Avatar, Btn, Campo, Emblema, Escolha, Input, Interruptor, Lei, Pill, Textarea } from '../ui/primitives';
@@ -13,10 +13,19 @@ import { CodigoSala, MolduraEscura, ServidorEmFalta } from './comuns';
 
 /* ═══════════════════════════════ Cadernos-tipo ═════════════════════════════ */
 
-/** Listas de arranque, tiradas do cenário de demonstração do protótipo. */
+/** Listas de arranque. A primeira é real; as outras vêm do cenário de demonstração. */
 function cadernosTipo() {
   const cel = criarEstadoInicial();
   return {
+    CELULA_B: {
+      nome: 'Célula B — Comité de Círculo 8 de Março',
+      escopo: 'CELULA' as const,
+      nota: 'Os quinze militantes da Célula B, tal como comunicados pelo Círculo.',
+      membros: MEMBROS_CELULA_B.map((m) => ({
+        nome: m.nome,
+        funcao: m.notas ? m.notas.replace(/\.$/, '') : '',
+      })),
+    },
     CIRCULO: {
       nome: 'Comité do Círculo n.º 12 — Polana Caniço A',
       escopo: 'CIRCULO' as const,
@@ -159,11 +168,11 @@ const Abertura: React.FC<{ ir: (r: string) => void }> = ({ ir }) => {
 
 const Constituir: React.FC<{ ir: (r: string) => void; onSessao: (s: Sessao) => void }> = ({ ir, onSessao }) => {
   const cadernos = useMemo(cadernosTipo, []);
-  const [escopo, setEscopo] = useState<'CELULA' | 'CIRCULO' | 'CONFERENCIA'>('CIRCULO');
-  const [nome, setNome] = useState(cadernos.CIRCULO.nome);
+  const [escopo, setEscopo] = useState<'CELULA' | 'CIRCULO' | 'CONFERENCIA'>('CELULA');
+  const [nome, setNome] = useState(cadernos.CELULA_B.nome);
   const [local, setLocal] = useState('');
   const [mesa, setMesa] = useState('');
-  const [lista, setLista] = useState(cadernos.CIRCULO.membros.map((m) => `${m.nome}${m.funcao ? ` — ${m.funcao}` : ''}`).join('\n'));
+  const [lista, setLista] = useState(cadernos.CELULA_B.membros.map((m) => `${m.nome}${m.funcao ? ` — ${m.funcao}` : ''}`).join('\n'));
   const [pinObrigatorio, setPin] = useState(true);
   const [registoAberto, setRegisto] = useState(true);
   const [aGuardar, setAGuardar] = useState(false);
@@ -185,7 +194,7 @@ const Constituir: React.FC<{ ir: (r: string) => void; onSessao: (s: Sessao) => v
   const comoTexto = (c: { membros: { nome: string; funcao: string }[] }) =>
     c.membros.map((m) => `${m.nome}${m.funcao ? ` — ${m.funcao}` : ''}`).join('\n');
 
-  const aplicarCaderno = (chave: 'CIRCULO' | 'CELULA') => {
+  const aplicarCaderno = (chave: 'CIRCULO' | 'CELULA' | 'CELULA_B') => {
     const c = cadernos[chave];
     setEscopo(c.escopo);
     setNome(c.nome);
@@ -201,9 +210,10 @@ const Constituir: React.FC<{ ir: (r: string) => void; onSessao: (s: Sessao) => v
   const escolherOrgao = (novo: 'CELULA' | 'CIRCULO' | 'CONFERENCIA') => {
     setEscopo(novo);
     const intacto = lista.trim() === comoTexto(cadernos.CIRCULO).trim()
-      || lista.trim() === comoTexto(cadernos.CELULA).trim();
+      || lista.trim() === comoTexto(cadernos.CELULA).trim()
+      || lista.trim() === comoTexto(cadernos.CELULA_B).trim();
     if (!intacto) return;
-    const c = novo === 'CELULA' ? cadernos.CELULA : cadernos.CIRCULO;
+    const c = novo === 'CELULA' ? cadernos.CELULA_B : cadernos.CIRCULO;
     setNome(c.nome);
     setLista(comoTexto(c));
   };
@@ -246,6 +256,7 @@ const Constituir: React.FC<{ ir: (r: string) => void; onSessao: (s: Sessao) => v
         <div className="mb-5">
           <p className="text-[11px] font-extrabold uppercase tracking-[0.1em] text-ink-400 mb-2">Caderno de arranque</p>
           <div className="flex flex-wrap gap-2">
+            <Btn tamanho="sm" variante="escura" onClick={() => aplicarCaderno('CELULA_B')}>Célula B ({cadernos.CELULA_B.membros.length})</Btn>
             <Btn tamanho="sm" onClick={() => aplicarCaderno('CIRCULO')}>Comité do Círculo n.º 12 ({cadernos.CIRCULO.membros.length})</Btn>
             <Btn tamanho="sm" onClick={() => aplicarCaderno('CELULA')}>Célula n.º 7 ({cadernos.CELULA.membros.length})</Btn>
             <Btn tamanho="sm" variante="fantasma" onClick={() => setLista('')}>Começar em branco</Btn>
