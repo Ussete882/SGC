@@ -10,7 +10,7 @@ import {
   prazoCandidatura, proximaReuniao, quotaReferencia, reunioesGerais, saldoCelula, serieCotizacao,
 } from '../lib/selectors';
 import { compacto, dataCurta, dataLonga, mesDe, mt, nomeMes, nomeMesCurto, nomeCurto, num, primeiroNome, relativo } from '../lib/format';
-import { Alerta, Anel, Avatar, Barra, Btn, Card, Contador, Emblema, FaixaBandeira, Lei, Pill, Stat } from '../ui/primitives';
+import { Alerta, Avatar, Barra, Btn, Card, Contador, FaixaBandeira, Lei, Pill, Stat } from '../ui/primitives';
 import {
   IcAviso, IcCalendario, IcCheck, IcEscudo, IcLocal, IcMegafone, IcMembros, IcMoeda, IcRelogio,
   IcRelatorio, IcSeta, IcUrna,
@@ -86,116 +86,82 @@ export const PainelCelula: React.FC = () => {
     { rotulo: 'Convocar eleição', icone: <IcUrna className="w-5 h-5" />, vista: 'eleicoes', params: { acao: 'convocar' } },
   ];
 
+  /* A Célula não pede sempre a mesma coisa: por cotizar vem primeiro, depois
+     marcar a Reunião Geral que falta, e só então o resto. */
+  const urgente =
+    cot.emFalta.length > 0 ? 'Registar quota'
+    : !prox ? 'Marcar reunião'
+    : 'Enviar mensagem';
+  const principal = atalhos.find((a) => a.rotulo === urgente) ?? atalhos[0];
+  const secundarios = atalhos.filter((a) => a !== principal);
+
   const desconformes = conf.filter((c) => c.estado !== 'CONFORME').length;
 
   return (
     <div className="space-y-6">
       {/* ══════════════════════════ Hero ══════════════════════════ */}
-      <section className="relative rounded-3xl hero-bg text-white overflow-hidden shadow-rail">
-        <div className="absolute inset-0 grid-paper opacity-[0.07]" />
-        <div className="faixa-diagonal absolute -top-16 -right-24 w-64 h-40 opacity-[0.16] rotate-12" />
-        <FaixaBandeira altura={4} className="absolute top-0 left-0" />
-        <div className="relative p-6 sm:p-7 lg:p-8">
-          <div className="flex flex-col lg:flex-row gap-8 lg:items-center">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-4">
-                <Emblema tamanho={44} />
-                <div className="leading-none">
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.24em] text-brand-300">FRELIMO</p>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/40 mt-1.5">
-                    Sistema de Gestão da Célula
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <Pill tom="gold" className="!bg-gold-500/15 !text-gold-300 !border-gold-500/30">
-                  {e.celula.nome}
-                </Pill>
-                <Pill className="!bg-white/10 !text-white/70 !border-white/15">
-                  {e.circulo.nome}
-                </Pill>
-                <Pill className="!bg-white/10 !text-white/70 !border-white/15">
-                  {e.celula.distrito} · {e.celula.provincia}
-                </Pill>
-              </div>
-              <h2 className="text-[26px] sm:text-[32px] font-extrabold tracking-tight leading-tight">
-                {saudacao}, camarada {primeiroNome(secretaria.nome)}.
-              </h2>
-              <p className="text-white/55 mt-2 text-[14.5px] leading-relaxed max-w-2xl">
-                {dataLonga(e.hoje)}. A Célula tem{' '}
-                <strong className="text-white">{contagens.EFECTIVO} membros efectivos</strong>,{' '}
-                {cot.emFalta.length === 0 ? 'a cotização do mês está completa' : (
-                  <>
-                    <strong className="text-white">{cot.emFalta.length}</strong> por cotizar este mês
-                  </>
-                )}{' '}
-                e {av.filter((a) => a.nivel === 'CRITICO').length > 0 ? (
-                  <>
-                    <strong className="text-brand-300">
-                      {av.filter((a) => a.nivel === 'CRITICO').length}{' '}
-                      {av.filter((a) => a.nivel === 'CRITICO').length === 1 ? 'aviso crítico' : 'avisos críticos'}
-                    </strong>{' '}
-                    à espera de decisão
-                  </>
-                ) : 'nenhum aviso crítico'}.
-              </p>
+      <section className="relative rounded-[26px] hero-bg text-white overflow-hidden shadow-lift">
+        <div className="absolute inset-0 grid-paper opacity-[0.06]" />
+        <FaixaBandeira altura={4} className="absolute top-0 inset-x-0" />
 
-              <div className="flex flex-wrap gap-2 mt-5">
-                {atalhos.map((a) => (
-                  <button
-                    key={a.rotulo}
-                    onClick={() => irPara(a.vista, a.params)}
-                    className="group inline-flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-2xl bg-white/[0.07] border border-white/12 hover:bg-white hover:text-ink transition-all duration-300 ease-swift"
-                  >
-                    <span className="text-gold-400 group-hover:text-brand-600 transition-colors">{a.icone}</span>
-                    <span className="text-[13px] font-bold">{a.rotulo}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
+        <div className="relative flex flex-col lg:flex-row lg:items-end gap-9 lg:gap-14 px-6 sm:px-8 lg:px-12 pt-10 pb-8 lg:pt-14 lg:pb-12">
+          {/* Quem fala, e para quê. O emblema e o nome do sistema vivem na
+              barra do topo — repeti-los aqui só rouba espaço ao essencial. */}
+          <div className="flex-1 min-w-0">
+            <p className="rotulo text-white/35">{dataLonga(e.hoje)}</p>
 
-            {/* IVO */}
-            <div className="flex-none">
-              <div className="rounded-2xl bg-white/[0.06] border border-white/12 p-5 backdrop-blur-sm">
-                <div className="flex items-center gap-5">
-                  <Anel
-                    valor={ivo.total}
-                    tamanho={112}
-                    espessura={10}
-                    cor={ivo.total >= 70 ? '#0FB85E' : ivo.total >= 50 ? '#F5D400' : '#F0303A'}
-                    trilho="rgba(255,255,255,.12)"
-                    centro={
-                      <>
-                        <span className="text-[30px] font-extrabold tnum leading-none">
-                          <Contador valor={ivo.total} />
-                        </span>
-                        <span className="text-[9.5px] font-extrabold uppercase tracking-[0.14em] text-white/40 mt-1">de 100</span>
-                      </>
-                    }
-                  />
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-white/40">Índice de Vitalidade</p>
-                    <p className="text-[17px] font-extrabold mt-0.5">
-                      {ivo.classe === 'EXEMPLAR' ? 'Célula exemplar' : ivo.classe === 'SOLIDA' ? 'Célula sólida' : ivo.classe === 'ATENCAO' ? 'Requer atenção' : 'Situação crítica'}
-                    </p>
-                    <p className="text-[12px] text-white/45 mt-1.5 leading-snug max-w-[190px]">
-                      Composto por cinco pilares estatutários: assiduidade, cotização, cadência, base de dados e vida orgânica.
-                    </p>
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {ivo.pilares.map((p, i) => (
-                        <span
-                          key={p.chave}
-                          title={`${p.nome}: ${p.valor}/100 — ${p.detalhe}`}
-                          className="text-[10px] font-bold px-1.5 py-0.5 rounded-md border"
-                          style={{ borderColor: `${CORES_IVO[i]}55`, color: CORES_IVO[i], background: `${CORES_IVO[i]}18` }}
-                        >
-                          {p.nome} {p.valor}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <h2 className="display text-white text-[clamp(30px,4.3vw,58px)] mt-5">
+              {saudacao}, camarada
+              <br />
+              {primeiroNome(secretaria.nome)}.
+            </h2>
+
+            <p className="text-white/55 mt-6 text-[14.5px] leading-relaxed max-w-lg">
+              <strong className="text-white">{contagens.EFECTIVO} membros efectivos</strong>,{' '}
+              {cot.emFalta.length === 0 ? 'a cotização do mês está completa' : (
+                <>
+                  <strong className="text-white">{cot.emFalta.length}</strong> por cotizar este mês
+                </>
+              )}{' '}
+              e {av.filter((a) => a.nivel === 'CRITICO').length > 0 ? (
+                <>
+                  <strong className="text-brand-300">
+                    {av.filter((a) => a.nivel === 'CRITICO').length}{' '}
+                    {av.filter((a) => a.nivel === 'CRITICO').length === 1 ? 'aviso crítico' : 'avisos críticos'}
+                  </strong>{' '}
+                  à espera de decisão
+                </>
+              ) : 'nenhum aviso crítico'}.
+            </p>
+          </div>
+
+          {/* O que a Célula pede a seguir. A acção que o estado de hoje torna
+              mais urgente entra sólida; as outras ficam à mão, em surdina. */}
+          <div className="flex-none w-full lg:w-[320px]">
+            <p className="rotulo text-white/35 mb-3">A seguir</p>
+
+            <button
+              onClick={() => irPara(principal.vista, principal.params)}
+              className="group w-full flex items-center gap-3 pl-5 pr-2 py-3 rounded-full bg-white text-ink hover:bg-brand-600 hover:text-white transition-all duration-300 ease-swift"
+            >
+              <span className="text-brand-600 group-hover:text-white transition-colors">{principal.icone}</span>
+              <span className="flex-1 text-left text-[14px] font-bold">{principal.rotulo}</span>
+              <span className="w-8 h-8 rounded-full bg-areia-200 text-ink grid place-items-center flex-none transition-all duration-300 ease-swift group-hover:bg-white/20 group-hover:text-white group-hover:rotate-45">
+                <IcSeta className="w-4 h-4" />
+              </span>
+            </button>
+
+            <div className="flex flex-wrap gap-2 mt-2.5">
+              {secundarios.map((a) => (
+                <button
+                  key={a.rotulo}
+                  onClick={() => irPara(a.vista, a.params)}
+                  className="inline-flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full bg-white/[0.07] text-white/70 hover:bg-white/15 hover:text-white transition-all duration-200 ease-swift"
+                >
+                  <span className="opacity-60">{a.icone}</span>
+                  <span className="text-[12.5px] font-bold">{a.rotulo}</span>
+                </button>
+              ))}
             </div>
           </div>
         </div>

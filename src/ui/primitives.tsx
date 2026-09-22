@@ -160,17 +160,17 @@ export const Stat: React.FC<{
   return (
     <Wrap
       onClick={onClick}
-      className={`group text-left w-full rounded-[22px] bg-white shadow-card p-5 lift ${onClick ? 'hover:bg-areia-50 hover:shadow-soft cursor-pointer' : ''} ${className}`}
+      className={`group text-left w-full rounded-[22px] bg-white shadow-card p-5 lift ${
+        onClick ? 'cursor-pointer ring-1 ring-areia-200 hover:ring-ink-200 hover:bg-areia-50 hover:shadow-soft' : ''
+      } ${className}`}
     >
       <div className="flex items-start justify-between gap-3">
         <p className="rotulo text-ink-400 leading-tight">{rotulo}</p>
-        {icone
-          ? <span className={`${cor} opacity-45 flex-none`}>{icone}</span>
-          : onClick && (
-              <span className="flex-none w-7 h-7 rounded-full bg-areia-200 text-ink-400 grid place-items-center transition-colors group-hover:bg-ink group-hover:text-white">
-                <IcSeta className="w-3.5 h-3.5" />
-              </span>
-            )}
+        {/* Num cartão que se abre, a seta vale mais do que o ícone decorativo:
+            é ela que diz que há mais para ver do lado de lá. */}
+        {onClick
+          ? <Seta tamanho={30} />
+          : icone && <span className={`${cor} opacity-45 flex-none`}>{icone}</span>}
       </div>
       <p className={`mt-3 text-[34px] leading-[0.9] font-extrabold tracking-[-0.04em] tnum ${cor}`}>{valor}</p>
       {nota && <p className="mt-2 text-[12px] text-ink-400 leading-snug">{nota}</p>}
