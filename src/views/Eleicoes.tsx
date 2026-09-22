@@ -232,7 +232,7 @@ const MesaEscrutinio: React.FC<{ el: Eleicao }> = ({ el }) => {
             <Input type="number" min={0} value={presentes} onChange={(ev) => setPresentes(Number(ev.target.value))} onBlur={sincronizar} />
           </Campo>
           <Campo rotulo="Em efectividade">
-            <Input type="number" value={volta.efectividade} disabled className="!bg-ink-50" />
+            <Input type="number" value={volta.efectividade} disabled className="!bg-areia-100" />
           </Campo>
           <Campo rotulo="Votos em branco">
             <Input type="number" min={0} value={brancos} onChange={(ev) => setBrancos(Number(ev.target.value))} onBlur={sincronizar} />
@@ -248,12 +248,12 @@ const MesaEscrutinio: React.FC<{ el: Eleicao }> = ({ el }) => {
             const v = votos[c.id] ?? 0;
             const alcancou = v >= maioria;
             return (
-              <div key={c.id} className="flex items-center gap-3 p-3 rounded-xl border border-ink-100">
+              <div key={c.id} className="flex items-center gap-3 p-3 rounded-xl border border-areia-200">
                 <Avatar nome={nome(c.membroId)} tamanho={34} />
                 <div className="min-w-0 flex-1">
                   <p className="text-[13.5px] font-bold text-ink truncate">{nome(c.membroId)}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <div className="flex-1 h-1.5 bg-ink-100 rounded-full overflow-hidden max-w-[220px]">
+                    <div className="flex-1 h-1.5 bg-areia-200 rounded-full overflow-hidden max-w-[220px]">
                       <div
                         className="h-1.5 rounded-full transition-all duration-500"
                         style={{ width: `${Math.min(100, (v / Math.max(1, volta.efectividade)) * 100)}%`, background: alcancou ? '#00A34F' : '#E61923' }}
@@ -267,7 +267,7 @@ const MesaEscrutinio: React.FC<{ el: Eleicao }> = ({ el }) => {
                 <div className="flex items-center gap-1.5 flex-none">
                   <button
                     onClick={() => { const n = { ...votos, [c.id]: Math.max(0, v - 1) }; setVotos(n); registarVotos(el.id, volta.numero, n, brancos, nulos, presentes); }}
-                    className="w-8 h-8 rounded-lg border border-ink-200 text-ink-500 font-bold hover:border-ink-300"
+                    className="w-8 h-8 rounded-lg border border-areia-300 text-ink-500 font-bold hover:border-areia-400"
                   >
                     −
                   </button>
@@ -285,11 +285,11 @@ const MesaEscrutinio: React.FC<{ el: Eleicao }> = ({ el }) => {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="rounded-xl bg-ink-50 border border-ink-100 p-3">
+          <div className="rounded-xl bg-areia-100 border border-areia-200 p-3">
             <p className="text-[9.5px] font-extrabold uppercase tracking-[0.1em] text-ink-400">Votos apurados</p>
             <p className={`text-[19px] font-extrabold tnum mt-0.5 ${excede ? 'text-brand-600' : 'text-ink'}`}>{totalVotos}</p>
           </div>
-          <div className="rounded-xl bg-ink-50 border border-ink-100 p-3">
+          <div className="rounded-xl bg-areia-100 border border-areia-200 p-3">
             <p className="text-[9.5px] font-extrabold uppercase tracking-[0.1em] text-ink-400">Presentes</p>
             <p className="text-[19px] font-extrabold tnum text-ink mt-0.5">{presentes}</p>
           </div>
@@ -297,7 +297,7 @@ const MesaEscrutinio: React.FC<{ el: Eleicao }> = ({ el }) => {
             <p className="text-[9.5px] font-extrabold uppercase tracking-[0.1em] text-brand-700">Maioria absoluta</p>
             <p className="text-[19px] font-extrabold tnum text-brand-700 mt-0.5">{volta.numero === 1 ? maioria : '—'}</p>
           </div>
-          <div className="rounded-xl bg-ink-50 border border-ink-100 p-3">
+          <div className="rounded-xl bg-areia-100 border border-areia-200 p-3">
             <p className="text-[9.5px] font-extrabold uppercase tracking-[0.1em] text-ink-400">Quórum</p>
             <p className={`text-[19px] font-extrabold tnum mt-0.5 ${presentes >= maioria ? 'text-verde-700' : 'text-brand-600'}`}>
               {presentes >= maioria ? 'sim' : 'não'}
@@ -385,7 +385,7 @@ const DetalheEleicao: React.FC<{ el: Eleicao; onVoltar: () => void }> = ({ el, o
 
       <Card>
         <Passos passos={FASES.map((f) => f.rotulo)} actual={idx} />
-        {el.observacoes && <p className="text-[12.5px] text-ink-500 mt-4 pt-4 border-t border-ink-100 leading-relaxed">{el.observacoes}</p>}
+        {el.observacoes && <p className="text-[12.5px] text-ink-500 mt-4 pt-4 border-t border-areia-200 leading-relaxed">{el.observacoes}</p>}
         <div className="flex flex-wrap gap-1.5 mt-3">
           {meta.base.map((b) => (<Lei key={b} id={b} />))}
         </div>
@@ -401,7 +401,7 @@ const DetalheEleicao: React.FC<{ el: Eleicao; onVoltar: () => void }> = ({ el, o
               membros com direitos suspensos ficam automaticamente de fora.
             </p>
             <div className="grid grid-cols-3 gap-3">
-              <div className="rounded-xl border border-ink-100 p-3 text-center">
+              <div className="rounded-xl border border-areia-200 p-3 text-center">
                 <p className="text-[22px] font-extrabold tnum text-ink">{e.membros.filter((m) => m.estado !== 'CESSADO').length}</p>
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-ink-400 mt-1">Na base de dados</p>
               </div>
@@ -447,7 +447,7 @@ const DetalheEleicao: React.FC<{ el: Eleicao; onVoltar: () => void }> = ({ el, o
                       <td>
                         <button
                           onClick={() => alternarCaderno(el.id, l.membroId, 'activa')}
-                          className={`w-7 h-7 rounded-lg grid place-items-center border transition-all ${l.activa ? 'bg-verde-600 border-verde-600 text-white' : 'bg-white border-ink-200 text-ink-200'}`}
+                          className={`w-7 h-7 rounded-lg grid place-items-center border transition-all ${l.activa ? 'bg-verde-600 border-verde-600 text-white' : 'bg-white border-areia-300 text-ink-200'}`}
                         >
                           {l.activa ? <IcCheck className="w-4 h-4" /> : <IcFechar className="w-3.5 h-3.5" />}
                         </button>
@@ -455,7 +455,7 @@ const DetalheEleicao: React.FC<{ el: Eleicao; onVoltar: () => void }> = ({ el, o
                       <td>
                         <button
                           onClick={() => alternarCaderno(el.id, l.membroId, 'passiva')}
-                          className={`w-7 h-7 rounded-lg grid place-items-center border transition-all ${l.passiva ? 'bg-ink border-ink text-white' : 'bg-white border-ink-200 text-ink-200'}`}
+                          className={`w-7 h-7 rounded-lg grid place-items-center border transition-all ${l.passiva ? 'bg-ink border-ink text-white' : 'bg-white border-areia-300 text-ink-200'}`}
                         >
                           {l.passiva ? <IcCheck className="w-4 h-4" /> : <IcFechar className="w-3.5 h-3.5" />}
                         </button>
@@ -506,7 +506,7 @@ const DetalheEleicao: React.FC<{ el: Eleicao; onVoltar: () => void }> = ({ el, o
                   <Barra valor={(excluidos.length / Math.max(1, el.caderno.length)) * 100} tom="bg-brand-600" />
                 </div>
               </div>
-              <div className="mt-4 pt-4 border-t border-ink-100">
+              <div className="mt-4 pt-4 border-t border-areia-200">
                 <Linha rotulo="Maioria absoluta à 1.ª volta">{Math.floor(votantes.length / 2) + 1} votos</Linha>
                 <Linha rotulo="Quórum para deliberar">{Math.floor(votantes.length / 2) + 1} presentes</Linha>
               </div>
@@ -531,7 +531,7 @@ const DetalheEleicao: React.FC<{ el: Eleicao; onVoltar: () => void }> = ({ el, o
       {el.fase === 'CANDIDATURAS' && (
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
           <Card className="xl:col-span-2" titulo={`Candidaturas (${el.candidaturas.filter((c) => !c.retirada).length})`} sub="Aceitação expressa exigida antes do escrutínio" pad={false}>
-            <ul className="divide-y divide-ink-100">
+            <ul className="divide-y divide-areia-200">
               {el.candidaturas.filter((c) => !c.retirada).map((c) => {
                 const m = e.membros.find((x) => x.id === c.membroId);
                 const assid = m ? assiduidadeDe(e, m.id) : null;
@@ -567,7 +567,7 @@ const DetalheEleicao: React.FC<{ el: Eleicao; onVoltar: () => void }> = ({ el, o
               )}
             </ul>
 
-            <div className="px-5 py-4 border-t border-ink-100 bg-ink-50/50 space-y-3">
+            <div className="px-5 py-4 border-t border-areia-200 bg-areia-100/50 space-y-3">
               <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-ink-400">
                 Propor candidatura <Lei id="art14d" discreto className="ml-1" />
               </p>
@@ -669,7 +669,7 @@ const DetalheEleicao: React.FC<{ el: Eleicao; onVoltar: () => void }> = ({ el, o
                         <span className="text-[11px] text-ink-300 w-12 text-right">{pct(l.pctExpressos)}</span>
                       </div>
                     ))}
-                    <div className="pt-2 mt-2 border-t border-ink-100 flex justify-between text-[11.5px] text-ink-400">
+                    <div className="pt-2 mt-2 border-t border-areia-200 flex justify-between text-[11.5px] text-ink-400">
                       <span>brancos {v.brancos} · nulos {v.nulos}</span>
                       <span>presentes {v.presentes}/{v.efectividade}</span>
                     </div>
@@ -708,15 +708,15 @@ const DetalheEleicao: React.FC<{ el: Eleicao; onVoltar: () => void }> = ({ el, o
                 </ResponsiveContainer>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="rounded-xl bg-ink-50 border border-ink-100 p-3">
+                <div className="rounded-xl bg-areia-100 border border-areia-200 p-3">
                   <p className="text-[9.5px] font-extrabold uppercase tracking-[0.1em] text-ink-400">Votos válidos</p>
                   <p className="text-[18px] font-extrabold tnum text-ink mt-0.5">{apuramento.validos}</p>
                 </div>
-                <div className="rounded-xl bg-ink-50 border border-ink-100 p-3">
+                <div className="rounded-xl bg-areia-100 border border-areia-200 p-3">
                   <p className="text-[9.5px] font-extrabold uppercase tracking-[0.1em] text-ink-400">Brancos / nulos</p>
                   <p className="text-[18px] font-extrabold tnum text-ink mt-0.5">{apuramento.brancos} / {apuramento.nulos}</p>
                 </div>
-                <div className="rounded-xl bg-ink-50 border border-ink-100 p-3">
+                <div className="rounded-xl bg-areia-100 border border-areia-200 p-3">
                   <p className="text-[9.5px] font-extrabold uppercase tracking-[0.1em] text-ink-400">Presentes</p>
                   <p className="text-[18px] font-extrabold tnum text-ink mt-0.5">{apuramento.presentes}/{apuramento.efectividade}</p>
                 </div>
@@ -729,10 +729,10 @@ const DetalheEleicao: React.FC<{ el: Eleicao; onVoltar: () => void }> = ({ el, o
 
             <div className="space-y-4">
               <Card titulo="Eleitos e suplentes" sub="A ordem de eleição fixa a chamada de suplentes" accao={<Lei id="art32" />} pad={false}>
-                <ul className="divide-y divide-ink-100">
+                <ul className="divide-y divide-areia-200">
                   {el.eleitos.map((x) => (
                     <li key={x.membroId} className="px-5 py-3 flex items-center gap-3">
-                      <span className={`w-7 h-7 rounded-lg grid place-items-center text-[11px] font-extrabold flex-none ${x.suplente ? 'bg-ink-100 text-ink-400' : 'bg-verde-600 text-white'}`}>
+                      <span className={`w-7 h-7 rounded-lg grid place-items-center text-[11px] font-extrabold flex-none ${x.suplente ? 'bg-areia-200 text-ink-400' : 'bg-verde-600 text-white'}`}>
                         {x.ordem}
                       </span>
                       <div className="min-w-0 flex-1">
@@ -794,7 +794,7 @@ const DetalheEleicao: React.FC<{ el: Eleicao; onVoltar: () => void }> = ({ el, o
 
           {el.acta && (
             <Card titulo="Acta de eleição" sub="Arquivada automaticamente nos documentos da Célula" accao={<Lei id="art21b" />}>
-              <div className="rounded-xl bg-ink-50 border border-ink-100 p-4 font-mono text-[12.5px] text-ink-600 leading-relaxed whitespace-pre-line">
+              <div className="rounded-xl bg-areia-100 border border-areia-200 p-4 font-mono text-[12.5px] text-ink-600 leading-relaxed whitespace-pre-line">
                 {el.acta}
                 {'\n'}Órgão que elegeu: {meta.orgaoEleitor}.
                 {'\n'}Forma de votação: {METODOS_VOTACAO[el.metodo].titulo}.
@@ -837,7 +837,7 @@ const DetalheEleicao: React.FC<{ el: Eleicao; onVoltar: () => void }> = ({ el, o
               <Input type="number" min={0} max={efectividade} value={presentes} onChange={(ev) => setPresentes(Number(ev.target.value))} />
             </Campo>
             <Campo rotulo="Membros em efectividade">
-              <Input type="number" value={efectividade} disabled className="!bg-ink-50" />
+              <Input type="number" value={efectividade} disabled className="!bg-areia-100" />
             </Campo>
           </div>
           <Alerta
@@ -924,11 +924,11 @@ const Mandatos: React.FC = () => {
               </div>
 
               {md.notaCessacao && (
-                <p className="text-[11.5px] text-ink-500 mt-3 pt-3 border-t border-ink-100 leading-relaxed">{md.notaCessacao}</p>
+                <p className="text-[11.5px] text-ink-500 mt-3 pt-3 border-t border-areia-200 leading-relaxed">{md.notaCessacao}</p>
               )}
 
               {assid && assid.risco !== 'OK' && (
-                <div className="mt-3 pt-3 border-t border-ink-100">
+                <div className="mt-3 pt-3 border-t border-areia-200">
                   <div className="flex items-center gap-2">
                     <IcAviso className={`w-4 h-4 flex-none ${assid.risco === 'CESSACAO' ? 'text-brand-600' : 'text-gold-500'}`} />
                     <p className="text-[11.5px] text-ink-500 leading-snug">
@@ -951,7 +951,7 @@ const Mandatos: React.FC = () => {
       </div>
 
       <Card titulo="Regras de mandato aplicadas pelo sistema" sub="Cada regra tem a norma de origem" pad={false}>
-        <ul className="divide-y divide-ink-100">
+        <ul className="divide-y divide-areia-200">
           {[
             { t: 'Mandato de cinco anos', d: 'Os órgãos do Partido são eleitos por um mandato de cinco anos, podendo ser antecipado ou adiado por decisão do Comité Central.', b: 'art26' },
             { t: 'Cessação por faltas', d: 'Vinte e cinco por cento de faltas injustificadas consecutivas, ou cinquenta por cento interpoladas, fazem cessar o mandato.', b: 'art27n6' },
@@ -960,7 +960,7 @@ const Mandatos: React.FC = () => {
             { t: 'Renúncia', d: 'A renúncia ao mandato é apresentada por escrito ao Secretário da Célula e ao órgão a que pertence.', b: 'art9' },
           ].map((r) => (
             <li key={r.t} className="px-5 py-3.5 flex items-start gap-3.5">
-              <span className="w-8 h-8 rounded-xl bg-ink-50 text-ink-400 grid place-items-center flex-none"><IcLei className="w-4 h-4" /></span>
+              <span className="w-8 h-8 rounded-xl bg-areia-100 text-ink-400 grid place-items-center flex-none"><IcLei className="w-4 h-4" /></span>
               <div className="min-w-0 flex-1">
                 <p className="text-[13px] font-bold text-ink">{r.t}</p>
                 <p className="text-[12px] text-ink-400 mt-0.5 leading-relaxed">{r.d}</p>
@@ -1017,13 +1017,13 @@ export const Eleicoes: React.FC = () => {
           <div className="mt-4">
             <div className="flex gap-1">
               {FASES.map((f, i) => (
-                <div key={f.id} className={`h-1.5 flex-1 rounded-full ${i <= idx ? (el.fase === 'PROCLAMADA' || el.fase === 'HOMOLOGADA' ? 'bg-verde-500' : 'bg-brand-500') : 'bg-ink-100'}`} />
+                <div key={f.id} className={`h-1.5 flex-1 rounded-full ${i <= idx ? (el.fase === 'PROCLAMADA' || el.fase === 'HOMOLOGADA' ? 'bg-verde-500' : 'bg-brand-500') : 'bg-areia-200'}`} />
               ))}
             </div>
             <p className="text-[11px] text-ink-400 mt-2">{FASES[Math.min(idx, 4)].rotulo} · {el.vagas} {el.vagas === 1 ? 'vaga' : 'vagas'}</p>
           </div>
 
-          <div className="mt-3 pt-3 border-t border-ink-100 flex items-center gap-2 flex-wrap">
+          <div className="mt-3 pt-3 border-t border-areia-200 flex items-center gap-2 flex-wrap">
             <span className="text-[11.5px] text-ink-400">escrutínio {dataMedia(el.dataEscrutinio)}</span>
             {el.candidaturas.filter((c) => !c.retirada).length > 0 && (
               <Pill tom="neutro">{el.candidaturas.filter((c) => !c.retirada).length} candidatos</Pill>
@@ -1066,9 +1066,10 @@ export const Eleicoes: React.FC = () => {
 
       <a
         href="#/votar"
-        className="block rounded-2xl bg-ink text-white p-5 shadow-card hover:shadow-lift transition-all duration-300 ease-swift group relative overflow-hidden"
+        className="block rounded-[26px] bg-ink text-white p-6 shadow-card hover:shadow-lift transition-all duration-300 ease-swift group relative overflow-hidden"
       >
-        <div className="faixa-diagonal absolute -top-8 -right-10 w-52 h-28 opacity-[0.16] rotate-12 pointer-events-none" />
+        {/* A faixa fica no canto e longe do botão: nada de texto por cima. */}
+        <div className="faixa-diagonal absolute -top-10 -right-12 w-44 h-24 opacity-[0.14] rotate-12 pointer-events-none" />
         <div className="relative flex flex-col lg:flex-row items-start lg:items-center gap-4">
           <div className="w-11 h-11 rounded-xl bg-brand-600 text-white grid place-items-center flex-none">
             <IcUrna className="w-5 h-5" />
@@ -1086,8 +1087,11 @@ export const Eleicoes: React.FC = () => {
               a todos os dispositivos da sala.
             </p>
           </div>
-          <span className="inline-flex items-center gap-2 text-[13px] font-bold text-white/70 group-hover:text-white flex-none">
-            Abrir assembleia <IcSeta className="w-4 h-4" />
+          <span className="inline-flex items-center gap-2.5 pl-5 pr-2 py-2 rounded-full bg-white text-ink text-[13px] font-bold flex-none transition-colors group-hover:bg-brand-600 group-hover:text-white">
+            Abrir assembleia
+            <span className="w-7 h-7 rounded-full bg-areia-200 text-ink grid place-items-center transition-all duration-300 ease-swift group-hover:bg-white/20 group-hover:text-white group-hover:rotate-45">
+              <IcSeta className="w-3.5 h-3.5" />
+            </span>
           </span>
         </div>
       </a>

@@ -72,7 +72,7 @@ export const RelatorioMensal: React.FC = () => {
 
   const Bloco: React.FC<{ n: string; titulo: string; children: React.ReactNode }> = ({ n, titulo, children }) => (
     <section className="mt-6">
-      <h3 className="text-[13px] font-extrabold text-ink uppercase tracking-[0.1em] flex items-baseline gap-2 pb-1.5 border-b border-ink-200">
+      <h3 className="text-[13px] font-extrabold text-ink uppercase tracking-[0.1em] flex items-baseline gap-2 pb-1.5 border-b border-areia-300">
         <span className="text-brand-600">{n}</span>
         {titulo}
       </h3>
@@ -106,7 +106,7 @@ export const RelatorioMensal: React.FC = () => {
       )}
 
       {/* ─────────────── folha do relatório ─────────────── */}
-      <div className="print-sheet bg-white rounded-2xl border border-ink-100 shadow-card overflow-hidden max-w-[900px] mx-auto">
+      <div className="print-sheet bg-white rounded-2xl border border-areia-200 shadow-card overflow-hidden max-w-[900px] mx-auto">
         <FaixaBandeira altura={6} />
         <div className="p-7 sm:p-10">
         <header className="flex items-start justify-between gap-6 pb-5 border-b-2 border-ink">
@@ -243,18 +243,18 @@ export const RelatorioMensal: React.FC = () => {
         <Bloco n="5." titulo="Situação de fundos">
           <table className="w-full text-[13px] mt-1">
             <tbody>
-              <tr className="border-b border-ink-100">
+              <tr className="border-b border-areia-200">
                 <td className="py-1.5">Quotas retidas na Célula (60%)</td>
                 <td className="py-1.5 text-right tnum font-bold">{mt(cot.retidoCelula)}</td>
               </tr>
               {receitas.map((m) => (
-                <tr key={m.id} className="border-b border-ink-100">
+                <tr key={m.id} className="border-b border-areia-200">
                   <td className="py-1.5">{m.categoria} — {m.descricao}</td>
                   <td className="py-1.5 text-right tnum font-bold">{mt(m.valor)}</td>
                 </tr>
               ))}
               {despesas.map((m) => (
-                <tr key={m.id} className="border-b border-ink-100">
+                <tr key={m.id} className="border-b border-areia-200">
                   <td className="py-1.5 text-brand-700">
                     {m.categoria} — {m.descricao}
                     {m.comprovativo && <span className="text-ink-300"> (comprovativo: {m.comprovativo})</span>}
@@ -312,7 +312,7 @@ export const RelatorioMensal: React.FC = () => {
           </ul>
         </Bloco>
 
-        <footer className="mt-9 pt-5 border-t border-ink-200 flex items-end justify-between gap-6">
+        <footer className="mt-9 pt-5 border-t border-areia-300 flex items-end justify-between gap-6">
           <div className="text-[12.5px] text-ink-500">
             <p>{e.celula.bairro}, {dataLonga(e.hoje)}</p>
             <p className="mt-8 pt-1 border-t border-ink-400 inline-block min-w-[240px] font-bold text-ink">

@@ -2,6 +2,11 @@
    SGC — Sistema de Gestão da Célula · camada de estilo base
    O Tailwind (play CDN) trata do utilitário; aqui ficam os fundamentos,
    as animações e os detalhes que o utilitário não cobre.
+
+   A linguagem visual assenta em três decisões:
+     1. o papel, não o ecrã — neutros quentes tirados da capa do Manual;
+     2. a hierarquia vem do tom e do tamanho, não do contorno nem da sombra;
+     3. o vermelho do Partido é acento, nunca fundo de leitura.
    ========================================================================= */
 
 *,
@@ -19,7 +24,13 @@
   --amarelo: #fff000;
   --preto: #211e1e;
   --surface: #ffffff;
-  --canvas: #f6f4f3;
+  --canvas: #f4f2f1;
+  --areia-100: #f4f2f1;
+  --areia-200: #eae7e5;
+  --areia-300: #dfdbd8;
+  /* Vermelhos da capa do Manual — mais fundos do que o do emblema */
+  --capa: #c2141c;
+  --capa-escura: #8a0d13;
   color-scheme: light;
 }
 
@@ -38,26 +49,43 @@ body {
 /* Números sempre alinhados em colunas de tabelas e KPIs */
 .tnum { font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
 
+/* Títulos de display — grandes, apertados, sem ar a mais entre letras.
+   É o contraste entre isto e os rótulos de 10px que cria a hierarquia. */
+.display {
+  font-weight: 800;
+  letter-spacing: -0.038em;
+  line-height: 0.95;
+}
+.rotulo {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.17em;
+}
+
 /* --------------------------------- foco --------------------------------- */
 :where(button, a, input, select, textarea, [tabindex]):focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 /* ------------------------------ scrollbars ------------------------------ */
-* { scrollbar-width: thin; scrollbar-color: #c3c9d4 transparent; }
+* { scrollbar-width: thin; scrollbar-color: #cfc9c5 transparent; }
 *::-webkit-scrollbar { width: 10px; height: 10px; }
 *::-webkit-scrollbar-track { background: transparent; }
 *::-webkit-scrollbar-thumb {
-  background: #cfd5e0;
+  background: #d5cfcb;
   border: 3px solid transparent;
   background-clip: content-box;
   border-radius: 999px;
 }
-*::-webkit-scrollbar-thumb:hover { background: #aab3c2; background-clip: content-box; }
+*::-webkit-scrollbar-thumb:hover { background: #b5ada8; background-clip: content-box; }
 
-.rail-scroll::-webkit-scrollbar-thumb { background: #313b4d; background-clip: content-box; }
+.rail-scroll::-webkit-scrollbar-thumb { background: #4a4040; background-clip: content-box; }
+/* Tiras de pílulas: deslizam, mas sem barra à vista */
+.sem-barra { scrollbar-width: none; }
+.sem-barra::-webkit-scrollbar { display: none; }
 
 /* ------------------------------- animações ------------------------------ */
 @keyframes sgc-rise {
@@ -77,9 +105,9 @@ body {
   to   { transform: none; opacity: 1; }
 }
 @keyframes sgc-pulse-ring {
-  0%   { box-shadow: 0 0 0 0 rgba(200, 16, 46, .35); }
-  70%  { box-shadow: 0 0 0 10px rgba(200, 16, 46, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(200, 16, 46, 0); }
+  0%   { box-shadow: 0 0 0 0 rgba(230, 25, 35, .35); }
+  70%  { box-shadow: 0 0 0 10px rgba(230, 25, 35, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(230, 25, 35, 0); }
 }
 @keyframes sgc-shimmer {
   from { background-position: -200% 0; }
@@ -89,7 +117,6 @@ body {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
-
 .a-rise  { animation: sgc-rise .5s cubic-bezier(.22,1,.36,1) both; }
 .a-fade  { animation: sgc-fade .4s ease both; }
 .a-scale { animation: sgc-scale .28s cubic-bezier(.22,1,.36,1) both; }
@@ -107,7 +134,7 @@ body {
 .stagger > *:nth-child(8) { animation-delay: .30s; }
 
 .shimmer {
-  background: linear-gradient(90deg, #eef1f6 25%, #f8fafc 37%, #eef1f6 63%);
+  background: linear-gradient(90deg, #eae7e5 25%, #f8f6f5 37%, #eae7e5 63%);
   background-size: 200% 100%;
   animation: sgc-shimmer 1.4s linear infinite;
 }
@@ -123,16 +150,22 @@ body {
     radial-gradient(700px 380px at 110% 105%, rgba(0,163,79,.24), transparent 62%),
     linear-gradient(180deg, #241f1f 0%, #100d0d 100%);
 }
+/* A tela de trabalho: papel quente, com um sopro de cor nos cantos.
+   Tão leve que só se nota quando desaparece. */
 .canvas-bg {
+  background-color: var(--canvas);
   background-image:
-    radial-gradient(1100px 520px at 88% -8%, rgba(230,25,35,.06), transparent 60%),
-    radial-gradient(900px 460px at -6% 8%, rgba(0,163,79,.055), transparent 60%);
+    radial-gradient(1200px 600px at 90% -10%, rgba(230,25,35,.05), transparent 62%),
+    radial-gradient(1000px 520px at -8% 4%, rgba(0,163,79,.04), transparent 60%);
 }
+/* O cartão escuro que abre os painéis e enche os ecrãs de votação.
+   Dentro do sistema o fundo forte é tinta, não vermelho: o vermelho fica
+   guardado para aquilo que exige acção. */
 .hero-bg {
   background:
-    radial-gradient(620px 320px at 92% -30%, rgba(255,240,0,.20), transparent 60%),
-    radial-gradient(540px 330px at 6% 130%, rgba(0,163,79,.32), transparent 62%),
-    linear-gradient(115deg, #2a2222 0%, #171313 52%, #3d0a0e 100%);
+    radial-gradient(760px 420px at 90% -25%, rgba(230,25,35,.34), transparent 62%),
+    radial-gradient(620px 380px at -5% 112%, rgba(0,163,79,.20), transparent 60%),
+    linear-gradient(140deg, #2c2525 0%, #191414 54%, #100d0d 100%);
 }
 .grid-paper {
   background-image:
@@ -141,7 +174,40 @@ body {
   background-size: 22px 22px;
 }
 
-/* ─────────────── Faixa da bandeira — assinatura do Partido ──────────────
+/* ===================== O campo vermelho do Manual =======================
+   O fundo do ecrã de entrada: o mesmo vermelho da capa do Manual, com a
+   luz a cair de cima à esquerda.                                        */
+.campo-manual {
+  background:
+    radial-gradient(1000px 700px at 18% -10%, rgba(255,255,255,.16), transparent 58%),
+    radial-gradient(800px 600px at 100% 110%, rgba(78,5,8,.85), transparent 60%),
+    linear-gradient(145deg, #d3161f 0%, var(--capa) 38%, #9a1017 72%, #6d0a0f 100%);
+}
+/* Vinheta por cima de tudo, para o texto branco assentar */
+.vinheta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 30% 30%, transparent 40%, rgba(60,4,8,.45) 100%);
+}
+
+/* ============================== Vidro ===================================
+   Cartão translúcido para assentar sobre o campo vermelho.               */
+.vidro {
+  background: rgba(255,255,255,.10);
+  backdrop-filter: blur(22px) saturate(1.4);
+  -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  border: 1px solid rgba(255,255,255,.18);
+}
+.vidro-claro {
+  background: rgba(255,255,255,.80);
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  border: 1px solid rgba(255,255,255,.7);
+}
+
+/* --------------- Faixa da bandeira — assinatura do Partido --------------
    Verde, preto, amarelo e vermelho, na ordem da bandeira nacional e das
    diagonais do emblema da FRELIMO.                                        */
 .faixa-bandeira {
@@ -168,7 +234,7 @@ body {
 /* Selo do emblema — moldura branca sobre campo vermelho, como no original */
 .selo-emblema {
   background: #ffffff;
-  box-shadow: 0 0 0 1px rgba(33, 30, 30, .12), 0 2px 8px -2px rgba(26, 23, 23, .28);
+  box-shadow: 0 0 0 1px rgba(33, 30, 30, .10), 0 2px 8px -3px rgba(26, 23, 23, .22);
 }
 
 /* --------------------------- pequenos detalhes -------------------------- */
@@ -183,10 +249,10 @@ body {
 }
 .link-underline:hover { background-size: 100% 1.5px; }
 
-.lift { transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s cubic-bezier(.22,1,.36,1); }
+.lift { transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s cubic-bezier(.22,1,.36,1), background-color .25s ease; }
 .lift:hover { transform: translateY(-2px); }
 
-/* Cartão de membro — brilho diagonal */
+/* Cartão — brilho diagonal ao passar o rato */
 .card-sheen { position: relative; overflow: hidden; }
 .card-sheen::after {
   content: '';
@@ -202,36 +268,38 @@ body {
 .marquee-track { display: flex; width: max-content; animation: sgc-marquee 42s linear infinite; }
 .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
 
-/* Tabelas */
+/* ------------------------------- Tabelas -------------------------------- */
+/* Sem grelha: o cabeçalho é um rótulo, as linhas separam-se por um fio
+   quase invisível, e o realce ao passar é um tom, não uma cor.            */
 table.sgc { border-collapse: separate; border-spacing: 0; width: 100%; }
 table.sgc thead th {
   position: sticky; top: 0; z-index: 1;
-  background: #fbfcfe;
-  font-size: 11px; letter-spacing: .09em; text-transform: uppercase;
-  color: #626a7a; font-weight: 700; text-align: left;
-  padding: 10px 14px; border-bottom: 1px solid var(--line);
+  background: var(--areia-100);
+  font-size: 10px; letter-spacing: .17em; text-transform: uppercase;
+  color: #8b8380; font-weight: 800; text-align: left;
+  padding: 11px 16px; border-bottom: 1px solid var(--areia-300);
 }
-table.sgc tbody td { padding: 12px 14px; border-bottom: 1px solid #eef1f6; font-size: 14px; vertical-align: middle; }
+table.sgc tbody td { padding: 13px 16px; border-bottom: 1px solid #f0edeb; font-size: 14px; vertical-align: middle; }
 table.sgc tbody tr { transition: background .15s ease; }
-table.sgc tbody tr:hover { background: #fafbfd; }
+table.sgc tbody tr:hover { background: #faf9f8; }
 table.sgc tbody tr:last-child td { border-bottom: none; }
 
 /* Range slider */
 input[type='range'].sgc {
   -webkit-appearance: none; appearance: none; height: 6px; border-radius: 999px;
-  background: #e7eaf0; outline: none;
+  background: var(--areia-300); outline: none;
 }
 input[type='range'].sgc::-webkit-slider-thumb {
   -webkit-appearance: none; appearance: none;
   width: 20px; height: 20px; border-radius: 999px; background: #fff;
   border: 5px solid var(--brand); cursor: pointer;
-  box-shadow: 0 2px 8px rgba(11,14,20,.18);
+  box-shadow: 0 2px 8px rgba(26,23,23,.18);
 }
 
 /* Checkbox custom */
 input[type='checkbox'].sgc {
   appearance: none; -webkit-appearance: none;
-  width: 18px; height: 18px; border: 1.5px solid #c3c9d4; border-radius: 5px;
+  width: 18px; height: 18px; border: 1.5px solid #cfc9c5; border-radius: 6px;
   background: #fff; cursor: pointer; position: relative; flex: none;
   transition: border-color .15s ease, background .15s ease;
 }
@@ -245,7 +313,7 @@ input[type='checkbox'].sgc:checked::after {
 /* Impressão — relatório mensal e acta */
 @media print {
   .no-print { display: none !important; }
-  /* Sem a barra lateral, o conteúdo ocupa a folha inteira. */
+  /* A navegação vive no topo e não se imprime; nada a compensar à esquerda. */
   .print-largura { padding-left: 0 !important; }
   body { background: #fff; }
   .print-sheet { box-shadow: none !important; border: none !important; margin: 0 !important; }

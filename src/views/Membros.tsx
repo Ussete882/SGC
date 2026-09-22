@@ -268,7 +268,7 @@ const FichaMembro: React.FC<{ m: Membro; onFechar: () => void }> = ({ m, onFecha
               {m.cessadoEm && <Linha rotulo="Cessou em">{dataMedia(m.cessadoEm)}</Linha>}
               {m.motivoCessacao && <Linha rotulo="Motivo da cessação">{m.motivoCessacao}</Linha>}
               {m.notas && (
-                <div className="mt-4 p-3 rounded-xl bg-ink-50 border border-ink-100">
+                <div className="mt-4 p-3 rounded-xl bg-areia-100 border border-areia-200">
                   <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-ink-400 mb-1">Notas do Secretariado</p>
                   <p className="text-[13px] text-ink-600 leading-relaxed">{m.notas}</p>
                 </div>
@@ -280,15 +280,15 @@ const FichaMembro: React.FC<{ m: Membro; onFechar: () => void }> = ({ m, onFecha
         {aba === 'cotas' && (
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-3">
-              <div className="rounded-xl border border-ink-100 p-3">
+              <div className="rounded-xl border border-areia-200 p-3">
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-ink-400">Quota de referência</p>
                 <p className="text-[18px] font-extrabold tnum text-ink mt-1">{mt(refQuota)}</p>
               </div>
-              <div className="rounded-xl border border-ink-100 p-3">
+              <div className="rounded-xl border border-areia-200 p-3">
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-ink-400">Meses em atraso</p>
                 <p className={`text-[18px] font-extrabold tnum mt-1 ${atraso >= 12 ? 'text-brand-600' : atraso > 0 ? 'text-gold-600' : 'text-verde-700'}`}>{atraso}</p>
               </div>
-              <div className="rounded-xl border border-ink-100 p-3">
+              <div className="rounded-xl border border-areia-200 p-3">
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-ink-400">Pago em 12 meses</p>
                 <p className="text-[18px] font-extrabold tnum text-ink mt-1">
                   {mt(historico.reduce((a, h) => a + (h.quota?.valor ?? 0), 0))}
@@ -344,7 +344,7 @@ const FichaMembro: React.FC<{ m: Membro; onFechar: () => void }> = ({ m, onFecha
                 { r: 'Justificada', v: assid.justificado, c: 'text-gold-600' },
                 { r: 'Não justif.', v: assid.injustificado, c: 'text-brand-600' },
               ].map((x) => (
-                <div key={x.r} className="rounded-xl border border-ink-100 p-3 text-center">
+                <div key={x.r} className="rounded-xl border border-areia-200 p-3 text-center">
                   <p className="text-[9.5px] font-extrabold uppercase tracking-[0.1em] text-ink-400">{x.r}</p>
                   <p className={`text-[20px] font-extrabold tnum mt-0.5 ${x.c}`}>{x.v}</p>
                 </div>
@@ -357,7 +357,7 @@ const FichaMembro: React.FC<{ m: Membro; onFechar: () => void }> = ({ m, onFecha
               </div>
               <Barra valor={assid.taxa} tom={assid.taxa >= 75 ? 'bg-verde-600' : assid.taxa >= 50 ? 'bg-gold-500' : 'bg-brand-600'} />
             </div>
-            <div className="rounded-xl bg-ink-50 border border-ink-100 p-3">
+            <div className="rounded-xl bg-areia-100 border border-areia-200 p-3">
               <p className="text-[12px] text-ink-500 leading-relaxed">
                 Faltas não justificadas de 25% implicam aviso; 50% implicam cessação do mandato dos membros de órgãos.
                 Actual: <strong className="text-ink">{pct(assid.taxaInjustificada)}</strong>.
@@ -614,7 +614,7 @@ export const Membros: React.FC = () => {
                 <span className="text-ink-300"> / 15 membros</span>
               </p>
             </div>
-            <div className="relative h-3 bg-ink-100 rounded-full overflow-hidden">
+            <div className="relative h-3 bg-areia-200 rounded-full overflow-hidden">
               <div className="absolute inset-y-0 left-0 bg-brand-100" style={{ width: `${(5 / 15) * 100}%` }} />
               <div
                 className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-swift"
@@ -654,7 +654,7 @@ export const Membros: React.FC = () => {
             value={q}
             onChange={(ev) => setQ(ev.target.value)}
             placeholder="Procurar por nome, cartão, telefone, profissão ou quarteirão…"
-            className="w-full bg-white border border-ink-200 rounded-xl pl-10 pr-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+            className="w-full bg-white border border-areia-300 rounded-xl pl-10 pr-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
           />
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -784,7 +784,7 @@ export const Membros: React.FC = () => {
                       <span className="ml-auto">desde {m.dataAdmissao.slice(0, 4)}</span>
                     </div>
                   </div>
-                  <div className="mt-3.5 pt-3 border-t border-ink-100 grid grid-cols-2 gap-3">
+                  <div className="mt-3.5 pt-3 border-t border-areia-200 grid grid-cols-2 gap-3">
                     <div>
                       <p className="text-[9.5px] font-extrabold uppercase tracking-[0.1em] text-ink-400">Assiduidade</p>
                       <p className="text-[15px] font-extrabold tnum text-ink">{Math.round(a.taxa)}%</p>

@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { NORMAS } from '../lib/estatutos';
 import { clamp, iniciais, num } from '../lib/format';
-import { IcAviso, IcCheck, IcFechar, IcInfo, IcLei } from './icons';
+import { IcAviso, IcCheck, IcFechar, IcInfo, IcLei, IcSeta } from './icons';
 
 /* ═══════════════════════════════════ Cartões ═══════════════════════════════ */
 
@@ -15,18 +15,22 @@ export const Card: React.FC<{
   destaque?: boolean;
 }> = ({ children, titulo, sub, accao, className = '', pad = true, destaque }) => (
   <section
-    className={`rounded-2xl bg-white border ${destaque ? 'border-brand-200 ring-1 ring-brand-100' : 'border-ink-100'} shadow-card ${className}`}
+    className={`rounded-[26px] bg-white shadow-card ${destaque ? 'ring-2 ring-brand-500/25' : ''} ${className}`}
   >
     {(titulo || accao) && (
-      <header className="flex items-start justify-between gap-4 px-5 pt-4 pb-3 border-b border-ink-100">
+      <header
+        className={`flex items-start justify-between gap-4 px-6 pt-5 ${
+          pad ? 'pb-1' : 'pb-4 border-b border-areia-200'
+        }`}
+      >
         <div className="min-w-0">
-          {titulo && <h3 className="text-[15px] font-bold text-ink tracking-tight leading-tight">{titulo}</h3>}
-          {sub && <p className="text-xs text-ink-400 mt-0.5 leading-snug">{sub}</p>}
+          {titulo && <h3 className="text-[16px] font-extrabold text-ink tracking-[-0.02em] leading-tight">{titulo}</h3>}
+          {sub && <p className="text-[12.5px] text-ink-400 mt-1 leading-snug">{sub}</p>}
         </div>
         {accao && <div className="flex items-center gap-2 flex-none">{accao}</div>}
       </header>
     )}
-    <div className={pad ? 'p-5' : ''}>{children}</div>
+    <div className={pad ? (titulo || accao ? 'px-6 pt-4 pb-6' : 'p-6') : ''}>{children}</div>
   </section>
 );
 
@@ -35,8 +39,8 @@ export const Secao: React.FC<{ titulo: string; sub?: string; accao?: React.React
 }) => (
   <div className={`flex items-end justify-between gap-4 mb-3 ${className}`}>
     <div>
-      <h2 className="text-[13px] font-extrabold uppercase tracking-[0.14em] text-ink-400">{titulo}</h2>
-      {sub && <p className="text-sm text-ink-500 mt-1">{sub}</p>}
+      <h2 className="text-[21px] font-extrabold text-ink tracking-[-0.03em] leading-none">{titulo}</h2>
+      {sub && <p className="text-[13px] text-ink-400 mt-1.5 leading-snug">{sub}</p>}
     </div>
     {accao}
   </div>
@@ -47,13 +51,13 @@ export const Secao: React.FC<{ titulo: string; sub?: string; accao?: React.React
 type Variante = 'primaria' | 'escura' | 'contorno' | 'fantasma' | 'perigo' | 'sucesso' | 'suave';
 
 const VARIANTES: Record<Variante, string> = {
-  primaria: 'bg-brand-600 text-white hover:bg-brand-700 shadow-sm active:scale-[.985]',
-  escura: 'bg-ink text-white hover:bg-ink-700 shadow-sm active:scale-[.985]',
-  contorno: 'bg-white text-ink-700 border border-ink-200 hover:border-ink-300 hover:bg-ink-50',
-  fantasma: 'text-ink-500 hover:text-ink hover:bg-ink-50',
-  perigo: 'bg-white text-brand-700 border border-brand-200 hover:bg-brand-50',
-  sucesso: 'bg-verde-600 text-white hover:bg-verde-700 shadow-sm active:scale-[.985]',
-  suave: 'bg-ink-50 text-ink-700 hover:bg-ink-100 border border-transparent',
+  primaria: 'bg-brand-600 text-white hover:bg-brand-700 active:scale-[.98]',
+  escura: 'bg-ink text-white hover:bg-ink-700 active:scale-[.98]',
+  contorno: 'bg-white text-ink-700 ring-1 ring-areia-300 hover:ring-ink-300 hover:bg-areia-50',
+  fantasma: 'text-ink-500 hover:text-ink hover:bg-areia-200',
+  perigo: 'bg-brand-50 text-brand-700 hover:bg-brand-100',
+  sucesso: 'bg-verde-600 text-white hover:bg-verde-700 active:scale-[.98]',
+  suave: 'bg-areia-200 text-ink-700 hover:bg-areia-300',
 };
 
 export const Btn: React.FC<
@@ -65,11 +69,11 @@ export const Btn: React.FC<
     largo?: boolean;
   }
 > = ({ variante = 'contorno', tamanho = 'md', icone, iconeFim, largo, children, className = '', ...rest }) => {
-  const tam = tamanho === 'sm' ? 'text-[13px] px-3 py-1.5 gap-1.5' : tamanho === 'lg' ? 'text-[15px] px-5 py-3 gap-2' : 'text-sm px-3.5 py-2 gap-2';
+  const tam = tamanho === 'sm' ? 'text-[12.5px] px-3.5 py-1.5 gap-1.5' : tamanho === 'lg' ? 'text-[15px] px-6 py-3 gap-2' : 'text-[13.5px] px-4 py-2 gap-2';
   return (
     <button
       {...rest}
-      className={`inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 ease-swift disabled:opacity-40 disabled:pointer-events-none ${VARIANTES[variante]} ${tam} ${largo ? 'w-full' : ''} ${className}`}
+      className={`inline-flex items-center justify-center font-bold rounded-full transition-all duration-200 ease-swift disabled:opacity-40 disabled:pointer-events-none ${VARIANTES[variante]} ${tam} ${largo ? 'w-full' : ''} ${className}`}
     >
       {icone}
       {children && <span className="truncate">{children}</span>}
@@ -83,20 +87,20 @@ export const Btn: React.FC<
 type Tom = 'neutro' | 'brand' | 'verde' | 'gold' | 'azul' | 'ink' | 'roxo';
 
 const TONS: Record<Tom, string> = {
-  neutro: 'bg-ink-50 text-ink-500 border-ink-100',
-  brand: 'bg-brand-50 text-brand-700 border-brand-100',
-  verde: 'bg-verde-100 text-verde-800 border-verde-200',
-  gold: 'bg-gold-100 text-gold-700 border-gold-300/60',
-  azul: 'bg-sky-50 text-sky-700 border-sky-100',
-  ink: 'bg-ink text-white border-ink',
-  roxo: 'bg-violet-50 text-violet-700 border-violet-100',
+  neutro: 'bg-areia-200 text-ink-500',
+  brand: 'bg-brand-50 text-brand-700',
+  verde: 'bg-verde-100 text-verde-800',
+  gold: 'bg-gold-100 text-gold-700',
+  azul: 'bg-sky-50 text-sky-700',
+  ink: 'bg-ink text-white',
+  roxo: 'bg-violet-50 text-violet-700',
 };
 
 export const Pill: React.FC<{ children: React.ReactNode; tom?: Tom; className?: string; ponto?: boolean }> = ({
   children, tom = 'neutro', className = '', ponto,
 }) => (
   <span
-    className={`inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${TONS[tom]} ${className}`}
+    className={`inline-flex items-center gap-1.5 text-[10.5px] font-extrabold uppercase tracking-[0.1em] px-2.5 py-1 rounded-full ${TONS[tom]} ${className}`}
   >
     {ponto && <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />}
     {children}
@@ -156,14 +160,20 @@ export const Stat: React.FC<{
   return (
     <Wrap
       onClick={onClick}
-      className={`text-left rounded-2xl bg-white border border-ink-100 shadow-card p-4 lift ${onClick ? 'hover:shadow-lift cursor-pointer' : ''} ${className}`}
+      className={`group text-left w-full rounded-[22px] bg-white shadow-card p-5 lift ${onClick ? 'hover:bg-areia-50 hover:shadow-soft cursor-pointer' : ''} ${className}`}
     >
       <div className="flex items-start justify-between gap-3">
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-ink-400 leading-tight">{rotulo}</p>
-        {icone && <span className={`${cor} opacity-60 flex-none`}>{icone}</span>}
+        <p className="rotulo text-ink-400 leading-tight">{rotulo}</p>
+        {icone
+          ? <span className={`${cor} opacity-45 flex-none`}>{icone}</span>
+          : onClick && (
+              <span className="flex-none w-7 h-7 rounded-full bg-areia-200 text-ink-400 grid place-items-center transition-colors group-hover:bg-ink group-hover:text-white">
+                <IcSeta className="w-3.5 h-3.5" />
+              </span>
+            )}
       </div>
-      <p className={`mt-2 text-[26px] leading-none font-extrabold tnum ${cor}`}>{valor}</p>
-      {nota && <p className="mt-1.5 text-xs text-ink-400 leading-snug">{nota}</p>}
+      <p className={`mt-3 text-[34px] leading-[0.9] font-extrabold tracking-[-0.04em] tnum ${cor}`}>{valor}</p>
+      {nota && <p className="mt-2 text-[12px] text-ink-400 leading-snug">{nota}</p>}
     </Wrap>
   );
 };
@@ -171,7 +181,7 @@ export const Stat: React.FC<{
 /* ═══════════════════════════════ Barras e anéis ════════════════════════════ */
 
 export const Barra: React.FC<{ valor: number; tom?: string; alt?: string; fundo?: string }> = ({
-  valor, tom = 'bg-brand-600', alt = 'h-2', fundo = 'bg-ink-100',
+  valor, tom = 'bg-brand-600', alt = 'h-2', fundo = 'bg-areia-300',
 }) => (
   <div className={`w-full ${alt} ${fundo} rounded-full overflow-hidden`}>
     <div
@@ -188,7 +198,7 @@ export const Anel: React.FC<{
   cor?: string;
   centro?: React.ReactNode;
   trilho?: string;
-}> = ({ valor, tamanho = 96, espessura = 9, cor = '#E61923', centro, trilho = '#EDE9E9' }) => {
+}> = ({ valor, tamanho = 96, espessura = 9, cor = '#E61923', centro, trilho = '#E7E4E2' }) => {
   const r = (tamanho - espessura) / 2;
   const c = 2 * Math.PI * r;
   const [anim, setAnim] = useState(0);
@@ -266,7 +276,7 @@ export const Lei: React.FC<{ id: string; texto?: string; className?: string; dis
         className={`inline-flex items-center gap-1 rounded-md font-bold tracking-wide transition-colors ${
           discreto
             ? 'text-[10px] uppercase text-ink-400 hover:text-brand-600'
-            : 'text-[10px] uppercase px-1.5 py-0.5 bg-ink-50 text-ink-400 border border-ink-100 hover:bg-brand-50 hover:text-brand-700 hover:border-brand-200'
+            : 'text-[10px] uppercase px-2 py-1 bg-areia-200 text-ink-400 hover:bg-brand-50 hover:text-brand-700'
         } ${className}`}
       >
         <IcLei className="w-3 h-3" />
@@ -318,18 +328,18 @@ export const Modal: React.FC<{
   return (
     <div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-0 sm:p-6">
       <div className="absolute inset-0 bg-ink/50 backdrop-blur-[3px] a-fade" onClick={onFechar} />
-      <div className={`relative w-full ${largura} bg-white rounded-t-3xl sm:rounded-3xl shadow-lift a-scale max-h-[92vh] flex flex-col`}>
-        <header className="flex items-start justify-between gap-4 px-6 pt-5 pb-4 border-b border-ink-100">
+      <div className={`relative w-full ${largura} bg-white rounded-t-[28px] sm:rounded-[28px] shadow-alta a-scale max-h-[92vh] flex flex-col`}>
+        <header className="flex items-start justify-between gap-4 px-6 pt-6 pb-4 border-b border-areia-200">
           <div className="min-w-0">
-            <h3 className="text-lg font-extrabold text-ink tracking-tight">{titulo}</h3>
+            <h3 className="text-[22px] font-extrabold text-ink tracking-[-0.03em] leading-none">{titulo}</h3>
             {sub && <p className="text-[13px] text-ink-400 mt-0.5 leading-snug">{sub}</p>}
           </div>
-          <button onClick={onFechar} className="flex-none w-8 h-8 rounded-full grid place-items-center text-ink-400 hover:bg-ink-50 hover:text-ink">
+          <button onClick={onFechar} className="flex-none w-9 h-9 rounded-full grid place-items-center text-ink-400 bg-areia-100 hover:bg-ink hover:text-white transition-colors">
             <IcFechar className="w-4 h-4" />
           </button>
         </header>
         <div className="px-6 py-5 overflow-y-auto flex-1">{children}</div>
-        {rodape && <footer className="px-6 py-4 border-t border-ink-100 bg-ink-50/60 rounded-b-3xl flex items-center justify-end gap-2">{rodape}</footer>}
+        {rodape && <footer className="px-6 py-4 border-t border-areia-200 bg-areia-50 rounded-b-[28px] flex items-center justify-end gap-2">{rodape}</footer>}
       </div>
     </div>
   );
@@ -357,18 +367,18 @@ export const Gaveta: React.FC<{
   return (
     <div className="fixed inset-0 z-[80] flex justify-end">
       <div className="absolute inset-0 bg-ink/40 backdrop-blur-[2px] a-fade" onClick={onFechar} />
-      <aside className={`relative w-full ${largura} h-full bg-white shadow-rail a-drawer flex flex-col`}>
-        <header className="flex items-start justify-between gap-4 px-6 pt-5 pb-4 border-b border-ink-100">
+      <aside className={`relative w-full ${largura} h-full bg-white shadow-alta a-drawer flex flex-col sm:rounded-l-[28px] overflow-hidden`}>
+        <header className="flex items-start justify-between gap-4 px-6 pt-6 pb-4 border-b border-areia-200">
           <div className="min-w-0">
-            <h3 className="text-lg font-extrabold text-ink tracking-tight leading-tight">{titulo}</h3>
-            {sub && <p className="text-[13px] text-ink-400 mt-0.5">{sub}</p>}
+            <h3 className="text-[21px] font-extrabold text-ink tracking-[-0.03em] leading-tight">{titulo}</h3>
+            {sub && <p className="text-[13px] text-ink-400 mt-1">{sub}</p>}
           </div>
-          <button onClick={onFechar} className="flex-none w-8 h-8 rounded-full grid place-items-center text-ink-400 hover:bg-ink-50">
+          <button onClick={onFechar} className="flex-none w-9 h-9 rounded-full grid place-items-center text-ink-400 bg-areia-100 hover:bg-ink hover:text-white transition-colors">
             <IcFechar className="w-4 h-4" />
           </button>
         </header>
         <div className="flex-1 overflow-y-auto px-6 py-5">{children}</div>
-        {rodape && <footer className="px-6 py-4 border-t border-ink-100 bg-ink-50/60 flex items-center gap-2">{rodape}</footer>}
+        {rodape && <footer className="px-6 py-4 border-t border-areia-200 bg-areia-50 flex items-center gap-2">{rodape}</footer>}
       </aside>
     </div>
   );
@@ -389,13 +399,13 @@ export const Abas: React.FC<{
         <button
           key={i.id}
           onClick={() => onMudar(i.id)}
-          className={`relative flex items-center gap-2 px-3.5 py-2 text-[13px] font-bold rounded-xl whitespace-nowrap transition-all ${
-            on ? 'bg-ink text-white shadow-sm' : 'text-ink-400 hover:text-ink hover:bg-ink-50'
+          className={`relative flex items-center gap-2 px-4 py-2 text-[13px] font-bold rounded-full whitespace-nowrap transition-all duration-200 ease-swift ${
+            on ? 'bg-ink text-white' : 'text-ink-400 hover:text-ink hover:bg-areia-200'
           }`}
         >
           {i.rotulo}
           {i.contagem !== undefined && (
-            <span className={`text-[10px] tnum px-1.5 py-0.5 rounded-full ${on ? 'bg-white/20' : 'bg-ink-100 text-ink-400'}`}>
+            <span className={`text-[10px] font-extrabold tnum px-1.5 py-0.5 rounded-full ${on ? 'bg-white/20' : 'bg-areia-300 text-ink-400'}`}>
               {i.contagem}
             </span>
           )}
@@ -411,15 +421,15 @@ export const Segmentado: React.FC<{
   onMudar: (id: string) => void;
   className?: string;
 }> = ({ itens, activo, onMudar, className = '' }) => (
-  <div className={`inline-flex items-center p-1 bg-ink-50 rounded-xl border border-ink-100 ${className}`}>
+  <div className={`inline-flex items-center p-1 bg-areia-200 rounded-full ${className}`}>
     {itens.map((i) => {
       const on = i.id === activo;
       return (
         <button
           key={i.id}
           onClick={() => onMudar(i.id)}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-[12.5px] font-bold rounded-lg transition-all ${
-            on ? 'bg-white text-ink shadow-sm' : 'text-ink-400 hover:text-ink-600'
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[12.5px] font-bold rounded-full transition-all duration-200 ease-swift ${
+            on ? 'bg-white text-ink shadow-card' : 'text-ink-400 hover:text-ink-600'
           }`}
         >
           {i.icone}
@@ -457,7 +467,7 @@ export const Vazio: React.FC<{ titulo: string; texto?: string; icone?: React.Rea
   titulo, texto, icone, accao,
 }) => (
   <div className="text-center py-12 px-6">
-    <div className="w-14 h-14 rounded-2xl bg-ink-50 text-ink-300 grid place-items-center mx-auto mb-4">
+    <div className="w-16 h-16 rounded-full bg-areia-200 text-ink-300 grid place-items-center mx-auto mb-4">
       {icone ?? <IcInfo className="w-6 h-6" />}
     </div>
     <p className="font-bold text-ink">{titulo}</p>
@@ -476,7 +486,7 @@ export const Campo: React.FC<{
   className?: string;
 }> = ({ rotulo, children, nota, obrigatorio, className = '' }) => (
   <label className={`block ${className}`}>
-    <span className="block text-[11px] font-extrabold uppercase tracking-[0.1em] text-ink-400 mb-1.5">
+    <span className="block rotulo text-ink-400 mb-2">
       {rotulo}
       {obrigatorio && <span className="text-brand-600 ml-1">*</span>}
     </span>
@@ -486,7 +496,7 @@ export const Campo: React.FC<{
 );
 
 const baseInput =
-  'w-full bg-white border border-ink-200 rounded-xl px-3 py-2.5 text-sm text-ink placeholder:text-ink-300 transition-all focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none';
+  'w-full bg-areia-100 rounded-2xl px-4 py-3 text-sm font-medium text-ink placeholder:text-ink-300 transition-all ring-1 ring-transparent focus:bg-white focus:ring-2 focus:ring-brand-500/50 outline-none';
 
 export const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ className = '', ...r }) => (
   <input {...r} className={`${baseInput} ${className}`} />
@@ -499,7 +509,7 @@ export const Select: React.FC<React.SelectHTMLAttributes<HTMLSelectElement>> = (
 );
 
 export const Textarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement>> = ({ className = '', ...r }) => (
-  <textarea {...r} className={`${baseInput} resize-y min-h-[90px] leading-relaxed ${className}`} />
+  <textarea {...r} className={`${baseInput} resize-y min-h-[96px] leading-relaxed ${className}`} />
 );
 
 export const Escolha: React.FC<{
@@ -516,13 +526,13 @@ export const Escolha: React.FC<{
           key={i.id}
           type="button"
           onClick={() => onMudar(i.id)}
-          className={`text-left flex items-start gap-3 p-3 rounded-xl border transition-all ${
-            on ? 'border-brand-500 bg-brand-50/60 ring-1 ring-brand-100' : 'border-ink-200 hover:border-ink-300 bg-white'
+          className={`text-left flex items-start gap-3 p-4 rounded-2xl transition-all duration-200 ease-swift ${
+            on ? 'bg-brand-50 ring-2 ring-brand-500/40' : 'bg-areia-100 hover:bg-areia-200'
           }`}
         >
           <span
             className={`mt-0.5 w-4 h-4 rounded-full border-2 flex-none grid place-items-center ${
-              on ? 'border-brand-600' : 'border-ink-200'
+              on ? 'border-brand-600' : 'border-areia-400'
             }`}
           >
             {on && <span className="w-2 h-2 rounded-full bg-brand-600" />}
@@ -546,7 +556,7 @@ export const Interruptor: React.FC<{ activo: boolean; onMudar: (v: boolean) => v
     className="inline-flex items-center gap-2.5"
     aria-pressed={activo}
   >
-    <span className={`w-10 h-6 rounded-full transition-colors relative flex-none ${activo ? 'bg-verde-600' : 'bg-ink-200'}`}>
+    <span className={`w-10 h-6 rounded-full transition-colors relative flex-none ${activo ? 'bg-verde-600' : 'bg-areia-400'}`}>
       <span
         className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 ease-swift ${activo ? 'left-[1.15rem]' : 'left-0.5'}`}
       />
@@ -569,20 +579,20 @@ export const Passos: React.FC<{ passos: string[]; actual: number; onIr?: (i: num
           <button
             disabled={!onIr || i > actual}
             onClick={() => onIr?.(i)}
-            className={`flex items-center gap-2 px-2.5 py-1.5 rounded-xl transition-all ${
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all ${
               agora ? 'bg-ink text-white' : feito ? 'text-verde-700 hover:bg-verde-100' : 'text-ink-300'
             } ${!onIr || i > actual ? 'cursor-default' : ''}`}
           >
             <span
               className={`w-5 h-5 rounded-full grid place-items-center text-[10px] font-extrabold flex-none ${
-                agora ? 'bg-white/20 text-white' : feito ? 'bg-verde-600 text-white' : 'bg-ink-100 text-ink-400'
+                agora ? 'bg-white/20 text-white' : feito ? 'bg-verde-600 text-white' : 'bg-areia-200 text-ink-400'
               }`}
             >
               {feito ? <IcCheck className="w-3 h-3" /> : i + 1}
             </span>
             <span className="text-[12.5px] font-bold whitespace-nowrap">{p}</span>
           </button>
-          {i < passos.length - 1 && <span className={`w-4 sm:w-6 h-px ${feito ? 'bg-verde-300' : 'bg-ink-100'}`} />}
+          {i < passos.length - 1 && <span className={`w-4 sm:w-6 h-px ${feito ? 'bg-verde-300' : 'bg-areia-300'}`} />}
         </li>
       );
     })}
@@ -625,14 +635,14 @@ export const Alerta: React.FC<{
   base?: string;
 }> = ({ tom = 'gold', titulo, children, icone, accao, base }) => {
   const cores: Record<string, string> = {
-    brand: 'bg-brand-50 border-brand-200 text-brand-900',
-    gold: 'bg-gold-100/70 border-gold-300/70 text-gold-700',
-    verde: 'bg-verde-100 border-verde-200 text-verde-900',
-    neutro: 'bg-ink-50 border-ink-100 text-ink-600',
-    azul: 'bg-sky-50 border-sky-100 text-sky-900',
+    brand: 'bg-brand-50 text-brand-900',
+    gold: 'bg-gold-100/80 text-gold-700',
+    verde: 'bg-verde-100 text-verde-900',
+    neutro: 'bg-areia-200 text-ink-600',
+    azul: 'bg-sky-50 text-sky-900',
   };
   return (
-    <div className={`flex items-start gap-3 p-3.5 rounded-xl border ${cores[tom]}`}>
+    <div className={`flex items-start gap-3 p-4 rounded-2xl ${cores[tom]}`}>
       <span className="flex-none mt-0.5 opacity-80">{icone ?? <IcAviso className="w-4 h-4" />}</span>
       <div className="min-w-0 flex-1">
         <p className="text-[13.5px] font-bold leading-snug">{titulo}</p>
@@ -698,13 +708,11 @@ export const Marca: React.FC<{ compacto?: boolean; className?: string; escuro?: 
   compacto, className = '', escuro = true,
 }) => (
   <div className={`flex items-center gap-2.5 ${className}`}>
-    <Emblema tamanho={38} />
+    <Emblema tamanho={34} />
     {!compacto && (
       <div className="leading-none min-w-0">
-        <p className={`text-[15px] font-extrabold tracking-tight ${escuro ? 'text-white' : 'text-ink'}`}>
-          SGC <span className={escuro ? 'text-brand-400' : 'text-brand-600'}>·</span> FRELIMO
-        </p>
-        <p className={`text-[9.5px] font-bold uppercase tracking-[0.16em] mt-1.5 ${escuro ? 'text-white/40' : 'text-ink-400'}`}>
+        <p className={`text-[17px] font-extrabold tracking-[-0.04em] ${escuro ? 'text-white' : 'text-ink'}`}>SGC</p>
+        <p className={`text-[8.5px] font-extrabold uppercase tracking-[0.2em] mt-1 ${escuro ? 'text-white/40' : 'text-ink-300'}`}>
           Gestão da Célula
         </p>
       </div>
@@ -717,8 +725,41 @@ export const Marca: React.FC<{ compacto?: boolean; className?: string; escuro?: 
 export const Linha: React.FC<{ rotulo: React.ReactNode; children: React.ReactNode; className?: string }> = ({
   rotulo, children, className = '',
 }) => (
-  <div className={`flex items-baseline justify-between gap-4 py-2 border-b border-ink-100 last:border-0 ${className}`}>
+  <div className={`flex items-baseline justify-between gap-4 py-2.5 border-b border-areia-200 last:border-0 ${className}`}>
     <span className="text-[12.5px] text-ink-400 font-semibold flex-none">{rotulo}</span>
     <span className="text-[13.5px] text-ink font-semibold text-right min-w-0">{children}</span>
   </div>
+);
+
+/* ════════════════════════════ Seta em círculo ══════════════════════════════ */
+
+/**
+ * O sinal de «entra aqui». Vive dentro de um elemento com a classe `group`
+ * e enche-se de tinta quando o rato passa na linha inteira, não só na seta —
+ * o alvo é a linha, a seta apenas diz para onde ela leva.
+ */
+export const Seta: React.FC<{ tamanho?: number; tom?: 'areia' | 'claro' | 'brand'; className?: string }> = ({
+  tamanho = 34,
+  tom = 'areia',
+  className = '',
+}) => {
+  const tons = {
+    areia: 'bg-areia-200 text-ink-400 group-hover:bg-ink group-hover:text-white',
+    claro: 'bg-white/12 text-white/70 group-hover:bg-white group-hover:text-ink',
+    brand: 'bg-brand-600 text-white group-hover:bg-white group-hover:text-brand-600',
+  }[tom];
+  return (
+    <span
+      className={`grid place-items-center rounded-full flex-none transition-all duration-300 ease-swift group-hover:rotate-45 ${tons} ${className}`}
+      style={{ width: tamanho, height: tamanho }}
+    >
+      <IcSeta size={Math.round(tamanho * 0.42)} />
+    </span>
+  );
+};
+
+/* ═══════════════════════════════ Micro-rótulo ══════════════════════════════ */
+
+export const Rotulo: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
+  <p className={`rotulo text-ink-300 ${className}`}>{children}</p>
 );

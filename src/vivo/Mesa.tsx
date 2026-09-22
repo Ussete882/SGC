@@ -107,7 +107,7 @@ const NovaVotacao: React.FC<{ aberto: boolean; onFechar: () => void; sala: Assem
         </Campo>
 
         {meta && (
-          <div className="rounded-xl bg-ink-50 border border-ink-100 p-3">
+          <div className="rounded-xl bg-areia-100 border border-areia-200 p-3">
             <p className="text-[12.5px] text-ink-500 leading-relaxed">{meta.descricao}</p>
             <div className="flex flex-wrap gap-1.5 mt-2">
               {meta.base.map((b) => <Lei key={b} id={b} />)}
@@ -139,7 +139,7 @@ const NovaVotacao: React.FC<{ aberto: boolean; onFechar: () => void; sala: Assem
           />
         </Campo>
 
-        <div className="rounded-2xl border border-ink-100 bg-ink-50/60 p-4 space-y-3">
+        <div className="rounded-2xl border border-areia-200 bg-areia-100/60 p-4 space-y-3">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="text-[13.5px] font-bold text-ink">Consulta prévia aos candidatos</p>
@@ -149,7 +149,7 @@ const NovaVotacao: React.FC<{ aberto: boolean; onFechar: () => void; sala: Assem
             </div>
             <Interruptor activo={exigeAceitacao} onMudar={setExige} />
           </div>
-          <div className="flex items-start justify-between gap-4 pt-3 border-t border-ink-100">
+          <div className="flex items-start justify-between gap-4 pt-3 border-t border-areia-200">
             <div className="min-w-0">
               <p className="text-[13.5px] font-bold text-ink">Apuramento em directo</p>
               <p className="text-[12px] text-ink-400 mt-0.5 leading-snug">
@@ -183,7 +183,7 @@ const Candidaturas: React.FC<{ sala: Assembleia; vt: VotacaoVivo; accao: Accao }
         {vt.candidatos.map((c) => {
           const m = sala.membros.find((x) => x.id === c.membroId);
           return (
-            <div key={c.id} className="flex items-center gap-3 p-3 rounded-xl border border-ink-100 bg-white">
+            <div key={c.id} className="flex items-center gap-3 p-3 rounded-xl border border-areia-200 bg-white">
               <Avatar nome={c.nome} tamanho={36} />
               <div className="min-w-0 flex-1">
                 <p className="text-[14px] font-bold text-ink truncate">{c.nome}</p>
@@ -212,7 +212,7 @@ const Candidaturas: React.FC<{ sala: Assembleia; vt: VotacaoVivo; accao: Accao }
         )}
       </div>
 
-      <div className="rounded-xl bg-ink-50 border border-ink-100 p-3 grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
+      <div className="rounded-xl bg-areia-100 border border-areia-200 p-3 grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
         <Select value={membroId} onChange={(ev) => setMembroId(ev.target.value)}>
           <option value="">Propor candidato…</option>
           {elegiveis.map((m) => <option key={m.id} value={m.id}>{m.nome}</option>)}
@@ -343,7 +343,7 @@ const PainelVotacao: React.FC<{ sala: Assembleia; vt: VotacaoVivo; accao: Accao 
                   <span
                     key={m.id}
                     className={`text-[11.5px] font-semibold px-2 py-1 rounded-lg border ${
-                      m.ligado ? 'border-gold-300 bg-gold-100/70 text-gold-700' : 'border-ink-100 bg-ink-50 text-ink-300'
+                      m.ligado ? 'border-gold-300 bg-gold-100/70 text-gold-700' : 'border-areia-200 bg-areia-100 text-ink-300'
                     }`}
                     title={m.ligado ? 'no sistema, ainda não votou' : 'ainda não entrou'}
                   >
@@ -464,7 +464,7 @@ const PainelVotacao: React.FC<{ sala: Assembleia; vt: VotacaoVivo; accao: Accao 
                   </Btn>
                 </div>
               </div>
-              <pre className="print-sheet text-[12px] leading-relaxed font-mono whitespace-pre-wrap bg-white border border-ink-100 rounded-xl p-4 max-h-80 overflow-y-auto text-ink-600">
+              <pre className="print-sheet text-[12px] leading-relaxed font-mono whitespace-pre-wrap bg-white border border-areia-200 rounded-xl p-4 max-h-80 overflow-y-auto text-ink-600">
                 {vt.acta}
               </pre>
             </div>
@@ -603,7 +603,7 @@ const Caderno: React.FC<{ sala: Assembleia; accao: Accao }> = ({ sala, accao }) 
         </tbody>
       </Tabela>
 
-      <div className="p-4 border-t border-ink-100 bg-ink-50/60 grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
+      <div className="p-4 border-t border-areia-200 bg-areia-100/60 grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
         <Input value={nome} onChange={(ev) => setNome(ev.target.value)} placeholder="Nome completo do camarada" />
         <Input value={funcao} onChange={(ev) => setFuncao(ev.target.value)} placeholder="Função (opcional)" />
         <Btn
@@ -662,7 +662,7 @@ const Credenciais: React.FC<{ sala: Assembleia; accao: Accao }> = ({ sala, accao
           </Btn>
         </div>
 
-        <div className="mt-5 pt-4 border-t border-ink-100 space-y-3">
+        <div className="mt-5 pt-4 border-t border-areia-200 space-y-3">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="text-[13px] font-bold text-ink">Código pessoal obrigatório</p>
@@ -688,7 +688,7 @@ const Credenciais: React.FC<{ sala: Assembleia; accao: Accao }> = ({ sala, accao
       >
         <div className="print-sheet grid grid-cols-2 sm:grid-cols-3 gap-2 p-4">
           {sala.membros.map((m) => (
-            <div key={m.id} className="rounded-xl border border-dashed border-ink-200 p-3">
+            <div key={m.id} className="rounded-xl border border-dashed border-areia-300 p-3">
               <p className="text-[9px] font-extrabold uppercase tracking-[0.14em] text-ink-300">{sala.codigo}</p>
               <p className="text-[13px] font-bold text-ink leading-tight mt-1 truncate">{m.nome}</p>
               <p className="text-[26px] font-mono font-extrabold tracking-[0.2em] text-brand-600 mt-1.5">{m.pin ?? '····'}</p>
@@ -704,7 +704,7 @@ const Credenciais: React.FC<{ sala: Assembleia; accao: Accao }> = ({ sala, accao
 
 const LivroDeBordo: React.FC<{ sala: Assembleia }> = ({ sala }) => (
   <Card titulo="Livro de bordo" sub="Tudo o que aconteceu na assembleia, pela ordem inversa." pad={false}>
-    <ul className="divide-y divide-ink-100">
+    <ul className="divide-y divide-areia-200">
       {sala.eventos.map((ev) => (
         <li key={ev.id} className="px-5 py-3 flex items-start gap-3">
           <span className="text-[11.5px] font-mono text-ink-300 tnum flex-none w-12 pt-0.5">{horas(ev.em)}</span>
@@ -793,7 +793,7 @@ export const Mesa: React.FC<{
             {ordenadas.length === 0 && (
               <Card>
                 <div className="text-center py-8">
-                  <span className="w-14 h-14 rounded-2xl bg-ink-50 text-ink-300 grid place-items-center mx-auto mb-4">
+                  <span className="w-14 h-14 rounded-2xl bg-areia-100 text-ink-300 grid place-items-center mx-auto mb-4">
                     <IcUrna className="w-6 h-6" />
                   </span>
                   <p className="font-bold text-ink">Assembleia constituída</p>

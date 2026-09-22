@@ -25,7 +25,7 @@ export const CabecalhoVivo: React.FC<{
   sub?: React.ReactNode;
   direita?: React.ReactNode;
 }> = ({ titulo, sub, direita }) => (
-  <header className="sticky top-0 z-30 bg-white/92 backdrop-blur-xl border-b border-ink-100 no-print">
+  <header className="sticky top-0 z-30 bg-white/92 backdrop-blur-xl border-b border-areia-200 no-print">
     <FaixaBandeira altura={3} />
     <div className="px-4 sm:px-6 py-3 flex items-center gap-3 max-w-[1520px] mx-auto">
       <Emblema tamanho={34} />
@@ -67,7 +67,7 @@ export const SinalLigacao: React.FC<{ estado: EstadoLigacao; compacto?: boolean 
 
 export const CodigoSala: React.FC<{ codigo: string; tamanho?: 'md' | 'lg' }> = ({ codigo, tamanho = 'md' }) => (
   <span
-    className={`font-mono font-extrabold tracking-[0.28em] text-ink bg-ink-50 border border-ink-200 rounded-xl ${
+    className={`font-mono font-extrabold tracking-[0.28em] text-ink bg-areia-100 border border-areia-300 rounded-xl ${
       tamanho === 'lg' ? 'text-[30px] px-5 py-2.5' : 'text-[15px] px-3 py-1.5'
     }`}
   >
@@ -174,7 +174,7 @@ export const BarraCandidato: React.FC<{
     <div className={`rounded-xl border p-3 transition-all ${
       escuro
         ? eleito ? 'border-verde-500/60 bg-verde-600/10' : 'border-white/10 bg-white/[0.04]'
-        : eleito ? 'border-verde-300 bg-verde-100/50' : destaque ? 'border-brand-200 bg-brand-50/40' : 'border-ink-100 bg-white'
+        : eleito ? 'border-verde-300 bg-verde-100/50' : destaque ? 'border-brand-200 bg-brand-50/40' : 'border-areia-200 bg-white'
     }`}>
       <div className="flex items-baseline justify-between gap-3">
         <p className={`text-[14px] font-bold truncate ${escuro ? 'text-white' : 'text-ink'}`}>
@@ -185,7 +185,7 @@ export const BarraCandidato: React.FC<{
           {votos}
         </p>
       </div>
-      <div className={`mt-2 h-2 rounded-full overflow-hidden ${escuro ? 'bg-white/10' : 'bg-ink-100'}`}>
+      <div className={`mt-2 h-2 rounded-full overflow-hidden ${escuro ? 'bg-white/10' : 'bg-areia-200'}`}>
         <div
           className={`h-2 rounded-full transition-all duration-700 ease-swift ${eleito ? 'bg-verde-600' : 'bg-brand-600'}`}
           style={{ width: `${Math.max(pct, votos > 0 ? 4 : 0)}%` }}

@@ -89,7 +89,7 @@ export const Conformidade: React.FC = () => {
                     </div>
                     <p className="text-[13px] text-ink-500 mt-1">{c.detalhe}</p>
                     {n && (
-                      <p className="text-[12px] text-ink-400 mt-2 leading-relaxed border-l-2 border-ink-200 pl-3 italic">
+                      <p className="text-[12px] text-ink-400 mt-2 leading-relaxed border-l-2 border-areia-300 pl-3 italic">
                         “{n.texto}”
                         <span className="not-italic font-bold text-ink-400"> — {n.ref}</span>
                       </p>
@@ -126,13 +126,13 @@ export const Conformidade: React.FC = () => {
           </Card>
 
           <Card titulo="Base normativa aplicada" sub={`${normasAplicadas.length} normas verificadas automaticamente`} pad={false}>
-            <ul className="divide-y divide-ink-100">
+            <ul className="divide-y divide-areia-200">
               {normasAplicadas.map((b) => {
                 const n = NORMAS[b];
                 if (!n) return null;
                 return (
                   <li key={b} className="px-5 py-3 flex items-start gap-3">
-                    <span className="w-7 h-7 rounded-lg bg-ink-50 text-ink-400 grid place-items-center flex-none">
+                    <span className="w-7 h-7 rounded-lg bg-areia-100 text-ink-400 grid place-items-center flex-none">
                       <IcLei className="w-3.5 h-3.5" />
                     </span>
                     <div className="min-w-0 flex-1">

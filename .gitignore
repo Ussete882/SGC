@@ -6,3 +6,6 @@ servidor/dados/
 
 # Documento gerado
 SGC_Dossier_Tecnico.pdf
+
+# Configuração local do arranque (painel de pré-visualização)
+.claude/

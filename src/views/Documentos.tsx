@@ -46,9 +46,9 @@ export const Documentos: React.FC = () => {
         accao={<Pill tom="gold">só leitura</Pill>}
         pad={false}
       >
-        <ul className="divide-y divide-ink-100">
+        <ul className="divide-y divide-areia-200">
           {normativos.map((d) => (
-            <li key={d.id} className="px-5 py-4 flex items-center gap-4 hover:bg-ink-50/40 transition-colors">
+            <li key={d.id} className="px-5 py-4 flex items-center gap-4 hover:bg-areia-100/40 transition-colors">
               <span className="w-10 h-10 rounded-xl bg-ink text-gold-400 grid place-items-center flex-none">
                 {CATEGORIA_META[d.categoria].icone}
               </span>
@@ -63,7 +63,7 @@ export const Documentos: React.FC = () => {
             </li>
           ))}
         </ul>
-        <div className="px-5 py-3 border-t border-ink-100 bg-ink-50/60 flex items-center gap-2">
+        <div className="px-5 py-3 border-t border-areia-200 bg-areia-100/60 flex items-center gap-2">
           <IcEscudo className="w-4 h-4 text-ink-300" />
           <p className="text-[11.5px] text-ink-400">
             Actualizados centralmente. Sempre que os Estatutos ou o Manual da Célula forem revistos, todas as Células passam
@@ -79,7 +79,7 @@ export const Documentos: React.FC = () => {
             value={q}
             onChange={(ev) => setQ(ev.target.value)}
             placeholder="Procurar documento…"
-            className="w-full bg-white border border-ink-200 rounded-xl pl-10 pr-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+            className="w-full bg-white border border-areia-300 rounded-xl pl-10 pr-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
           />
         </div>
         <Segmentado
@@ -104,7 +104,7 @@ export const Documentos: React.FC = () => {
             return (
               <Card key={d.id} className="lift hover:shadow-lift">
                 <div className="flex items-start gap-3">
-                  <span className={`w-9 h-9 rounded-xl grid place-items-center flex-none ${d.escopo === 'CENTRAL' ? 'bg-ink text-gold-400' : 'bg-ink-50 text-ink-400'}`}>
+                  <span className={`w-9 h-9 rounded-xl grid place-items-center flex-none ${d.escopo === 'CENTRAL' ? 'bg-ink text-gold-400' : 'bg-areia-100 text-ink-400'}`}>
                     {meta.icone}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -112,7 +112,7 @@ export const Documentos: React.FC = () => {
                     <p className="text-[11.5px] text-ink-400 mt-1">{dataMedia(d.data)} · {d.paginas} pág · {d.tamanhoKb} KB</p>
                   </div>
                 </div>
-                <div className="mt-3 pt-3 border-t border-ink-100 flex items-center gap-2">
+                <div className="mt-3 pt-3 border-t border-areia-200 flex items-center gap-2">
                   <Pill tom={meta.tom}>{meta.rotulo}</Pill>
                   <Pill tom="neutro">{d.escopo === 'CENTRAL' ? 'central' : d.escopo === 'CIRCULO' ? 'círculo' : 'célula'}</Pill>
                   <Btn tamanho="sm" variante="fantasma" className="ml-auto" icone={<IcDescarregar className="w-3.5 h-3.5" />}>Abrir</Btn>

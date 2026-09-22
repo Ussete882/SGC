@@ -44,7 +44,7 @@ const Linha: React.FC<{
       type={tipo}
       value={valor}
       onChange={(ev) => onMudar(ev.target.value)}
-      className="flex-1 min-w-0 bg-transparent border-b border-ink-300 focus:border-brand-600 outline-none px-1 pb-0.5 text-[13px] text-ink transition-colors"
+      className="flex-1 min-w-0 bg-transparent border-b border-areia-400 focus:border-brand-600 outline-none px-1 pb-0.5 text-[13px] text-ink transition-colors"
     />
   </label>
 );
@@ -55,7 +55,7 @@ const Escolher: React.FC<{
   onMudar: (v: 'SIM' | 'NAO') => void;
   complemento?: { rotulo: string; valor: string; onMudar: (v: string) => void; tipo?: 'text' | 'date' };
 }> = ({ pergunta, valor, onMudar, complemento }) => (
-  <div className="py-2.5 border-b border-ink-100 last:border-0">
+  <div className="py-2.5 border-b border-areia-200 last:border-0">
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
       <p className="text-[13px] text-ink flex-1 min-w-[16rem]">{pergunta}</p>
       <div className="flex items-center gap-1.5 flex-none">
@@ -67,7 +67,7 @@ const Escolher: React.FC<{
             className={`px-3 py-1 rounded-lg text-[12px] font-bold border transition-all ${
               valor === v
                 ? 'bg-ink text-white border-ink'
-                : 'bg-white text-ink-400 border-ink-200 hover:border-ink-300'
+                : 'bg-white text-ink-400 border-areia-300 hover:border-areia-400'
             }`}
           >
             {v === 'NAO' ? 'NÃO' : 'SIM'}
@@ -109,7 +109,7 @@ const PainelAnexos: React.FC<{ ficha: FichaDelegado; onAlternar: (k: keyof Ficha
           const declarado = ficha.anexos[v.chave];
           const tom = v.estado === 'VERIFICADO' ? 'verde' : v.estado === 'EM_FALTA' ? 'brand' : 'neutro';
           return (
-            <li key={v.chave} className="flex items-start gap-3 p-3 rounded-xl border border-ink-100 bg-white">
+            <li key={v.chave} className="flex items-start gap-3 p-3 rounded-xl border border-areia-200 bg-white">
               <input
                 type="checkbox"
                 className="sgc mt-0.5"
@@ -145,7 +145,7 @@ const Impresso: React.FC<{ ficha: FichaDelegado; alterar: (p: Partial<FichaDeleg
   const c = (k: keyof FichaDelegado) => (v: string) => alterar({ [k]: v } as Partial<FichaDelegado>);
 
   return (
-    <div className="print-sheet bg-white rounded-2xl border border-ink-100 shadow-card mx-auto max-w-[820px] px-8 sm:px-12 py-10">
+    <div className="print-sheet bg-white rounded-2xl border border-areia-200 shadow-card mx-auto max-w-[820px] px-8 sm:px-12 py-10">
       {/* ── cabeçalho ── */}
       <div className="flex flex-col items-center text-center">
         <Emblema tamanho={92} />
@@ -228,7 +228,7 @@ const Impresso: React.FC<{ ficha: FichaDelegado; alterar: (p: Partial<FichaDeleg
       </div>
 
       {/* ── filiação ── */}
-      <p className="text-[12.5px] font-extrabold uppercase tracking-[0.1em] text-ink mt-9 mb-3 pb-1 border-b border-ink-200">
+      <p className="text-[12.5px] font-extrabold uppercase tracking-[0.1em] text-ink mt-9 mb-3 pb-1 border-b border-areia-300">
         Partido FRELIMO
       </p>
       <div className="grid gap-3.5">
@@ -288,7 +288,7 @@ const Impresso: React.FC<{ ficha: FichaDelegado; alterar: (p: Partial<FichaDeleg
             value={ficha.actividadesPoliticas ?? ''}
             onChange={(ev) => alterar({ actividadesPoliticas: ev.target.value })}
             rows={3}
-            className="w-full mt-1 bg-transparent border-b border-ink-300 focus:border-brand-600 outline-none px-1 py-1 text-[13px] leading-relaxed resize-y"
+            className="w-full mt-1 bg-transparent border-b border-areia-400 focus:border-brand-600 outline-none px-1 py-1 text-[13px] leading-relaxed resize-y"
           />
         </label>
         <label className="block">
@@ -299,7 +299,7 @@ const Impresso: React.FC<{ ficha: FichaDelegado; alterar: (p: Partial<FichaDeleg
             value={ficha.outrasInformacoes ?? ''}
             onChange={(ev) => alterar({ outrasInformacoes: ev.target.value })}
             rows={3}
-            className="w-full mt-1 bg-transparent border-b border-ink-300 focus:border-brand-600 outline-none px-1 py-1 text-[13px] leading-relaxed resize-y"
+            className="w-full mt-1 bg-transparent border-b border-areia-400 focus:border-brand-600 outline-none px-1 py-1 text-[13px] leading-relaxed resize-y"
           />
         </label>
       </div>
@@ -313,14 +313,14 @@ const Impresso: React.FC<{ ficha: FichaDelegado; alterar: (p: Partial<FichaDeleg
             value={ficha.localAssinatura}
             onChange={(ev) => alterar({ localAssinatura: ev.target.value })}
             placeholder="Local"
-            className="w-40 text-center bg-transparent border-b border-ink-300 focus:border-brand-600 outline-none text-[13px] pb-0.5"
+            className="w-40 text-center bg-transparent border-b border-areia-400 focus:border-brand-600 outline-none text-[13px] pb-0.5"
           />
           <span className="text-[13px] pb-0.5">,</span>
           <input
             type="date"
             value={ficha.dataAssinatura}
             onChange={(ev) => alterar({ dataAssinatura: ev.target.value })}
-            className="w-40 text-center bg-transparent border-b border-ink-300 focus:border-brand-600 outline-none text-[13px] pb-0.5"
+            className="w-40 text-center bg-transparent border-b border-areia-400 focus:border-brand-600 outline-none text-[13px] pb-0.5"
           />
         </div>
       </div>

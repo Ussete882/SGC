@@ -262,17 +262,17 @@ export const PainelCelula: React.FC = () => {
           accao={<Pill tom={av.some((a) => a.nivel === 'CRITICO') ? 'brand' : 'verde'}>{av.length} activos</Pill>}
           pad={false}
         >
-          <div className="divide-y divide-ink-100">
+          <div className="divide-y divide-areia-200">
             {av.slice(0, 5).map((a) => {
               const tons: Record<string, { cor: string; fundo: string }> = {
                 CRITICO: { cor: 'text-brand-600', fundo: 'bg-brand-50' },
                 ALTO: { cor: 'text-gold-600', fundo: 'bg-gold-100' },
                 MEDIO: { cor: 'text-sky-600', fundo: 'bg-sky-50' },
-                INFO: { cor: 'text-ink-400', fundo: 'bg-ink-50' },
+                INFO: { cor: 'text-ink-400', fundo: 'bg-areia-100' },
               };
               const t = tons[a.nivel];
               return (
-                <div key={a.id} className="flex items-start gap-3.5 px-5 py-3.5 hover:bg-ink-50/40 transition-colors">
+                <div key={a.id} className="flex items-start gap-3.5 px-5 py-3.5 hover:bg-areia-100/40 transition-colors">
                   <span className={`w-8 h-8 rounded-xl grid place-items-center flex-none ${t.fundo} ${t.cor}`}>
                     <IcAviso className="w-4 h-4" />
                   </span>
@@ -344,7 +344,7 @@ export const PainelCelula: React.FC = () => {
                 <ol className="space-y-1.5">
                   {prox.agenda.map((p) => (
                     <li key={p.id} className="flex items-start gap-2.5 text-[12.5px] text-ink-600 leading-snug">
-                      <span className="w-4 h-4 rounded-md bg-ink-50 text-ink-400 text-[9.5px] font-extrabold grid place-items-center flex-none mt-0.5">
+                      <span className="w-4 h-4 rounded-md bg-areia-100 text-ink-400 text-[9.5px] font-extrabold grid place-items-center flex-none mt-0.5">
                         {p.ordem}
                       </span>
                       {p.titulo}
@@ -358,7 +358,7 @@ export const PainelCelula: React.FC = () => {
               </Btn>
 
               {proxSec && (
-                <div className="pt-3 border-t border-ink-100">
+                <div className="pt-3 border-t border-areia-200">
                   <p className="text-[11px] text-ink-400">
                     Secretariado reúne {relativo(proxSec.data, e.hoje)} — {dataCurta(proxSec.data)}, {proxSec.hora}.
                     <Lei id="art35n9" discreto className="ml-1.5" />
@@ -434,7 +434,7 @@ export const PainelCelula: React.FC = () => {
               </RadarChart>
             </ResponsiveContainer>
           </div>
-          <div className="space-y-2.5 mt-3 pt-3 border-t border-ink-100">
+          <div className="space-y-2.5 mt-3 pt-3 border-t border-areia-200">
             {ivo.pilares.map((p, i) => (
               <div key={p.chave}>
                 <div className="flex items-center justify-between gap-2 mb-1">
@@ -445,7 +445,7 @@ export const PainelCelula: React.FC = () => {
                   </span>
                   <span className="text-[12px] font-extrabold tnum text-ink">{p.valor}<span className="text-ink-300 font-semibold"> · peso {p.peso}%</span></span>
                 </div>
-                <div className="w-full h-1.5 bg-ink-100 rounded-full overflow-hidden">
+                <div className="w-full h-1.5 bg-areia-200 rounded-full overflow-hidden">
                   <div className="h-1.5 rounded-full transition-all duration-700 ease-swift" style={{ width: `${p.valor}%`, background: CORES_IVO[i] }} />
                 </div>
                 <p className="text-[11px] text-ink-300 mt-1">{p.detalhe}</p>
@@ -476,7 +476,7 @@ export const PainelCelula: React.FC = () => {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div className="flex flex-wrap gap-4 mt-3 pt-3 border-t border-ink-100">
+          <div className="flex flex-wrap gap-4 mt-3 pt-3 border-t border-areia-200">
             {[
               { c: '#00A34F', r: 'Presente' },
               { c: '#F5D400', r: 'Ausência justificada' },
@@ -500,12 +500,12 @@ export const PainelCelula: React.FC = () => {
           accao={<Btn tamanho="sm" variante="suave" onClick={() => irPara('cotas')}>Ver todos</Btn>}
           pad={false}
         >
-          <div className="divide-y divide-ink-100 max-h-[330px] overflow-y-auto">
+          <div className="divide-y divide-areia-200 max-h-[330px] overflow-y-auto">
             {atrasos.slice(0, 7).map((a) => (
               <button
                 key={a.membro.id}
                 onClick={() => irPara('membros', { membro: a.membro.id })}
-                className="w-full text-left px-5 py-3 flex items-center gap-3 hover:bg-ink-50/50"
+                className="w-full text-left px-5 py-3 flex items-center gap-3 hover:bg-areia-100/50"
               >
                 <Avatar nome={a.membro.nome} tamanho={34} />
                 <div className="min-w-0 flex-1">
@@ -530,7 +530,7 @@ export const PainelCelula: React.FC = () => {
               </div>
             )}
           </div>
-          <div className="px-5 py-3 border-t border-ink-100 bg-ink-50/50">
+          <div className="px-5 py-3 border-t border-areia-200 bg-areia-100/50">
             <p className="text-[11.5px] text-ink-400 leading-relaxed">
               Doze meses sem pagamento, sem motivo justificado, implicam suspensão de direitos por um ano.
               <Lei id="art16n4" discreto className="ml-1.5" />
@@ -567,7 +567,7 @@ export const PainelCelula: React.FC = () => {
         </Card>
 
         <Card titulo="Próximas actividades" sub="Reuniões, estudo político e auscultação" accao={<Lei id="art36" />} pad={false}>
-          <ul className="divide-y divide-ink-100">
+          <ul className="divide-y divide-areia-200">
             {proximas.map((r) => {
               const cores: Record<string, string> = {
                 REUNIAO_GERAL: 'bg-brand-600',
@@ -580,10 +580,10 @@ export const PainelCelula: React.FC = () => {
               };
               return (
                 <li key={r.id}>
-                  <button onClick={() => irPara('reunioes', { reuniao: r.id })} className="w-full text-left px-5 py-3 flex items-start gap-3 hover:bg-ink-50/50">
+                  <button onClick={() => irPara('reunioes', { reuniao: r.id })} className="w-full text-left px-5 py-3 flex items-start gap-3 hover:bg-areia-100/50">
                     <span className="flex flex-col items-center flex-none">
                       <span className={`w-1.5 h-1.5 rounded-full ${cores[r.tipo] ?? 'bg-ink-300'}`} />
-                      <span className="w-px flex-1 bg-ink-100 mt-1" />
+                      <span className="w-px flex-1 bg-areia-200 mt-1" />
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-[12.5px] font-bold text-ink leading-snug">{r.titulo}</span>
@@ -606,7 +606,7 @@ export const PainelCelula: React.FC = () => {
           accao={<Btn tamanho="sm" variante="suave" onClick={() => irPara('conformidade')}>Detalhe</Btn>}
           pad={false}
         >
-          <ul className="divide-y divide-ink-100">
+          <ul className="divide-y divide-areia-200">
             {conf.slice(0, 8).map((c) => {
               const cor = c.estado === 'CONFORME' ? 'text-verde-600' : c.estado === 'ATENCAO' ? 'text-gold-500' : 'text-brand-600';
               return (

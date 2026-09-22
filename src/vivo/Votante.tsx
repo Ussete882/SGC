@@ -20,7 +20,7 @@ import { Afluencia, BarraCandidato, CodigoSala, PillFase, SinalLigacao } from '.
 const Topo: React.FC<{ sala: Assembleia; nome: string; estado: EstadoLigacao; onSair: () => void }> = ({
   sala, nome, estado, onSair,
 }) => (
-  <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-xl border-b border-ink-100">
+  <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-xl border-b border-areia-200">
     <FaixaBandeira altura={3} />
     <div className="px-4 py-2.5 flex items-center gap-3">
       <Avatar nome={nome} tamanho={36} />
@@ -125,9 +125,9 @@ const Boletim: React.FC<{
 
   return (
     <>
-      <div className="rounded-3xl bg-white border border-ink-100 shadow-lift overflow-hidden">
+      <div className="rounded-3xl bg-white border border-areia-200 shadow-lift overflow-hidden">
         {/* cabeçalho do boletim, como o impresso */}
-        <div className="relative px-5 pt-5 pb-4 border-b-2 border-dashed border-ink-200 text-center">
+        <div className="relative px-5 pt-5 pb-4 border-b-2 border-dashed border-areia-300 text-center">
           <div className="faixa-diagonal absolute top-0 right-0 w-24 h-12 opacity-[0.14]" />
           <Emblema tamanho={44} className="mx-auto" />
           <p className="text-[9.5px] font-extrabold uppercase tracking-[0.2em] text-brand-600 mt-3">Boletim de voto</p>
@@ -145,7 +145,7 @@ const Boletim: React.FC<{
                 key={c.id}
                 onClick={() => alternar(c.id)}
                 className={`w-full flex items-center gap-3 p-3 rounded-2xl border-2 text-left transition-all ${
-                  on ? 'border-brand-600 bg-brand-50' : 'border-ink-100 bg-white hover:border-ink-300'
+                  on ? 'border-brand-600 bg-brand-50' : 'border-areia-200 bg-white hover:border-areia-400'
                 }`}
               >
                 <Avatar nome={c.nome} tamanho={40} />
@@ -155,7 +155,7 @@ const Boletim: React.FC<{
                 </span>
                 <span
                   className={`w-7 h-7 rounded-md border-2 grid place-items-center flex-none ${
-                    on ? 'border-brand-600 bg-brand-600 text-white' : 'border-ink-200'
+                    on ? 'border-brand-600 bg-brand-600 text-white' : 'border-areia-300'
                   }`}
                 >
                   {on && <IcCheck className="w-4 h-4" />}
@@ -170,7 +170,7 @@ const Boletim: React.FC<{
                 key={t}
                 onClick={() => { setEspecial((v) => (v === t ? null : t)); setIds([]); }}
                 className={`p-3 rounded-2xl border-2 text-[13px] font-bold transition-all ${
-                  especial === t ? 'border-ink bg-ink text-white' : 'border-ink-100 text-ink-500 hover:border-ink-300'
+                  especial === t ? 'border-ink bg-ink text-white' : 'border-areia-200 text-ink-500 hover:border-areia-400'
                 }`}
               >
                 {t === 'BRANCO' ? 'Voto em branco' : 'Voto nulo'}
@@ -211,7 +211,7 @@ const Boletim: React.FC<{
           </>
         }
       >
-        <div className="rounded-2xl bg-ink-50 border border-ink-100 p-4 text-center">
+        <div className="rounded-2xl bg-areia-100 border border-areia-200 p-4 text-center">
           <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-ink-400">O seu voto</p>
           <p className="text-[18px] font-extrabold text-ink mt-1.5 leading-snug">{resumo}</p>
         </div>
@@ -228,8 +228,8 @@ const Resultado: React.FC<{ votacao: VotacaoVivo }> = ({ votacao }) => {
   const ap = volta?.apuramento;
   if (!ap) {
     return (
-      <div className="rounded-3xl bg-white border border-ink-100 shadow-card p-6 text-center">
-        <span className="w-12 h-12 rounded-2xl bg-ink-50 text-ink-400 grid place-items-center mx-auto mb-3">
+      <div className="rounded-3xl bg-white border border-areia-200 shadow-card p-6 text-center">
+        <span className="w-12 h-12 rounded-2xl bg-areia-100 text-ink-400 grid place-items-center mx-auto mb-3">
           <IcRelogio className="w-5 h-5" />
         </span>
         <p className="text-[15px] font-extrabold text-ink">Urna encerrada</p>
@@ -241,8 +241,8 @@ const Resultado: React.FC<{ votacao: VotacaoVivo }> = ({ votacao }) => {
   const eleitos = votacao.eleitos.filter((x) => !x.suplente);
 
   return (
-    <div className="rounded-3xl bg-white border border-ink-100 shadow-lift overflow-hidden">
-      <div className="px-5 py-4 border-b border-ink-100 flex items-center justify-between gap-3">
+    <div className="rounded-3xl bg-white border border-areia-200 shadow-lift overflow-hidden">
+      <div className="px-5 py-4 border-b border-areia-200 flex items-center justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-[16px] font-extrabold text-ink leading-tight truncate">{votacao.titulo}</h2>
           <p className="text-[11.5px] text-ink-400 mt-0.5">{ap.volta}.ª volta · {ap.expressos} boletins</p>
@@ -293,7 +293,7 @@ const Resultado: React.FC<{ votacao: VotacaoVivo }> = ({ votacao }) => {
 /* ═══════════════════════════════════ Espera ════════════════════════════════ */
 
 const Espera: React.FC<{ titulo: string; texto: string; children?: React.ReactNode }> = ({ titulo, texto, children }) => (
-  <div className="rounded-3xl bg-white border border-ink-100 shadow-card p-7 text-center">
+  <div className="rounded-3xl bg-white border border-areia-200 shadow-card p-7 text-center">
     <span className="relative flex w-14 h-14 mx-auto mb-4">
       <span className="absolute inline-flex w-full h-full rounded-2xl bg-brand-100 opacity-70 animate-ping" />
       <span className="relative inline-flex w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 items-center justify-center">
@@ -406,7 +406,7 @@ export const Votante: React.FC<{
           >
             <div className="space-y-1.5 text-left">
               {votacao.candidatos.map((c) => (
-                <div key={c.id} className="flex items-center gap-2.5 p-2.5 rounded-xl bg-ink-50 border border-ink-100">
+                <div key={c.id} className="flex items-center gap-2.5 p-2.5 rounded-xl bg-areia-100 border border-areia-200">
                   <Avatar nome={c.nome} tamanho={30} />
                   <span className="text-[13.5px] font-bold text-ink flex-1 truncate text-left">{c.nome}</span>
                   {c.aceitou === true && <Pill tom="verde">aceitou</Pill>}

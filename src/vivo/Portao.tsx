@@ -330,7 +330,7 @@ const Constituir: React.FC<{ ir: (r: string) => void; onSessao: (s: Sessao) => v
           </div>
         )}
 
-        <div className="mt-5 rounded-2xl border border-ink-100 bg-ink-50/60 p-4 space-y-3">
+        <div className="mt-5 rounded-2xl border border-areia-200 bg-areia-100/60 p-4 space-y-3">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="text-[13.5px] font-bold text-ink">Código pessoal por camarada</p>
@@ -340,7 +340,7 @@ const Constituir: React.FC<{ ir: (r: string) => void; onSessao: (s: Sessao) => v
             </div>
             <Interruptor activo={pinObrigatorio} onMudar={setPin} />
           </div>
-          <div className="flex items-start justify-between gap-4 pt-3 border-t border-ink-100">
+          <div className="flex items-start justify-between gap-4 pt-3 border-t border-areia-200">
             <div className="min-w-0">
               <p className="text-[13.5px] font-bold text-ink">Permitir inscrição na hora</p>
               <p className="text-[12px] text-ink-400 mt-0.5 leading-snug">
@@ -490,7 +490,7 @@ const Entrada: React.FC<{ codigo: string; ir: (r: string) => void; onSessao: (s:
           </div>
         ) : escolhido ? (
           <div className="space-y-4">
-            <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-ink-50 border border-ink-100">
+            <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-areia-100 border border-areia-200">
               <Avatar nome={escolhido.nome} tamanho={44} />
               <div className="min-w-0 flex-1">
                 <p className="text-[15px] font-extrabold text-ink truncate">{escolhido.nome}</p>
@@ -508,7 +508,7 @@ const Entrada: React.FC<{ codigo: string; ir: (r: string) => void; onSessao: (s:
                   autoFocus
                   placeholder="0000"
                   onKeyDown={(ev) => { if (ev.key === 'Enter' && pin.length === 4) void entrar(); }}
-                  className="w-full bg-white border border-ink-200 rounded-2xl px-4 py-4 text-center text-[30px] font-mono font-extrabold tracking-[0.4em] text-ink outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+                  className="w-full bg-white border border-areia-300 rounded-2xl px-4 py-4 text-center text-[30px] font-mono font-extrabold tracking-[0.4em] text-ink outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
                 />
               </Campo>
             )}
@@ -542,7 +542,7 @@ const Entrada: React.FC<{ codigo: string; ir: (r: string) => void; onSessao: (s:
                 <button
                   key={m.id}
                   onClick={() => setEscolhido({ id: m.id, nome: m.nome })}
-                  className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-ink-100 bg-white hover:border-brand-300 hover:bg-brand-50/40 transition-all text-left"
+                  className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-areia-200 bg-white hover:border-brand-300 hover:bg-brand-50/40 transition-all text-left"
                 >
                   <Avatar nome={m.nome} tamanho={34} />
                   <span className="min-w-0 flex-1">
@@ -559,7 +559,7 @@ const Entrada: React.FC<{ codigo: string; ir: (r: string) => void; onSessao: (s:
             </div>
 
             {sala.registoAberto && (
-              <div className="mt-4 pt-4 border-t border-ink-100">
+              <div className="mt-4 pt-4 border-t border-areia-200">
                 <p className="text-[12.5px] font-bold text-ink mb-2">Não está na lista?</p>
                 <div className="flex gap-2">
                   <Input

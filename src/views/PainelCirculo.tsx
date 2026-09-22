@@ -126,7 +126,7 @@ export const PainelCirculo: React.FC = () => {
             </Card>
 
             <Card titulo="Células que exigem apoio" sub="Alertas gerados pelas regras estatutárias" pad={false}>
-              <ul className="divide-y divide-ink-100 max-h-[290px] overflow-y-auto">
+              <ul className="divide-y divide-areia-200 max-h-[290px] overflow-y-auto">
                 {comAlertas.map((c) => (
                   <li key={c.id} className="px-5 py-3">
                     <div className="flex items-start gap-3">
@@ -199,11 +199,11 @@ export const PainelCirculo: React.FC = () => {
             </Card>
 
             <Card titulo="Eleições do escalão" sub="Órgãos do Círculo" accao={<Lei id="art39" />} pad={false}>
-              <ul className="divide-y divide-ink-100">
+              <ul className="divide-y divide-areia-200">
                 {eleicoesCirculo.map((el) => (
                   <li key={el.id}>
-                    <button onClick={() => irPara('eleicoes', { eleicao: el.id })} className="w-full text-left px-5 py-3.5 flex items-start gap-3 hover:bg-ink-50/50">
-                      <span className="w-8 h-8 rounded-xl bg-ink-50 text-ink-400 grid place-items-center flex-none"><IcUrna className="w-4 h-4" /></span>
+                    <button onClick={() => irPara('eleicoes', { eleicao: el.id })} className="w-full text-left px-5 py-3.5 flex items-start gap-3 hover:bg-areia-100/50">
+                      <span className="w-8 h-8 rounded-xl bg-areia-100 text-ink-400 grid place-items-center flex-none"><IcUrna className="w-4 h-4" /></span>
                       <div className="min-w-0 flex-1">
                         <p className="text-[13px] font-bold text-ink leading-snug">{el.titulo}</p>
                         <p className="text-[11.5px] text-ink-400 mt-0.5">
@@ -250,7 +250,7 @@ export const PainelCirculo: React.FC = () => {
                   <tr key={c.id} className={c.numero === 7 ? 'bg-brand-50/40' : ''}>
                     <td>
                       <div className="flex items-center gap-2.5">
-                        <span className={`w-6 h-6 rounded-lg grid place-items-center text-[10px] font-extrabold flex-none ${i === 0 ? 'bg-gold-500 text-white' : 'bg-ink-50 text-ink-400'}`}>
+                        <span className={`w-6 h-6 rounded-lg grid place-items-center text-[10px] font-extrabold flex-none ${i === 0 ? 'bg-gold-500 text-white' : 'bg-areia-100 text-ink-400'}`}>
                           {i + 1}
                         </span>
                         <div className="min-w-0">

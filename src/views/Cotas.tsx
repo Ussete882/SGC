@@ -95,7 +95,7 @@ const RegistarQuota: React.FC<{ aberto: boolean; onFechar: () => void; mes: stri
                     disabled={pago}
                     onClick={() => { setMembroId(m.id); setPasso(1); }}
                     className={`w-full flex items-center gap-3 p-2.5 rounded-xl border transition-all ${
-                      membroId === m.id ? 'border-brand-500 bg-brand-50/60' : pago ? 'border-ink-100 bg-ink-50/50 opacity-60' : 'border-ink-200 hover:border-ink-300 bg-white'
+                      membroId === m.id ? 'border-brand-500 bg-brand-50/60' : pago ? 'border-areia-200 bg-areia-100/50 opacity-60' : 'border-areia-300 hover:border-areia-400 bg-white'
                     }`}
                   >
                     <Avatar nome={m.nome} tamanho={34} />
@@ -116,7 +116,7 @@ const RegistarQuota: React.FC<{ aberto: boolean; onFechar: () => void; mes: stri
 
         {passo === 1 && membro && (
           <div className="space-y-4">
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-ink-50 border border-ink-100">
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-areia-100 border border-areia-200">
               <Avatar nome={membro.nome} tamanho={38} />
               <div className="min-w-0">
                 <p className="text-[13.5px] font-bold text-ink truncate">{membro.nome}</p>
@@ -137,7 +137,7 @@ const RegistarQuota: React.FC<{ aberto: boolean; onFechar: () => void; mes: stri
                 <button
                   key={i}
                   onClick={() => setValor(String(x))}
-                  className="px-3 py-1.5 rounded-lg border border-ink-200 text-[12px] font-bold text-ink-500 hover:border-brand-300 hover:text-brand-700 tnum"
+                  className="px-3 py-1.5 rounded-lg border border-areia-300 text-[12px] font-bold text-ink-500 hover:border-brand-300 hover:text-brand-700 tnum"
                 >
                   {num(x)} MT
                 </button>
@@ -399,7 +399,7 @@ export const Cotas: React.FC = () => {
               {cot.emFalta.length === 0 ? (
                 <Vazio titulo="Cotização completa" texto="Todos os membros obrigados pagaram este mês." icone={<IcCheck className="w-6 h-6" />} />
               ) : (
-                <ul className="divide-y divide-ink-100">
+                <ul className="divide-y divide-areia-200">
                   {cot.emFalta.map((m: Membro) => {
                     const atraso = mesesEmAtraso(e, m.id, e.hoje);
                     return (
@@ -537,7 +537,7 @@ export const Cotas: React.FC = () => {
           </Card>
 
           <Card titulo="Movimento de fundos" sub="Todos os lançamentos" pad={false}>
-            <ul className="divide-y divide-ink-100 max-h-[430px] overflow-y-auto">
+            <ul className="divide-y divide-areia-200 max-h-[430px] overflow-y-auto">
               {e.movimentos.map((m) => (
                 <li key={m.id} className="px-5 py-3 flex items-start gap-3">
                   <span className={`w-8 h-8 rounded-xl grid place-items-center flex-none ${m.tipo === 'RECEITA' ? 'bg-verde-100 text-verde-700' : 'bg-brand-50 text-brand-600'}`}>

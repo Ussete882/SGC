@@ -227,8 +227,8 @@ const FichaReuniao: React.FC<{ r: Reuniao; onFechar: () => void }> = ({ r, onFec
           </p>
           <ol className="space-y-1.5">
             {r.agenda.map((p) => (
-              <li key={p.id} className="flex items-start gap-3 p-2.5 rounded-xl bg-ink-50/70 border border-ink-100">
-                <span className="w-5 h-5 rounded-lg bg-white border border-ink-200 text-[10px] font-extrabold text-ink-500 grid place-items-center flex-none">
+              <li key={p.id} className="flex items-start gap-3 p-2.5 rounded-xl bg-areia-100/70 border border-areia-200">
+                <span className="w-5 h-5 rounded-lg bg-white border border-areia-300 text-[10px] font-extrabold text-ink-500 grid place-items-center flex-none">
                   {p.ordem}
                 </span>
                 <span className="text-[13px] text-ink-600 leading-snug flex-1">{p.titulo}</span>
@@ -266,7 +266,7 @@ const FichaReuniao: React.FC<{ r: Reuniao; onFechar: () => void }> = ({ r, onFec
             {universo.map((m) => {
               const estado = r.presencas[m.id];
               return (
-                <li key={m.id} className="flex items-center gap-3 p-2 rounded-xl border border-ink-100">
+                <li key={m.id} className="flex items-center gap-3 p-2 rounded-xl border border-areia-200">
                   <Avatar nome={m.nome} tamanho={30} />
                   <div className="min-w-0 flex-1">
                     <p className="text-[13px] font-bold text-ink truncate">{m.nome}</p>
@@ -281,7 +281,7 @@ const FichaReuniao: React.FC<{ r: Reuniao; onFechar: () => void }> = ({ r, onFec
                           title={PRESENCA_META[c].rotulo}
                           onClick={() => marcarPresenca(r.id, m.id, c, c === 'JUSTIFICADO' ? 'Justificação apresentada ao Secretariado' : undefined)}
                           className={`w-8 h-8 rounded-lg border text-[12px] font-extrabold transition-all ${
-                            on ? PRESENCA_META[c].cor : 'bg-white border-ink-200 text-ink-300 hover:border-ink-300'
+                            on ? PRESENCA_META[c].cor : 'bg-white border-areia-300 text-ink-300 hover:border-areia-400'
                           }`}
                         >
                           {PRESENCA_META[c].curto}
@@ -305,7 +305,7 @@ const FichaReuniao: React.FC<{ r: Reuniao; onFechar: () => void }> = ({ r, onFec
 
         {/* encerramento */}
         {r.estado === 'AGENDADA' && (
-          <div className="rounded-xl border border-ink-100 p-4 space-y-3">
+          <div className="rounded-xl border border-areia-200 p-4 space-y-3">
             <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-ink-400">
               Encerramento da sessão <Lei id="manual_duracao" discreto className="ml-1" />
             </p>
@@ -327,7 +327,7 @@ const FichaReuniao: React.FC<{ r: Reuniao; onFechar: () => void }> = ({ r, onFec
             {r.decisoes.map((d) => {
               const resp = e.membros.find((m) => m.id === d.responsavelId);
               return (
-                <li key={d.id} className="flex items-start gap-3 p-2.5 rounded-xl border border-ink-100">
+                <li key={d.id} className="flex items-start gap-3 p-2.5 rounded-xl border border-areia-200">
                   <input type="checkbox" className="sgc mt-0.5" checked={d.cumprida} onChange={() => toggleDecisao(r.id, d.id)} />
                   <div className="min-w-0 flex-1">
                     <p className={`text-[13px] leading-snug ${d.cumprida ? 'text-ink-300 line-through' : 'text-ink-600'}`}>{d.texto}</p>
@@ -357,7 +357,7 @@ const FichaReuniao: React.FC<{ r: Reuniao; onFechar: () => void }> = ({ r, onFec
         </div>
 
         {/* acta */}
-        <div className="rounded-xl border border-ink-100 p-4">
+        <div className="rounded-xl border border-areia-200 p-4">
           <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-ink-400 mb-2">
             Acta da sessão <Lei id="manual_acta" discreto className="ml-1" />
           </p>
@@ -435,7 +435,7 @@ export const Reunioes: React.FC = () => {
                 <p className="flex items-center gap-2 text-[12px] text-ink-400"><IcRelogio className="w-3.5 h-3.5 text-ink-300" />{r.hora}{r.duracaoMin ? ` · ${r.duracaoMin} min` : ''}</p>
                 <p className="flex items-center gap-2 text-[12px] text-ink-400 truncate"><IcLocal className="w-3.5 h-3.5 text-ink-300 flex-none" />{r.local}</p>
               </div>
-              <div className="mt-3 pt-3 border-t border-ink-100 flex items-center gap-2 flex-wrap">
+              <div className="mt-3 pt-3 border-t border-areia-200 flex items-center gap-2 flex-wrap">
                 {r.estado === 'AGENDADA' ? (
                   conv.enviada ? <Pill tom="verde"><IcCheck className="w-3 h-3" />convocada</Pill> : <Pill tom={conv.expirado ? 'brand' : 'gold'}>convocatória em falta</Pill>
                 ) : (
@@ -509,10 +509,10 @@ export const Reunioes: React.FC = () => {
 
       {aba === 'actas' && (
         <Card pad={false} titulo="Arquivo de Actas" sub="Cada Acta é lida e aprovada na reunião seguinte">
-          <ul className="divide-y divide-ink-100">
+          <ul className="divide-y divide-areia-200">
             {e.reunioes.filter((r) => r.acta).map((r) => (
               <li key={r.id} className="px-5 py-3.5 flex items-center gap-4">
-                <span className="w-9 h-9 rounded-xl bg-ink-50 text-ink-400 grid place-items-center flex-none">
+                <span className="w-9 h-9 rounded-xl bg-areia-100 text-ink-400 grid place-items-center flex-none">
                   <IcCartao className="w-4 h-4" />
                 </span>
                 <div className="min-w-0 flex-1">

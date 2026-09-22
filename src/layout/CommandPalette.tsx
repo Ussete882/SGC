@@ -131,17 +131,17 @@ export const CommandPalette: React.FC<{ aberto: boolean; onFechar: () => void }>
   return (
     <div className="fixed inset-0 z-[95] flex items-start justify-center pt-[8vh] px-4">
       <div className="absolute inset-0 bg-ink/55 backdrop-blur-sm a-fade" onClick={onFechar} />
-      <div className="relative w-full max-w-[620px] bg-white rounded-2xl shadow-lift overflow-hidden a-scale">
-        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-ink-100">
+      <div className="relative w-full max-w-[620px] bg-white rounded-[28px] shadow-alta overflow-hidden a-scale">
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-areia-200">
           <IcBusca className="w-5 h-5 text-ink-300" />
           <input
             ref={input}
             value={q}
             onChange={(ev) => setQ(ev.target.value)}
             placeholder="Procurar membros, ecrãs e acções…"
-            className="flex-1 text-[15px] text-ink placeholder:text-ink-300 outline-none bg-transparent"
+            className="flex-1 text-[16px] font-medium text-ink placeholder:text-ink-300 outline-none bg-transparent"
           />
-          <kbd className="text-[10px] font-mono font-bold bg-ink-50 border border-ink-200 rounded px-1.5 py-0.5 text-ink-400">esc</kbd>
+          <kbd className="text-[10px] font-mono font-bold bg-areia-100 rounded-full px-2 py-1 text-ink-400">esc</kbd>
         </div>
 
         <div className="max-h-[54vh] overflow-y-auto py-2">
@@ -155,12 +155,12 @@ export const CommandPalette: React.FC<{ aberto: boolean; onFechar: () => void }>
             return (
               <React.Fragment key={r.id}>
                 {novoGrupo && (
-                  <p className="px-4 pt-3 pb-1.5 text-[9.5px] font-extrabold uppercase tracking-[0.16em] text-ink-400">{r.grupo}</p>
+                  <p className="rotulo px-5 pt-3 pb-1.5 text-ink-300">{r.grupo}</p>
                 )}
                 <button
                   onMouseEnter={() => setSel(i)}
                   onClick={() => { r.executar(); onFechar(); }}
-                  className={`w-full text-left px-4 py-2.5 flex items-center gap-3 ${on ? 'bg-brand-50' : 'hover:bg-ink-50/70'}`}
+                  className={`w-full text-left px-5 py-2.5 flex items-center gap-3 transition-colors ${on ? 'bg-brand-50' : 'hover:bg-areia-100/70'}`}
                 >
                   <span className={`flex-none ${on ? 'text-brand-600' : 'text-ink-300'}`}>{r.icone}</span>
                   <span className="min-w-0 flex-1">
@@ -174,7 +174,7 @@ export const CommandPalette: React.FC<{ aberto: boolean; onFechar: () => void }>
           })}
         </div>
 
-        <div className="px-4 py-2.5 border-t border-ink-100 bg-ink-50/60 flex items-center gap-3 text-[11px] text-ink-400">
+        <div className="px-5 py-3 border-t border-areia-200 bg-areia-50 flex items-center gap-2 text-[11px] text-ink-400">
           <Pill tom="neutro">↑ ↓ navegar</Pill>
           <Pill tom="neutro">↵ abrir</Pill>
           <span className="ml-auto">{filtrados.length} resultado(s)</span>

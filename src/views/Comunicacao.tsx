@@ -147,7 +147,7 @@ export const Comunicacao: React.FC = () => {
             <button
               key={m.id}
               onClick={() => aplicarModelo(m.id)}
-              className="text-left p-3.5 rounded-xl border border-ink-200 hover:border-brand-300 hover:bg-brand-50/40 transition-all group"
+              className="text-left p-3.5 rounded-xl border border-areia-300 hover:border-brand-300 hover:bg-brand-50/40 transition-all group"
             >
               <div className="flex items-start justify-between gap-2">
                 <p className="text-[13.5px] font-bold text-ink leading-snug">{m.rotulo}</p>
@@ -174,14 +174,14 @@ export const Comunicacao: React.FC = () => {
       {aba === 'novo' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <Card titulo="Audiências disponíveis" sub="Calculadas em tempo real a partir dos dados da Célula" pad={false}>
-            <ul className="divide-y divide-ink-100">
+            <ul className="divide-y divide-areia-200">
               {SEGMENTOS.map((s) => {
                 const d = destinatariosDe(s.id);
                 return (
                   <li key={s.id}>
                     <button
                       onClick={() => { setSegmento(s.id); setAberto(true); }}
-                      className="w-full text-left px-5 py-3.5 flex items-center gap-3 hover:bg-ink-50/50"
+                      className="w-full text-left px-5 py-3.5 flex items-center gap-3 hover:bg-areia-100/50"
                       disabled={d.length === 0}
                     >
                       <div className="min-w-0 flex-1">
@@ -213,7 +213,7 @@ export const Comunicacao: React.FC = () => {
                     </span>
                     <span className="text-[12px] text-ink-400">{c.membros} membros · {CANAL_META[c.canal].nota}</span>
                   </div>
-                  <div className="w-full h-2 bg-ink-100 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-areia-200 rounded-full overflow-hidden">
                     <div
                       className="h-2 rounded-full transition-all duration-700"
                       style={{
@@ -225,7 +225,7 @@ export const Comunicacao: React.FC = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-5 pt-4 border-t border-ink-100">
+            <div className="mt-5 pt-4 border-t border-areia-200">
               <ul className="space-y-2">
                 {membrosDaCelula(e).slice(0, 6).map((m) => (
                   <li key={m.id} className="flex items-center gap-2.5 text-[12.5px]">
@@ -243,11 +243,11 @@ export const Comunicacao: React.FC = () => {
 
       {aba === 'historico' && (
         <Card pad={false} titulo="Histórico de comunicações" sub="Registo automático por membro">
-          <ul className="divide-y divide-ink-100">
+          <ul className="divide-y divide-areia-200">
             {e.mensagens.map((m) => (
               <li key={m.id} className="px-5 py-4">
                 <div className="flex items-start gap-3.5">
-                  <span className="w-9 h-9 rounded-xl bg-ink-50 text-ink-400 grid place-items-center flex-none">
+                  <span className="w-9 h-9 rounded-xl bg-areia-100 text-ink-400 grid place-items-center flex-none">
                     {CANAL_META[m.canais[0]].icone}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -325,7 +325,7 @@ export const Comunicacao: React.FC = () => {
                       key={c}
                       onClick={() => setCanais((prev) => (on ? prev.filter((x) => x !== c) : [...prev, c]))}
                       className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl border text-[13px] font-bold transition-all ${
-                        on ? 'border-brand-500 bg-brand-50 text-brand-700' : 'border-ink-200 text-ink-400 hover:border-ink-300'
+                        on ? 'border-brand-500 bg-brand-50 text-brand-700' : 'border-areia-300 text-ink-400 hover:border-areia-400'
                       }`}
                     >
                       {CANAL_META[c].icone}
@@ -357,7 +357,7 @@ export const Comunicacao: React.FC = () => {
               </div>
             </div>
 
-            <div className="rounded-xl border border-ink-100 p-3">
+            <div className="rounded-xl border border-areia-200 p-3">
               <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-ink-400 mb-2">Destinatários</p>
               <ul className="space-y-1.5 max-h-[180px] overflow-y-auto">
                 {destinatarios.map((id) => {

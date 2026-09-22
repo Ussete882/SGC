@@ -108,7 +108,7 @@ export const PainelMembro: React.FC = () => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
         {/* próximas actividades */}
         <Card className="xl:col-span-2" titulo="Próximas reuniões e actividades da Célula" sub="Convocatórias recebidas pelo meu canal preferido" pad={false}>
-          <ul className="divide-y divide-ink-100">
+          <ul className="divide-y divide-areia-200">
             {proximas.map((r) => (
               <li key={r.id} className="px-5 py-4 flex items-start gap-4">
                 <div className="text-center flex-none w-12">
@@ -174,7 +174,7 @@ export const PainelMembro: React.FC = () => {
               </div>
             ))}
           </div>
-          <div className="mt-4 pt-4 border-t border-ink-100">
+          <div className="mt-4 pt-4 border-t border-areia-200">
             <Linha rotulo="Quota de referência">{mt(ref)}</Linha>
             <Linha rotulo="Mês corrente">
               {e.quotas.some((q) => q.membroId === eu.id && q.mes === mesDe(e.hoje))
@@ -205,7 +205,7 @@ export const PainelMembro: React.FC = () => {
           </div>
 
           {eleicoesAbertas.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-ink-100">
+            <div className="mt-4 pt-4 border-t border-areia-200">
               <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-ink-400 mb-2">Eleições em curso na Célula</p>
               <ul className="space-y-2">
                 {eleicoesAbertas.map((el) => (
@@ -224,10 +224,10 @@ export const PainelMembro: React.FC = () => {
 
         {/* avisos */}
         <Card titulo="Avisos do Secretariado" sub="Comunicações que recebi" pad={false}>
-          <ul className="divide-y divide-ink-100">
+          <ul className="divide-y divide-areia-200">
             {minhasMensagens.map((m) => (
               <li key={m.id} className="px-5 py-3.5 flex items-start gap-3">
-                <span className="w-8 h-8 rounded-xl bg-ink-50 text-ink-400 grid place-items-center flex-none">
+                <span className="w-8 h-8 rounded-xl bg-areia-100 text-ink-400 grid place-items-center flex-none">
                   <IcMegafone className="w-4 h-4" />
                 </span>
                 <div className="min-w-0 flex-1">
@@ -243,10 +243,10 @@ export const PainelMembro: React.FC = () => {
 
         {/* documentos */}
         <Card titulo="Documentos partilhados" sub="Actas aprovadas e normativos do Partido" pad={false}>
-          <ul className="divide-y divide-ink-100">
+          <ul className="divide-y divide-areia-200">
             {docs.map((d) => (
               <li key={d.id} className="px-5 py-3 flex items-center gap-3">
-                <span className={`w-8 h-8 rounded-xl grid place-items-center flex-none ${d.escopo === 'CENTRAL' ? 'bg-ink text-gold-400' : 'bg-ink-50 text-ink-400'}`}>
+                <span className={`w-8 h-8 rounded-xl grid place-items-center flex-none ${d.escopo === 'CENTRAL' ? 'bg-ink text-gold-400' : 'bg-areia-100 text-ink-400'}`}>
                   <IcCartao className="w-4 h-4" />
                 </span>
                 <div className="min-w-0 flex-1">
@@ -262,7 +262,7 @@ export const PainelMembro: React.FC = () => {
 
       <Card>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <span className="w-10 h-10 rounded-xl bg-ink-50 text-ink-400 grid place-items-center flex-none">
+          <span className="w-10 h-10 rounded-xl bg-areia-100 text-ink-400 grid place-items-center flex-none">
             <IcCheck className="w-5 h-5" />
           </span>
           <div className="flex-1">

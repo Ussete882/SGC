@@ -188,7 +188,7 @@ export const PainelNacional: React.FC = () => {
                   </div>
                 ))}
               </div>
-              <div className="mt-5 pt-4 border-t border-ink-100">
+              <div className="mt-5 pt-4 border-t border-areia-200">
                 <Linha rotulo="Retido nas Células (60%)"><span className="text-verde-700">{mt(t.retidoCelulas)}</span></Linha>
                 <Linha rotulo="Para os escalões (40%)"><span className="text-brand-700">{mt(t.paraEscaloes)}</span></Linha>
               </div>
@@ -293,7 +293,7 @@ export const PainelNacional: React.FC = () => {
                     <tr key={p.codigo}>
                       <td>
                         <div className="flex items-center gap-2.5">
-                          <span className="w-7 h-7 rounded-lg bg-ink-50 text-ink-400 grid place-items-center flex-none text-[10px] font-extrabold font-mono">
+                          <span className="w-7 h-7 rounded-lg bg-areia-100 text-ink-400 grid place-items-center flex-none text-[10px] font-extrabold font-mono">
                             {p.codigo.replace('P', '')}
                           </span>
                           <span className="font-bold text-ink">{p.nome}</span>
@@ -319,7 +319,7 @@ export const PainelNacional: React.FC = () => {
                     </tr>
                   );
                 })}
-                <tr className="bg-ink-50">
+                <tr className="bg-areia-100">
                   <td className="font-extrabold text-ink">Total nacional</td>
                   <td className="tnum font-extrabold">{num(t.celulasAderentes)}</td>
                   <td className="tnum font-extrabold text-[15px] text-brand-700">{num(t.reunioesMes)}</td>
@@ -368,7 +368,7 @@ export const PainelNacional: React.FC = () => {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className={`w-6 h-6 rounded-lg grid place-items-center text-[10px] font-extrabold flex-none ${i === 0 ? 'bg-gold-500 text-white' : 'bg-ink-50 text-ink-400'}`}>
+                        <span className={`w-6 h-6 rounded-lg grid place-items-center text-[10px] font-extrabold flex-none ${i === 0 ? 'bg-gold-500 text-white' : 'bg-areia-100 text-ink-400'}`}>
                           {i + 1}
                         </span>
                         <p className="text-[14.5px] font-bold text-ink truncate">{p.nome}</p>
@@ -384,7 +384,7 @@ export const PainelNacional: React.FC = () => {
                     <Micrografico dados={p.serie12m} cor={taxa >= 85 ? '#00A34F' : '#E61923'} altura={40} />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-ink-100">
+                  <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-areia-200">
                     <div>
                       <p className="text-[9.5px] font-extrabold uppercase tracking-[0.1em] text-ink-400">Reuniões no mês</p>
                       <p className="text-[17px] font-extrabold tnum text-ink">{num(p.reunioesMes)}</p>
@@ -403,7 +403,7 @@ export const PainelNacional: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="mt-3 pt-3 border-t border-ink-100 flex items-center gap-2">
+                  <div className="mt-3 pt-3 border-t border-areia-200 flex items-center gap-2">
                     <Pill tom="neutro">{num(p.eleicoesAbertas)} eleições em curso</Pill>
                     <Pill tom="neutro">{p.assiduidade}% assiduidade</Pill>
                   </div>
@@ -425,7 +425,7 @@ export const PainelNacional: React.FC = () => {
                 { f: 'Fase 3', t: 'Expansão faseada', d: 'Alargamento progressivo a mais Círculos e Distritos, com formação e pontos focais locais.', on: true },
                 { f: 'Fase 4', t: 'Enriquecimento', d: 'Activação gradual das funcionalidades adiadas, começando pelas mais pedidas pelas Células.', on: false },
               ].map((x) => (
-                <div key={x.f} className={`rounded-2xl border p-4 ${x.on ? 'border-verde-200 bg-verde-100/40' : 'border-ink-100 bg-ink-50/40'}`}>
+                <div key={x.f} className={`rounded-2xl border p-4 ${x.on ? 'border-verde-200 bg-verde-100/40' : 'border-areia-200 bg-areia-100/40'}`}>
                   <div className="flex items-center gap-2">
                     <span className={`w-6 h-6 rounded-lg grid place-items-center text-[10px] font-extrabold ${x.on ? 'bg-verde-600 text-white' : 'bg-ink-200 text-ink-500'}`}>
                       {x.f.replace('Fase ', '')}
@@ -472,7 +472,7 @@ export const PainelNacional: React.FC = () => {
                   })}
               </tbody>
             </Tabela>
-            <div className="px-5 py-3.5 border-t border-ink-100 bg-ink-50/60 flex items-start gap-2.5">
+            <div className="px-5 py-3.5 border-t border-areia-200 bg-areia-100/60 flex items-start gap-2.5">
               <IcEscudo className="w-4 h-4 text-ink-300 flex-none mt-0.5" />
               <p className="text-[11.5px] text-ink-400 leading-relaxed">
                 A média de membros por Célula é um indicador de saúde orgânica: a Célula é constituída por um mínimo de cinco
@@ -483,7 +483,7 @@ export const PainelNacional: React.FC = () => {
           </Card>
 
           <Card titulo="O que falta activar" sub="Funcionalidades expressamente adiadas na Versão 1" pad={false}>
-            <ul className="divide-y divide-ink-100">
+            <ul className="divide-y divide-areia-200">
               {[
                 { t: 'Plano de Actividades anual estruturado', d: 'Aprovado pela Reunião Geral, com verificação do grau de cumprimento.' },
                 { t: 'Processos disciplinares e módulo do Elemento de Ligação', d: 'Sanções, audição prévia e recursos até ao Comité Central.' },
@@ -492,7 +492,7 @@ export const PainelNacional: React.FC = () => {
                 { t: 'Aplicação móvel com modo offline', d: 'Para zonas com conectividade limitada.' },
               ].map((x) => (
                 <li key={x.t} className="px-5 py-3.5 flex items-start gap-3.5">
-                  <span className="w-7 h-7 rounded-lg border border-dashed border-ink-200 grid place-items-center flex-none text-ink-300">
+                  <span className="w-7 h-7 rounded-lg border border-dashed border-areia-300 grid place-items-center flex-none text-ink-300">
                     <IcMapa className="w-3.5 h-3.5" />
                   </span>
                   <div className="min-w-0 flex-1">
