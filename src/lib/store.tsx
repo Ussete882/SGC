@@ -8,7 +8,7 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AGENDA_SECRETARIADO, AGENDA_TIPO, CARGOS_ELEITORAIS, REGRAS } from './estatutos';
-import { addDays, addYears, anos, mesDe, uid } from './format';
+import { addDays, addYears, anos, iso, mesDe, uid } from './format';
 import { apurar, quotaReferencia } from './selectors';
 import { criarEstadoCelulaB, criarEstadoInicial, VERSAO_SEED } from './seed';
 import type {
@@ -113,7 +113,11 @@ function carregar(): Estado {
     const raw = localStorage.getItem(CHAVE);
     if (raw) {
       const parsed = JSON.parse(raw) as Estado;
-      if (parsed?.versaoSeed === VERSAO_SEED) return parsed;
+      if (parsed?.versaoSeed === VERSAO_SEED) {
+        /* O trabalho guardado é de ontem; o dia não é. Num sistema que conta
+           prazos estatutários, uma data errada não é um detalhe estético. */
+        return parsed.cenario === 'REAL' ? { ...parsed, hoje: iso(new Date()) } : parsed;
+      }
     }
   } catch {
     /* cenário novo */
@@ -143,6 +147,26 @@ export const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) 
       /* espaço esgotado — o protótipo continua a funcionar em memória */
     }
   }, [e]);
+
+  /* O separador pode ficar aberto a atravessar a meia-noite. Verifica-se ao
+     voltar ao ecrã e de dez em dez minutos: se o dia virou, o cenário real
+     acompanha. O de demonstração fica onde está, que é onde faz sentido. */
+  useEffect(() => {
+    const acertar = () =>
+      setE((prev) => {
+        if (prev.cenario !== 'REAL') return prev;
+        const agora = iso(new Date());
+        return agora === prev.hoje ? prev : { ...prev, hoje: agora };
+      });
+    const relogio = window.setInterval(acertar, 600_000);
+    document.addEventListener('visibilitychange', acertar);
+    window.addEventListener('focus', acertar);
+    return () => {
+      window.clearInterval(relogio);
+      document.removeEventListener('visibilitychange', acertar);
+      window.removeEventListener('focus', acertar);
+    };
+  }, []);
 
   const fecharToast = useCallback((id: string) => {
     setToasts((t) => t.filter((x) => x.id !== id));

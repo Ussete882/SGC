@@ -693,16 +693,50 @@ export const Emblema: React.FC<{ tamanho?: number; className?: string; selo?: bo
   );
 };
 
-/** Faixa com as cores da bandeira nacional — verde, preto, amarelo, vermelho. */
-export const FaixaBandeira: React.FC<{ altura?: number; className?: string; arredondada?: boolean }> = ({
-  altura = 4, className = '', arredondada,
-}) => (
+/**
+ * Faixa com as cores da bandeira nacional — verde, preto, amarelo, vermelho.
+ * `animada` hasteia-a: cresce da esquerda, como uma bandeira a subir. É o
+ * gesto de entrada da casa, e não se usa mais do que uma vez por ecrã.
+ */
+export const FaixaBandeira: React.FC<{
+  altura?: number;
+  className?: string;
+  arredondada?: boolean;
+  animada?: boolean;
+}> = ({ altura = 4, className = '', arredondada, animada }) => (
   <div
-    className={`faixa-bandeira w-full ${arredondada ? 'rounded-full' : ''} ${className}`}
+    className={`faixa-bandeira w-full ${arredondada ? 'rounded-full' : ''} ${animada ? 'a-hastear' : ''} ${className}`}
     style={{ height: altura }}
     aria-hidden="true"
   />
 );
+
+/**
+ * O lema em vigor do Partido. As três primeiras linhas situam a efeméride;
+ * a última é a que se diz em voz alta, e por isso é a única que ganha peso.
+ * `escuro` indica que o fundo é escuro — a mesma convenção da Marca.
+ */
+export const Lema: React.FC<{ completo?: boolean; escuro?: boolean; className?: string }> = ({
+  completo, escuro = true, className = '',
+}) => {
+  const quieto = escuro ? 'text-white/45' : 'text-ink-300';
+  const forte = escuro ? 'text-white/90' : 'text-ink-600';
+  return (
+    <div className={`flex items-start gap-3 ${className}`}>
+      <span className="faixa-bandeira w-7 h-[3px] rounded-full flex-none mt-[7px]" aria-hidden="true" />
+      <p className="leading-[1.8] min-w-0">
+        {completo && (
+          <>
+            <span className={`rotulo block ${quieto}`}>60 anos,</span>
+            <span className={`rotulo block ${quieto}`}>Consolidando a Unidade Nacional,</span>
+            <span className={`rotulo block ${quieto}`}>Promovendo a Paz e o Desenvolvimento</span>
+          </>
+        )}
+        <span className={`rotulo block ${forte}`}>FRELIMO, a Força da Mudança!</span>
+      </p>
+    </div>
+  );
+};
 
 export const Marca: React.FC<{ compacto?: boolean; className?: string; escuro?: boolean }> = ({
   compacto, className = '', escuro = true,

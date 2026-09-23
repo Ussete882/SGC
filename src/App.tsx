@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Provider, useStore } from './lib/store';
 import { Shell } from './layout/Shell';
 import { CommandPalette } from './layout/CommandPalette';
-import { Emblema, FaixaBandeira, Lei, Pill, Rotulo, Seta } from './ui/primitives';
+import { Emblema, FaixaBandeira, Lei, Lema, Pill, Rotulo, Seta } from './ui/primitives';
 import { IcCheck, IcFechar, IcLei, IcRaio } from './ui/icons';
 
 import { PainelCelula } from './views/PainelCelula';
@@ -97,34 +97,33 @@ const Entrada: React.FC = () => {
           </div>
         </div>
 
-        {/* o título, encostado ao fundo */}
-        <div className="relative z-10 mt-auto px-6 sm:px-10 pt-14 pb-8 lg:pb-12 a-rise">
-          <p className="rotulo text-white/50 mb-5">Frente de Libertação de Moçambique</p>
+        {/* O título encosta ao fundo e entra linha a linha, de trás de uma
+            máscara. O lema fecha a sequência, e a bandeira é hasteada por fim. */}
+        <div className="relative z-10 mt-auto px-6 sm:px-10 pt-14 pb-8 lg:pb-12">
+          <p className="rotulo text-white/50 mb-5 a-fade d1">Frente de Libertação de Moçambique</p>
           <h1 className="display text-white text-[clamp(38px,6.6vw,76px)]">
-            Sistema
-            <br />
-            de Gestão
-            <br />
-            <span className="text-white/60">da Célula</span>
+            <span className="block a-revelar d2">Sistema</span>
+            <span className="block a-revelar d3">de Gestão</span>
+            <span className="block a-revelar d4 text-white/60">da Célula</span>
           </h1>
-          <p className="hidden sm:block text-white/60 text-[14px] mt-6 max-w-md leading-relaxed">
+          <p className="hidden sm:block text-white/60 text-[14px] mt-6 max-w-md leading-relaxed a-rise d5">
             Membros, cotas, reuniões, documentação — e a democracia interna, da Célula ao escalão nacional. Ancorado
             nos Estatutos da FRELIMO e no Manual da Célula.
           </p>
-          <div className="flex items-center gap-3 mt-7 sm:mt-8">
-            <span className="w-9 h-[3px] rounded-full bg-white/70" />
-            <p className="rotulo text-white/50">A Luta Continua</p>
-          </div>
+          <Lema completo className="mt-7 sm:mt-8 a-rise d6" />
         </div>
 
-        <FaixaBandeira altura={5} className="relative z-10" />
+        <FaixaBandeira altura={5} animada className="relative z-10 d7" />
       </section>
 
       {/* ───────────────────────────── A entrada ──────────────────────────── */}
       <section className="flex-1 min-w-0 flex flex-col lg:overflow-y-auto">
         <div className="flex items-center justify-between px-6 sm:px-10 pt-8">
           <Pill tom="neutro">Protótipo funcional</Pill>
-          <p className="text-[11.5px] text-ink-300">Setembro de 2026</p>
+          {/* Só a inicial: `capitalize` poria maiúscula também no «de». */}
+          <p className="text-[11.5px] text-ink-300 first-letter:uppercase">
+            {new Date().toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' })}
+          </p>
         </div>
 
         <div className="flex-1 flex flex-col justify-center px-6 sm:px-10 py-10 max-w-[560px] w-full mx-auto lg:mx-0">
@@ -155,13 +154,11 @@ const Entrada: React.FC = () => {
               <button
                 key={l.id}
                 onClick={() => entrar(l.id as any, l.v)}
-                className="group text-left w-full rounded-[22px] bg-white shadow-card p-4 pl-5 flex items-center justify-between gap-4 hover:bg-ink hover:shadow-soft transition-all duration-300 ease-swift"
+                className="group text-left w-full rounded-[22px] bg-white shadow-card p-4 pl-5 flex items-center justify-between gap-4 hover:bg-gold-500 hover:shadow-soft transition-all duration-300 ease-swift"
               >
                 <div className="min-w-0">
-                  <p className="text-[15px] font-bold text-ink group-hover:text-white tracking-[-0.02em] leading-tight">
-                    {l.t}
-                  </p>
-                  <p className="text-[12.5px] text-ink-400 group-hover:text-white/55 mt-1 leading-snug">{l.d}</p>
+                  <p className="text-[15px] font-bold text-ink tracking-[-0.02em] leading-tight">{l.t}</p>
+                  <p className="text-[12.5px] text-ink-400 group-hover:text-ink-700 mt-1 leading-snug">{l.d}</p>
                 </div>
                 <Seta tamanho={32} />
               </button>
@@ -195,16 +192,6 @@ const Entrada: React.FC = () => {
               </div>
             </a>
           </div>
-        </div>
-
-        <div className="px-6 sm:px-10 pb-8">
-          <p className="text-[11.5px] text-ink-300 leading-relaxed max-w-[560px]">
-            Sem base de dados: o cenário vive neste navegador e pode ser reposto a qualquer momento. Lá dentro,{' '}
-            <kbd className="font-mono font-bold bg-white rounded-md px-1.5 py-0.5 text-[10.5px] text-ink-400 shadow-card">
-              Ctrl K
-            </kbd>{' '}
-            procura membros, ecrãs e acções.
-          </p>
         </div>
       </section>
     </div>

@@ -706,7 +706,7 @@ function construirProvincias(): ProvinciaResumo[] {
 
 // ───────────────────────────────── Estado ───────────────────────────────────
 
-export const VERSAO_SEED = 11;
+export const VERSAO_SEED = 12;
 
 export function criarEstadoInicial(): Estado {
   return {
@@ -723,6 +723,7 @@ export function criarEstadoInicial(): Estado {
     documentos: construirDocumentos(),
     celulasCirculo: construirCelulasCirculo(),
     provincias: construirProvincias(),
+    cenario: 'DEMO',
     hoje: HOJE,
     versaoSeed: VERSAO_SEED,
   };
@@ -832,6 +833,7 @@ export function criarEstadoCelulaB(): Estado {
     documentos: construirDocumentos().filter((d) => d.bloqueado),
     celulasCirculo: [resumoB],
     provincias: [],
+    cenario: 'REAL',
     hoje,
     versaoSeed: VERSAO_SEED,
   };

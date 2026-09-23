@@ -102,7 +102,7 @@ export const PainelCelula: React.FC = () => {
       {/* ══════════════════════════ Hero ══════════════════════════ */}
       <section className="relative rounded-[26px] hero-bg text-white overflow-hidden shadow-lift">
         <div className="absolute inset-0 grid-paper opacity-[0.06]" />
-        <FaixaBandeira altura={4} className="absolute top-0 inset-x-0" />
+        <FaixaBandeira altura={4} animada className="absolute top-0 inset-x-0" />
 
         <div className="relative flex flex-col lg:flex-row lg:items-end gap-9 lg:gap-14 px-6 sm:px-8 lg:px-12 pt-10 pb-8 lg:pt-14 lg:pb-12">
           {/* Quem fala, e para quê. O emblema e o nome do sistema vivem na

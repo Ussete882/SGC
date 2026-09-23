@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useStore } from '../lib/store';
 import { avisos as calcAvisos, calcularIVO, membrosDaCelula, totaisNacionais } from '../lib/selectors';
-import { compacto, dataLonga, nomeCurto } from '../lib/format';
-import { Avatar, Btn, Emblema, FaixaBandeira, Lei, Marca, Pill, Rotulo } from '../ui/primitives';
+import { compacto, nomeCurto } from '../lib/format';
+import { Avatar, Btn, Emblema, FaixaBandeira, Lei, Lema, Marca, Pill, Rotulo } from '../ui/primitives';
 import {
   IcAviso, IcBusca, IcCalendario, IcChevronBaixo, IcEscudo, IcFechar, IcMapa, IcMegafone, IcMembros,
-  IcMenu, IcMoeda, IcPainel, IcPasta, IcRaio, IcRede, IcRelatorio, IcRepor, IcSair, IcSino, IcTeclado,
+  IcMenu, IcMoeda, IcPainel, IcPasta, IcRaio, IcRede, IcRelatorio, IcRepor, IcSair, IcSino,
   IcTrocar, IcUrna,
 } from '../ui/icons';
 import type { Lente } from '../lib/types';
@@ -490,13 +490,13 @@ const Cabecalho: React.FC = () => {
     <div className="pt-8 pb-7">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
         <div className="min-w-0">
-          <div className="flex items-center gap-2.5 mb-4">
+          <div className="flex items-center gap-2.5 mb-4 a-fade">
             <span className="w-5 h-[3px] rounded-full bg-brand-600 flex-none" />
             <Rotulo className="!text-ink-400 truncate">{contexto}</Rotulo>
             {lente === 'MEMBRO' && <Pill tom="azul">apenas consulta</Pill>}
           </div>
-          <h1 className="display text-ink text-[clamp(30px,4.4vw,46px)]">{meta.t}</h1>
-          {meta.s && <p className="text-[14px] text-ink-400 mt-3.5 max-w-2xl leading-relaxed">{meta.s}</p>}
+          <h1 className="display text-ink text-[clamp(30px,4.4vw,46px)] a-revelar d1">{meta.t}</h1>
+          {meta.s && <p className="text-[14px] text-ink-400 mt-3.5 max-w-2xl leading-relaxed a-rise d2">{meta.s}</p>}
         </div>
 
         <div className="flex flex-col items-start lg:items-end gap-3 flex-none">
@@ -573,35 +573,30 @@ const Cabecalho: React.FC = () => {
 /* ══════════════════════════════════ Shell ══════════════════════════════════ */
 
 export const Shell: React.FC<{ children: React.ReactNode; onBusca: () => void }> = ({ children, onBusca }) => {
-  const { e } = useStore();
+  const { vista } = useStore();
   const [menu, setMenu] = useState(false);
 
   return (
     <div className="min-h-screen canvas-bg">
       {/* A assinatura do Partido, a coroar o ecrã inteiro */}
-      <FaixaBandeira altura={3} className="no-print fixed top-0 inset-x-0 z-[60]" />
+      <FaixaBandeira altura={3} animada className="no-print fixed top-0 inset-x-0 z-[60]" />
 
       <BarraTopo onBusca={onBusca} onMenu={() => setMenu(true)} />
       <Folha aberto={menu} onFechar={() => setMenu(false)} />
 
       <main className="px-4 sm:px-6 lg:px-8 pb-10 max-w-[1520px] mx-auto print-largura">
-        <div className="no-print"><Cabecalho /></div>
+        {/* A chave faz o cabeçalho remontar a cada ecrã, para a entrada
+            se repetir — é o que dá a sensação de página nova. */}
+        <div className="no-print" key={vista}><Cabecalho /></div>
         {children}
       </main>
 
       <footer className="no-print px-4 sm:px-6 lg:px-8 pb-10 pt-4 max-w-[1520px] mx-auto">
         <FaixaBandeira altura={3} arredondada className="opacity-70" />
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-5">
-          <div className="flex items-start gap-3">
-            <Emblema tamanho={32} />
-            <div className="text-[11.5px] text-ink-300 leading-relaxed">
-              <p className="rotulo text-ink-500">Frente de Libertação de Moçambique · A Luta Continua</p>
-              <p className="flex items-center gap-1.5 mt-1.5">
-                <IcTeclado className="w-3.5 h-3.5" />
-                Protótipo funcional — dados em memória, sem base de dados. Cenário a{' '}
-                <strong className="text-ink-400">{dataLonga(e.hoje)}</strong>.
-              </p>
-            </div>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 pt-5">
+          <div className="flex items-start gap-3.5">
+            <Emblema tamanho={34} />
+            <Lema completo escuro={false} />
           </div>
           <div className="flex items-center gap-2 flex-none">
             <Lei id="art35" texto="Estatutos" />

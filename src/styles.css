@@ -87,7 +87,10 @@ body {
 .sem-barra { scrollbar-width: none; }
 .sem-barra::-webkit-scrollbar { display: none; }
 
-/* ------------------------------- animações ------------------------------ */
+/* ------------------------------- animações ------------------------------
+   O gesto da casa é hastear: a faixa da bandeira desenha-se da esquerda,
+   na ordem das cores, e o resto do ecrã entra atrás dela. Uma orquestração,
+   não efeitos espalhados.                                                 */
 @keyframes sgc-rise {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: none; }
@@ -117,11 +120,33 @@ body {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
+/* Hastear — a faixa cresce da esquerda, como uma bandeira a subir */
+@keyframes sgc-hastear {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+/* Revelar — a linha sai de trás de uma máscara, de baixo para cima */
+@keyframes sgc-revelar {
+  from { clip-path: inset(-0.12em -0.12em 100% -0.12em); opacity: 0; }
+  to   { clip-path: inset(-0.12em -0.12em -0.3em -0.12em); opacity: 1; }
+}
 .a-rise  { animation: sgc-rise .5s cubic-bezier(.22,1,.36,1) both; }
 .a-fade  { animation: sgc-fade .4s ease both; }
 .a-scale { animation: sgc-scale .28s cubic-bezier(.22,1,.36,1) both; }
 .a-drawer { animation: sgc-slide-right .32s cubic-bezier(.22,1,.36,1) both; }
 .a-ping  { animation: sgc-pulse-ring 2.4s ease-out infinite; }
+.a-hastear { transform-origin: left center; animation: sgc-hastear .85s cubic-bezier(.16,1,.3,1) both; }
+.a-revelar { animation: sgc-revelar .75s cubic-bezier(.16,1,.3,1) both; }
+
+/* Atrasos para compor a entrada. Um passo são 70 ms — rápido o bastante para
+   não fazer esperar, lento o bastante para se ler como sequência. */
+.d1 { animation-delay: .07s; }
+.d2 { animation-delay: .14s; }
+.d3 { animation-delay: .21s; }
+.d4 { animation-delay: .30s; }
+.d5 { animation-delay: .40s; }
+.d6 { animation-delay: .52s; }
+.d7 { animation-delay: .64s; }
 
 .stagger > * { animation: sgc-rise .5s cubic-bezier(.22,1,.36,1) both; }
 .stagger > *:nth-child(1) { animation-delay: .02s; }

@@ -321,7 +321,7 @@ export const RelatorioMensal: React.FC = () => {
             <p className="text-[11.5px] text-ink-400">Secretária da {e.celula.nome}</p>
           </div>
           <div className="text-right text-[11px] text-ink-300 leading-relaxed">
-            <p className="font-extrabold text-brand-600 tracking-[0.16em] uppercase text-[9.5px]">A Luta Continua</p>
+            <p className="font-extrabold text-brand-600 tracking-[0.16em] uppercase text-[9.5px]">FRELIMO, a Força da Mudança!</p>
             <p className="mt-1">Documento gerado pelo SGC</p>
             <p>4 páginas · limite de 5 (Manual da Célula, 1.9)</p>
           </div>

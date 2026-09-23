@@ -444,7 +444,13 @@ export interface Estado {
   documentos: Documento[];
   celulasCirculo: CelulaResumo[];
   provincias: ProvinciaResumo[];
-  /** Data de referência do protótipo (congelada para o cenário fazer sentido) */
+  /**
+   * REAL é a Célula B a funcionar a sério — a data acompanha o relógio.
+   * DEMO é o cenário de demonstração, cuja história inventada só faz
+   * sentido ancorada a um dia fixo.
+   */
+  cenario: 'REAL' | 'DEMO';
+  /** Dia de referência. No cenário REAL é sempre hoje; no DEMO está congelado. */
   hoje: string;
   versaoSeed: number;
 }

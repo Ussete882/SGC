@@ -75,7 +75,7 @@ const Casca: React.FC<{ children: React.ReactNode; onVoltar?: () => void; largur
       </div>
     </div>
     <div className="relative px-6 py-4 border-t border-white/10 flex items-center justify-between gap-4">
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-white/30">A Luta Continua</p>
+      <p className="rotulo text-white/35">FRELIMO, a Força da Mudança!</p>
       <a href="#/" className="text-[11px] text-white/25 hover:text-white/60 transition-colors">Voltar ao SGC</a>
     </div>
   </MolduraEscura>

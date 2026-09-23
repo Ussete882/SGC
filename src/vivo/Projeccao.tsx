@@ -244,7 +244,7 @@ export const Projeccao: React.FC<{
         </div>
         <div className="text-right">
           <SinalLigacao estado={estado} />
-          <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/25 mt-2">A Luta Continua</p>
+          <p className="rotulo text-white/30 mt-2">FRELIMO, a Força da Mudança!</p>
         </div>
       </footer>
     </div>
