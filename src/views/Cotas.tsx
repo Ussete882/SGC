@@ -266,13 +266,16 @@ const NovoMovimento: React.FC<{ aberto: boolean; onFechar: () => void }> = ({ ab
 /* ════════════════════════════════ Vista ════════════════════════════════════ */
 
 export const Cotas: React.FC = () => {
-  const { e, params, irPara, anularQuota } = useStore();
+  const { e, params, irPara, anularQuota, registarQuota } = useStore();
   const meses = useMemo(() => ultimosMeses(e.hoje, 12).reverse(), [e.hoje]);
   const [mes, setMes] = useState(mesDe(e.hoje));
   const [aba, setAba] = useState<'cotizacao' | 'atrasos' | 'contas'>('cotizacao');
   const [registar, setRegistar] = useState(false);
   const [pre, setPre] = useState<string | undefined>();
   const [movimento, setMovimento] = useState(false);
+  /* O valor que o Secretário escreve em cada linha. Enquanto não escrever
+     nada, vale a referência do camarada — mas a caixa está sempre lá. */
+  const [valores, setValores] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (params.acao === 'registar') setRegistar(true);
@@ -395,17 +398,34 @@ export const Cotas: React.FC = () => {
               )}
             </Card>
 
-            <Card titulo={`Em falta — ${nomeMes(mes)}`} sub={`${cot.emFalta.length} membros`} pad={false} destaque={cot.emFalta.length > 0}>
+            <Card
+              titulo={`Em falta — ${nomeMes(mes)}`}
+              sub={
+                cot.emFalta.length === 0
+                  ? '0 membros'
+                  : `${cot.emFalta.length} membros · ${mt(
+                      cot.emFalta.reduce(
+                        (a: number, m: Membro) =>
+                          a + (valores[m.id] === undefined ? quotaReferencia(m) : Number(valores[m.id]) || 0),
+                        0,
+                      ),
+                    )} por cobrar`
+              }
+              pad={false}
+              destaque={cot.emFalta.length > 0}
+            >
               {cot.emFalta.length === 0 ? (
                 <Vazio titulo="Cotização completa" texto="Todos os membros obrigados pagaram este mês." icone={<IcCheck className="w-6 h-6" />} />
               ) : (
                 <ul className="divide-y divide-areia-200">
                   {cot.emFalta.map((m: Membro) => {
                     const atraso = mesesEmAtraso(e, m.id, e.hoje);
+                    const escrito = valores[m.id];
+                    const valor = escrito === undefined ? quotaReferencia(m) : Number(escrito) || 0;
                     return (
-                      <li key={m.id} className="px-5 py-3 flex items-center gap-3">
+                      <li key={m.id} className="px-5 py-3 flex flex-wrap items-center gap-3">
                         <Avatar nome={m.nome} tamanho={32} />
-                        <div className="min-w-0 flex-1">
+                        <div className="min-w-0 flex-1 basis-40">
                           <p className="text-[13px] font-bold text-ink truncate">{m.nome}</p>
                           <p className="text-[11.5px] text-ink-400">
                             referência {mt(quotaReferencia(m))}
@@ -413,7 +433,38 @@ export const Cotas: React.FC = () => {
                           </p>
                         </div>
                         {atraso >= 12 && <Pill tom="brand">Art. 16 n.º 4</Pill>}
-                        <Btn tamanho="sm" variante="suave" onClick={() => { setPre(m.id); setRegistar(true); }}>Registar</Btn>
+
+                        {/* Cada camarada paga o que pode: o valor escreve-se aqui,
+                            na própria linha, sem abrir nada. */}
+                        <label className="flex items-center gap-1.5 flex-none">
+                          <span className="sr-only">Valor da quota de {m.nome}</span>
+                          <Input
+                            type="number"
+                            inputMode="numeric"
+                            min={0}
+                            step={5}
+                            value={escrito === undefined ? String(quotaReferencia(m)) : escrito}
+                            onChange={(ev) => setValores((v) => ({ ...v, [m.id]: ev.target.value }))}
+                            onFocus={(ev) => ev.currentTarget.select()}
+                            onKeyDown={(ev) => {
+                              if (ev.key === 'Enter' && valor > 0) {
+                                registarQuota({ membroId: m.id, mes, valor, modalidade: 'NUMERARIO' });
+                              }
+                            }}
+                            className="!w-24 !py-2 !px-3 text-right tnum !font-bold"
+                          />
+                          <span className="text-[11.5px] font-bold text-ink-400">MT</span>
+                        </label>
+
+                        <Btn
+                          tamanho="sm"
+                          variante="suave"
+                          disabled={valor <= 0}
+                          onClick={() => registarQuota({ membroId: m.id, mes, valor, modalidade: 'NUMERARIO' })}
+                          title="Registar em numerário. Para pagamento em espécie, use «Registar quota» em cima."
+                        >
+                          Registar
+                        </Btn>
                       </li>
                     );
                   })}
