@@ -706,7 +706,7 @@ function construirProvincias(): ProvinciaResumo[] {
 
 // ───────────────────────────────── Estado ───────────────────────────────────
 
-export const VERSAO_SEED = 12;
+export const VERSAO_SEED = 13;
 
 export function criarEstadoInicial(): Estado {
   return {
@@ -723,6 +723,10 @@ export function criarEstadoInicial(): Estado {
     documentos: construirDocumentos(),
     celulasCirculo: construirCelulasCirculo(),
     provincias: construirProvincias(),
+    sessoesCirculo: [],
+    planos: [],
+    decisoesSuperiores: [],
+    analises: [],
     cenario: 'DEMO',
     hoje: HOJE,
     versaoSeed: VERSAO_SEED,
@@ -833,6 +837,11 @@ export function criarEstadoCelulaB(): Estado {
     documentos: construirDocumentos().filter((d) => d.bloqueado),
     celulasCirculo: [resumoB],
     provincias: [],
+    // O Círculo começa sem registo próprio: nada se inventa a órgãos reais.
+    sessoesCirculo: [],
+    planos: [],
+    decisoesSuperiores: [],
+    analises: [],
     cenario: 'REAL',
     hoje,
     versaoSeed: VERSAO_SEED,

@@ -430,6 +430,71 @@ export interface Perfil {
   membroId?: string;
 }
 
+/* ══════════════════ Direcção do Círculo — Artigos 39, 53 e 56 ══════════════
+   O Círculo não é uma Célula maior: tem órgãos, cadência e competências
+   próprias. Estes quatro registos são o que o Comité precisa de ter escrito
+   para cumprir o Art. 39 sem depender da memória de quem lá esteve. */
+
+/** Sessão de um órgão do Círculo. O Comité reúne de 45 em 45 dias (Art. 53). */
+export interface SessaoCirculo {
+  id: string;
+  orgao: 'COMITE' | 'SECRETARIADO' | 'CONFERENCIA';
+  numero: number;
+  data: string;
+  hora: string;
+  local: string;
+  estado: 'AGENDADA' | 'REALIZADA' | 'CANCELADA';
+  extraordinaria?: boolean;
+  convocados: number;
+  presentes?: number;
+  ordemTrabalhos: string[];
+  deliberacoes?: string[];
+  acta?: { ficheiro: string; anexadaEm: string; aprovadaEm?: string };
+}
+
+/** Uma acção do Plano de Actividade (Art. 39 i), acompanhada ao abrigo da d). */
+export interface AccaoPlano {
+  id: string;
+  titulo: string;
+  area: 'ORGANIZACAO' | 'MOBILIZACAO' | 'FORMACAO' | 'FINANCAS' | 'COMUNIDADE';
+  responsavel: string;
+  prazo: string;
+  estado: 'POR_INICIAR' | 'EM_CURSO' | 'CONCLUIDA';
+  nota?: string;
+}
+
+/** O Plano de Actividade do Círculo, por ano (Art. 39 i). */
+export interface PlanoActividade {
+  id: string;
+  ano: number;
+  aprovadoEm?: string;
+  aprovadoNaSessaoId?: string;
+  accoes: AccaoPlano[];
+}
+
+/** Decisão recebida de órgão superior, a materializar (Art. 39 b). */
+export interface DecisaoSuperior {
+  id: string;
+  origem: string;
+  referencia: string;
+  recebidaEm: string;
+  sumario: string;
+  responsavel: string;
+  prazo: string;
+  estado: 'RECEBIDA' | 'EM_EXECUCAO' | 'MATERIALIZADA';
+  evidencia?: string;
+}
+
+/** Análise da situação da área de jurisdição (Art. 39 h). */
+export interface AnaliseSituacao {
+  id: string;
+  periodo: string;
+  dominio: 'POLITICA' | 'ECONOMICA' | 'SOCIOCULTURAL';
+  sintese: string;
+  registadaEm: string;
+  sessaoId?: string;
+}
+
 export interface Estado {
   membros: Membro[];
   celula: Celula;
@@ -443,6 +508,11 @@ export interface Estado {
   mensagens: Mensagem[];
   documentos: Documento[];
   celulasCirculo: CelulaResumo[];
+  /* ── Direcção do Círculo (Art. 39, 53 e 56) ── */
+  sessoesCirculo: SessaoCirculo[];
+  planos: PlanoActividade[];
+  decisoesSuperiores: DecisaoSuperior[];
+  analises: AnaliseSituacao[];
   provincias: ProvinciaResumo[];
   /**
    * REAL é a Célula B a funcionar a sério — a data acompanha o relógio.

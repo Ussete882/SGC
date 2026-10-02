@@ -12,8 +12,12 @@ import { addDays, addYears, anos, iso, mesDe, uid } from './format';
 import { apurar, quotaReferencia } from './selectors';
 import { criarEstadoCelulaB, criarEstadoInicial, VERSAO_SEED } from './seed';
 import type {
+  AccaoPlano,
+  AnaliseSituacao,
   Canal,
   Candidatura,
+  DecisaoSuperior,
+  SessaoCirculo,
   CargoEleitoral,
   Documento,
   Eleicao,
@@ -104,6 +108,17 @@ interface Ctx {
   // ── comunicação e documentos ──
   enviarMensagem: (p: { canais: Canal[]; segmento: Segmento; destinatarios: string[]; assunto: string; corpo: string; tipo: 'CONVOCATORIA' | 'AVISO_QUOTA' | 'ANIVERSARIO' | 'ELEITORAL' | 'LIVRE' }) => void;
   arquivarDocumento: (d: Omit<Documento, 'id'>) => void;
+
+  // ── direcção do Círculo (Art. 39, 53 e 56) ──
+  agendarSessaoCirculo: (p: { orgao: SessaoCirculo['orgao']; data: string; hora: string; local: string; ordemTrabalhos: string[]; extraordinaria?: boolean; convocados: number }) => void;
+  realizarSessaoCirculo: (id: string, p: { presentes: number; deliberacoes: string[] }) => void;
+  criarPlano: (ano: number) => void;
+  addAccaoPlano: (ano: number, p: Omit<AccaoPlano, 'id'>) => void;
+  mudarEstadoAccao: (ano: number, accaoId: string, estado: AccaoPlano['estado']) => void;
+  aprovarPlano: (ano: number, sessaoId?: string) => void;
+  registarDecisaoSuperior: (p: Omit<DecisaoSuperior, 'id' | 'estado'>) => void;
+  mudarEstadoDecisao: (id: string, estado: DecisaoSuperior['estado'], evidencia?: string) => void;
+  registarAnalise: (p: Omit<AnaliseSituacao, 'id' | 'registadaEm'>) => void;
 }
 
 const StoreCtx = createContext<Ctx | null>(null);
@@ -930,6 +945,95 @@ export const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     avisar({ tipo: 'ok', titulo: 'Documento arquivado', texto: dcm.titulo });
   }, [set, avisar]);
 
+  /* ═══════════════ Direcção do Círculo — Artigos 39, 53 e 56 ═══════════════ */
+
+  const agendarSessaoCirculo = useCallback((p: { orgao: SessaoCirculo['orgao']; data: string; hora: string; local: string; ordemTrabalhos: string[]; extraordinaria?: boolean; convocados: number }) => {
+    set((prev) => {
+      const numero = prev.sessoesCirculo.filter((x) => x.orgao === p.orgao).length + 1;
+      return {
+        ...prev,
+        sessoesCirculo: [{ id: uid('sc'), numero, estado: 'AGENDADA' as const, ...p }, ...prev.sessoesCirculo],
+      };
+    });
+    avisar({
+      tipo: 'lei',
+      titulo: 'Sessão agendada',
+      texto: p.orgao === 'COMITE' ? 'O Comité do Círculo reúne de 45 em 45 dias.' : 'Sessão registada.',
+      base: p.orgao === 'COMITE' ? 'art53' : undefined,
+    });
+  }, [set, avisar]);
+
+  const realizarSessaoCirculo = useCallback((id: string, p: { presentes: number; deliberacoes: string[] }) => {
+    set((prev) => ({
+      ...prev,
+      sessoesCirculo: prev.sessoesCirculo.map((x) =>
+        x.id === id ? { ...x, estado: 'REALIZADA' as const, presentes: p.presentes, deliberacoes: p.deliberacoes } : x,
+      ),
+    }));
+    avisar({ tipo: 'ok', titulo: 'Sessão realizada', texto: 'As deliberações ficaram registadas.' });
+  }, [set, avisar]);
+
+  const criarPlano = useCallback((ano: number) => {
+    set((prev) =>
+      prev.planos.some((x) => x.ano === ano)
+        ? prev
+        : { ...prev, planos: [{ id: uid('pl'), ano, accoes: [] }, ...prev.planos] },
+    );
+    avisar({ tipo: 'lei', titulo: `Plano de Actividade de ${ano}`, texto: 'Compete ao Comité do Círculo elaborá-lo.', base: 'art39i' });
+  }, [set, avisar]);
+
+  const addAccaoPlano = useCallback((ano: number, p: Omit<AccaoPlano, 'id'>) => {
+    set((prev) => ({
+      ...prev,
+      planos: prev.planos.map((pl) => (pl.ano === ano ? { ...pl, accoes: [...pl.accoes, { id: uid('ac'), ...p }] } : pl)),
+    }));
+  }, [set]);
+
+  const mudarEstadoAccao = useCallback((ano: number, accaoId: string, estado: AccaoPlano['estado']) => {
+    set((prev) => ({
+      ...prev,
+      planos: prev.planos.map((pl) =>
+        pl.ano === ano ? { ...pl, accoes: pl.accoes.map((a) => (a.id === accaoId ? { ...a, estado } : a)) } : pl,
+      ),
+    }));
+  }, [set]);
+
+  const aprovarPlano = useCallback((ano: number, sessaoId?: string) => {
+    set((prev) => ({
+      ...prev,
+      planos: prev.planos.map((pl) => (pl.ano === ano ? { ...pl, aprovadoEm: prev.hoje, aprovadoNaSessaoId: sessaoId } : pl)),
+    }));
+    avisar({ tipo: 'ok', titulo: 'Plano aprovado', texto: `Plano de Actividade de ${ano}.`, base: 'art39i' });
+  }, [set, avisar]);
+
+  const registarDecisaoSuperior = useCallback((p: Omit<DecisaoSuperior, 'id' | 'estado'>) => {
+    set((prev) => ({
+      ...prev,
+      decisoesSuperiores: [{ id: uid('ds'), estado: 'RECEBIDA' as const, ...p }, ...prev.decisoesSuperiores],
+    }));
+    avisar({
+      tipo: 'lei',
+      titulo: 'Decisão registada',
+      texto: 'Compete ao Comité garantir a sua materialização.',
+      base: 'art39b',
+    });
+  }, [set, avisar]);
+
+  const mudarEstadoDecisao = useCallback((id: string, estado: DecisaoSuperior['estado'], evidencia?: string) => {
+    set((prev) => ({
+      ...prev,
+      decisoesSuperiores: prev.decisoesSuperiores.map((d) => (d.id === id ? { ...d, estado, evidencia: evidencia ?? d.evidencia } : d)),
+    }));
+  }, [set]);
+
+  const registarAnalise = useCallback((p: Omit<AnaliseSituacao, 'id' | 'registadaEm'>) => {
+    set((prev) => ({
+      ...prev,
+      analises: [{ id: uid('an'), registadaEm: prev.hoje, ...p }, ...prev.analises],
+    }));
+    avisar({ tipo: 'ok', titulo: 'Análise registada', texto: 'Fica disponível entre sessões.', base: 'art39h' });
+  }, [set, avisar]);
+
   const valor = useMemo<Ctx>(() => ({
     e, lente, setLente, vista, irPara, params, toasts, avisar, fecharToast, repor,
     sessao, entrar, sair,
@@ -939,6 +1043,8 @@ export const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     criarEleicao, gerarCaderno, alternarCaderno, abrirCandidaturas, addCandidatura, aceitarCandidatura, retirarCandidatura, abrirEscrutinio, registarVotos, fecharVolta, homologar, anularEleicao,
     criarFichaDelegado, guardarFichaDelegado, entregarFichaDelegado, removerFichaDelegado,
     enviarMensagem, arquivarDocumento,
+    agendarSessaoCirculo, realizarSessaoCirculo, criarPlano, addAccaoPlano, mudarEstadoAccao,
+    aprovarPlano, registarDecisaoSuperior, mudarEstadoDecisao, registarAnalise,
   }), [
     e, lente, vista, params, toasts, irPara, avisar, fecharToast, repor,
     sessao, entrar, sair,
@@ -948,6 +1054,8 @@ export const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     criarEleicao, gerarCaderno, alternarCaderno, abrirCandidaturas, addCandidatura, aceitarCandidatura, retirarCandidatura, abrirEscrutinio, registarVotos, fecharVolta, homologar, anularEleicao,
     criarFichaDelegado, guardarFichaDelegado, entregarFichaDelegado, removerFichaDelegado,
     enviarMensagem, arquivarDocumento,
+    agendarSessaoCirculo, realizarSessaoCirculo, criarPlano, addAccaoPlano, mudarEstadoAccao,
+    aprovarPlano, registarDecisaoSuperior, mudarEstadoDecisao, registarAnalise,
   ]);
 
   return <StoreCtx.Provider value={valor}>{children}</StoreCtx.Provider>;

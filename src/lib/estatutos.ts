@@ -291,6 +291,59 @@ export const NORMAS: Record<string, Norma> = {
     texto:
       'Compete ao Comité do Círculo eleger, de entre os seus membros, o Primeiro Secretário e os membros do respectivo Secretariado.',
   },
+  art39b: {
+    id: 'art39b',
+    ref: 'Art. 39 b)',
+    fonte: 'ESTATUTOS',
+    epigrafe: 'Decisões dos órgãos superiores',
+    texto:
+      'Compete ao Comité do Círculo garantir a materialização das decisões dos órgãos superiores do Partido, tomando em consideração as condições específicas locais.',
+  },
+  art39c: {
+    id: 'art39c',
+    ref: 'Art. 39 c)',
+    fonte: 'ESTATUTOS',
+    epigrafe: 'Relatório do Secretariado',
+    texto: 'Compete ao Comité do Círculo analisar e aprovar o Relatório do respectivo Secretariado.',
+  },
+  art39d: {
+    id: 'art39d',
+    ref: 'Art. 39 d)',
+    fonte: 'ESTATUTOS',
+    epigrafe: 'Cumprimento do Plano de Trabalho',
+    texto: 'Compete ao Comité do Círculo analisar o cumprimento do Plano de Trabalho.',
+  },
+  art39h: {
+    id: 'art39h',
+    ref: 'Art. 39 h)',
+    fonte: 'ESTATUTOS',
+    epigrafe: 'Análise da situação',
+    texto:
+      'Compete ao Comité do Círculo analisar a situação política, económica e sócio-cultural da área da sua jurisdição.',
+  },
+  art39i: {
+    id: 'art39i',
+    ref: 'Art. 39 i)',
+    fonte: 'ESTATUTOS',
+    epigrafe: 'Plano de Actividade',
+    texto: 'Compete ao Comité do Círculo elaborar o seu Plano de Actividade.',
+  },
+  art53: {
+    id: 'art53',
+    ref: 'Art. 53 n.º 1 a)',
+    fonte: 'ESTATUTOS',
+    epigrafe: 'Periodicidade das sessões',
+    texto:
+      'Os Comités reúnem ordinariamente: de Círculo — de quarenta e cinco dias em quarenta e cinco dias. Reúnem em sessão extraordinária a requerimento de um terço dos seus membros, dos respectivos secretariados ou por indicação do órgão superior.',
+  },
+  art56: {
+    id: 'art56',
+    ref: 'Art. 56',
+    fonte: 'ESTATUTOS',
+    epigrafe: 'Competências dos Secretariados',
+    texto:
+      'Compete aos Secretariados, em particular: informar todos os órgãos de escalão inferior sobre as decisões do Comité e do seu Secretariado; gerir os recursos humanos, materiais e financeiros do Partido; analisar regularmente a situação política, económica e social, garantindo o envio de informações para o Secretariado do Comité superior; apresentar ao Comité, no decurso das suas sessões ordinárias, o relatório das actividades desenvolvidas.',
+  },
   art39f: {
     id: 'art39f',
     ref: 'Art. 39 f) g)',
@@ -414,6 +467,8 @@ export const REGRAS = {
   ANTECEDENCIA_CONVOCATORIA_DIAS: 2,
   DURACAO_MAX_REUNIAO_GERAL_MIN: 90,
   CADENCIA_SECRETARIADO_DIAS: 15,
+  /** Art. 53 n.º 1 a) — o Comité do Círculo reúne de 45 em 45 dias. */
+  CADENCIA_COMITE_CIRCULO_DIAS: 45,
   PERCENT_CELULA: 0.6,
   PERCENT_ESCALAO: 0.4,
   TAXA_QUOTA: 0.01,

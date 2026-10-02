@@ -818,3 +818,57 @@ export function totaisCirculo(e: Estado) {
     comAlertas: cs.filter((c) => c.alertas.length > 0).length,
   };
 }
+
+/* ═══════════════════ Direcção do Círculo — Artigos 39 e 53 ═════════════════ */
+
+/**
+ * Cadência das sessões ordinárias do Comité do Círculo. O Art. 53 n.º 1 a)
+ * fixa quarenta e cinco dias, e é esse prazo que ninguém hoje conta.
+ */
+export function cadenciaComiteCirculo(e: Estado) {
+  const ordinarias = e.sessoesCirculo
+    .filter((s) => s.orgao === 'COMITE' && s.estado === 'REALIZADA' && !s.extraordinaria)
+    .sort((a, b) => (a.data > b.data ? -1 : 1));
+  const ultima = ordinarias[0] ?? null;
+  const limite = ultima ? addDays(ultima.data, REGRAS.CADENCIA_COMITE_CIRCULO_DIAS) : null;
+  // diffDays(a, b) = a − b: os dias decorridos são hoje menos a data da sessão.
+  const diasDesde = ultima ? diffDays(e.hoje, ultima.data) : null;
+  const agendada = e.sessoesCirculo
+    .filter((s) => s.orgao === 'COMITE' && s.estado === 'AGENDADA' && s.data >= e.hoje)
+    .sort((a, b) => (a.data > b.data ? 1 : -1))[0] ?? null;
+
+  const emFalta = limite !== null && e.hoje > limite && !agendada;
+  const aAproximar = limite !== null && !emFalta && !agendada && diffDays(limite, e.hoje) <= 10;
+
+  return { ultima, agendada, limite, diasDesde, emFalta, aAproximar, realizadas: ordinarias.length };
+}
+
+/** Execução do Plano de Actividade do ano em curso (Art. 39 d e i). */
+export function execucaoPlano(e: Estado, ano?: number) {
+  const alvo = ano ?? Number(e.hoje.slice(0, 4));
+  const plano = e.planos.find((p) => p.ano === alvo) ?? null;
+  const accoes = plano?.accoes ?? [];
+  const concluidas = accoes.filter((a) => a.estado === 'CONCLUIDA');
+  const atrasadas = accoes.filter((a) => a.estado !== 'CONCLUIDA' && a.prazo < e.hoje);
+  return {
+    plano,
+    ano: alvo,
+    total: accoes.length,
+    concluidas: concluidas.length,
+    emCurso: accoes.filter((a) => a.estado === 'EM_CURSO').length,
+    porIniciar: accoes.filter((a) => a.estado === 'POR_INICIAR').length,
+    atrasadas,
+    taxa: accoes.length ? Math.round((concluidas.length / accoes.length) * 100) : 0,
+  };
+}
+
+/** Decisões de órgãos superiores por materializar (Art. 39 b). */
+export function decisoesPendentes(e: Estado) {
+  const abertas = e.decisoesSuperiores.filter((d) => d.estado !== 'MATERIALIZADA');
+  return {
+    abertas,
+    foraDePrazo: abertas.filter((d) => d.prazo < e.hoje),
+    materializadas: e.decisoesSuperiores.filter((d) => d.estado === 'MATERIALIZADA').length,
+  };
+}
+

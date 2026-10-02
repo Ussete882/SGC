@@ -16,6 +16,7 @@ import { Documentos } from './views/Documentos';
 import { RelatorioMensal } from './views/RelatorioMensal';
 import { Conformidade } from './views/Conformidade';
 import { PainelCirculo } from './views/PainelCirculo';
+import { CirculoDireccao } from './views/CirculoDireccao';
 import { PainelNacional } from './views/PainelNacional';
 import { PainelMembro } from './views/PainelMembro';
 import { AppVivo } from './vivo/AppVivo';
@@ -92,7 +93,7 @@ const Entrada: React.FC = () => {
           <div className="leading-none">
             <p className="text-[19px] font-extrabold tracking-[-0.04em]">SGC</p>
             <p className="text-[8.5px] font-extrabold uppercase tracking-[0.22em] text-white/50 mt-1.5">
-              Sistema de Gestão da Célula
+              Sistema de Gestão de Círculo
             </p>
           </div>
         </div>
@@ -104,7 +105,7 @@ const Entrada: React.FC = () => {
           <h1 className="display text-white text-[clamp(38px,6.6vw,76px)]">
             <span className="block a-revelar d2">Sistema</span>
             <span className="block a-revelar d3">de Gestão</span>
-            <span className="block a-revelar d4 text-white/60">da Célula</span>
+            <span className="block a-revelar d4 text-white/60">de Círculo</span>
           </h1>
           <p className="hidden sm:block text-white/60 text-[14px] mt-6 max-w-md leading-relaxed a-rise d5">
             Membros, cotas, reuniões, documentação — e a democracia interna, da Célula ao escalão nacional. Ancorado
@@ -219,6 +220,10 @@ const Vistas: React.FC = () => {
     case 'circulo':
     case 'circulo-celulas':
       return <PainelCirculo />;
+    case 'circulo-direccao':
+    case 'circulo-plano':
+    case 'circulo-decisoes':
+      return <CirculoDireccao />;
     case 'nacional':
     case 'nacional-reunioes':
     case 'nacional-provincias':

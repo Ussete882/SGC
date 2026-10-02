@@ -747,7 +747,7 @@ export const Marca: React.FC<{ compacto?: boolean; className?: string; escuro?: 
       <div className="leading-none min-w-0">
         <p className={`text-[17px] font-extrabold tracking-[-0.04em] ${escuro ? 'text-white' : 'text-ink'}`}>SGC</p>
         <p className={`text-[8.5px] font-extrabold uppercase tracking-[0.2em] mt-1 ${escuro ? 'text-white/40' : 'text-ink-300'}`}>
-          Gestão da Célula
+          Gestão de Círculo
         </p>
       </div>
     )}

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useStore } from '../lib/store';
-import { avisos as calcAvisos, calcularIVO, membrosDaCelula, totaisNacionais } from '../lib/selectors';
+import { avisos as calcAvisos, cadenciaComiteCirculo, calcularIVO, decisoesPendentes, membrosDaCelula, totaisNacionais } from '../lib/selectors';
 import { compacto, nomeCurto } from '../lib/format';
 import { Avatar, Btn, Emblema, FaixaBandeira, Lei, Lema, Marca, Pill, Rotulo } from '../ui/primitives';
 import {
@@ -47,6 +47,9 @@ export function navPara(lente: Lente, contagens: Record<string, number>): ItemNa
     return [
       { id: 'circulo', rotulo: 'Painel do Círculo', nota: 'Vista de conjunto', icone: <IcRede className="w-[18px] h-[18px]" />, grupo: 'Círculo' },
       { id: 'circulo-celulas', rotulo: 'Células subordinadas', nota: 'Vitalidade Célula a Célula', icone: <IcMembros className="w-[18px] h-[18px]" />, grupo: 'Círculo', params: { tab: 'celulas' } },
+      { id: 'circulo-direccao', rotulo: 'Sessões do Comité', nota: 'Cadência de 45 dias (Art. 53)', icone: <IcCalendario className="w-[18px] h-[18px]" />, grupo: 'Direcção do Círculo', badge: contagens.sessoesEmFalta },
+      { id: 'circulo-plano', rotulo: 'Plano de Actividade', nota: 'Elaborar e acompanhar (Art. 39)', icone: <IcRelatorio className="w-[18px] h-[18px]" />, grupo: 'Direcção do Círculo', params: { tab: 'plano' } },
+      { id: 'circulo-decisoes', rotulo: 'Decisões superiores', nota: 'Garantir a materialização', icone: <IcEscudo className="w-[18px] h-[18px]" />, grupo: 'Direcção do Círculo', params: { tab: 'decisoes' }, badge: contagens.decisoesAbertas },
       { id: 'eleicoes', rotulo: 'Eleições do escalão', nota: 'Conferência e mandatos', icone: <IcUrna className="w-[18px] h-[18px]" />, grupo: 'Círculo' },
       { id: 'vivo', rotulo: 'Votação em directo', nota: 'A sala inteira, em tempo real', icone: <IcRaio className="w-[18px] h-[18px]" />, grupo: 'Círculo' },
       { id: 'documentos', rotulo: 'Documentos', nota: 'Normativos do Partido', icone: <IcPasta className="w-[18px] h-[18px]" />, grupo: 'Apoio' },
@@ -66,7 +69,7 @@ export function navPara(lente: Lente, contagens: Record<string, number>): ItemNa
 
 /* Contagens onde um número quer dizer «trate disto», e não apenas «há tantos».
    Só estas acendem o ponto vermelho na pílula do grupo. */
-const EXIGEM_ATENCAO = new Set(['conformidade', 'cotas', 'eleicoes', 'delegados']);
+const EXIGEM_ATENCAO = new Set(['conformidade', 'cotas', 'eleicoes', 'delegados', 'circulo-direccao', 'circulo-decisoes']);
 
 const TITULOS: Record<string, { t: string; s: string }> = {
   painel: { t: 'Painel da Célula', s: 'O essencial do dia-a-dia num só ecrã' },
@@ -80,6 +83,9 @@ const TITULOS: Record<string, { t: string; s: string }> = {
   documentos: { t: 'Documentos', s: 'Actas, relatórios e normativos do Partido' },
   relatorio: { t: 'Relatório mensal ao Círculo', s: 'Gerado a partir dos dados do mês' },
   circulo: { t: 'Painel do Círculo', s: 'Vista de conjunto das Células subordinadas' },
+  'circulo-direccao': { t: 'Direcção do Círculo', s: 'Sessões, Plano de Actividade, decisões superiores e análise da situação' },
+  'circulo-plano': { t: 'Plano de Actividade', s: 'Elaborar o Plano e analisar o seu cumprimento — Art. 39 d) e i)' },
+  'circulo-decisoes': { t: 'Decisões dos órgãos superiores', s: 'Garantir a sua materialização — Art. 39 b)' },
   'circulo-celulas': { t: 'Células subordinadas', s: 'Velar pelo funcionamento de cada Célula' },
   nacional: { t: 'Síntese nacional', s: 'Do Rovuma ao Maputo — consolidação da estrutura celular' },
   'nacional-reunioes': { t: 'Reuniões de Célula no País', s: 'Contagem consolidada de toda a estrutura' },
@@ -99,6 +105,8 @@ function useContagens() {
       eleicoes: e.eleicoes.filter((x) => !['HOMOLOGADA', 'ANULADA'].includes(x.fase)).length,
       desconforme: av.filter((a) => a.nivel === 'CRITICO').length,
       fichas: e.fichasDelegado.filter((f) => !f.entregueEm).length,
+      sessoesEmFalta: cadenciaComiteCirculo(e).emFalta ? 1 : 0,
+      decisoesAbertas: decisoesPendentes(e).abertas.length,
     };
   }, [e]);
 }
@@ -479,12 +487,14 @@ const Cabecalho: React.FC = () => {
   const grupo = itens.find((i) => i.id === vista)?.grupo;
   const irmaos = itens.filter((i) => i.grupo === grupo);
 
-  const contexto =
+  /* Campos por preencher não geram separadores soltos: junta-se só o que existe. */
+  const contexto = (
     lente === 'CELULA' || lente === 'MEMBRO'
-      ? `${e.celula.nome} · ${e.circulo.nome}`
+      ? [e.celula.nome, e.circulo.nome]
       : lente === 'CIRCULO'
-        ? `${e.circulo.nome} · ${e.circulo.distrito}`
-        : 'Frente de Libertação de Moçambique';
+        ? [e.circulo.nome, e.circulo.distrito, e.circulo.provincia]
+        : ['Frente de Libertação de Moçambique']
+  ).filter(Boolean).join(' · ');
 
   return (
     <div className="pt-8 pb-7">
